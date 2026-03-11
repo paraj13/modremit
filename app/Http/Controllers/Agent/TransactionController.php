@@ -13,39 +13,12 @@ class TransactionController extends Controller
 
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = \App\Models\Transaction::where('agent_id', auth()->id())
-                ->with(['customer', 'recipient'])
-                ->select('transactions.*');
-                
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('customer', function($row){
-                    return $row->customer->name ?? 'N/A';
-                })
-                ->addColumn('recipient', function($row){
-                    return $row->recipient->name ?? 'N/A';
-                })
-                ->addColumn('amount', function($row){
-                    return 'CHF ' . number_format($row->chf_amount, 2);
-                })
-                ->editColumn('status', function($row){
-                    $class = match($row->status) {
-                        'completed'  => 'bg-success',
-                        'processing' => 'bg-info',
-                        'failed'     => 'bg-danger',
-                        default      => 'bg-warning',
-                    };
-                    return '<span class="badge '.$class.' px-3">'.strtoupper($row->status).'</span>';
-                })
-                ->addColumn('action', function($row){
-                    return '<a href="'.route('agent.transactions.show', $row->id).'" class="btn btn-sm btn-outline-primary">Details</a>';
-                })
-                ->rawColumns(['status', 'action'])
-                ->make(true);
-        }
+        $transactions = \App\Models\Transaction::where('agent_id', auth()->id())
+            ->with(['customer', 'recipient'])
+            ->latest()
+            ->paginate(10);
 
-        return view('agent.transactions.index');
+        return view('agent.transactions.index', compact('transactions'));
     }
 
     public function show(int $id)

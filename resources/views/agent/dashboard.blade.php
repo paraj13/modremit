@@ -3,94 +3,92 @@
 @section('page_title', 'Agent Dashboard')
 
 @section('content')
-<div class="row g-4 mb-4">
+<div class="row g-4 mb-5">
     <div class="col-md-3">
-        <div class="card stat-card bg-white h-100">
-            <div class="d-flex justify-content-between">
+        <div class="card card-premium p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted">Total Transfers</h6>
-                    <h3 class="fw-bold mb-0">{{ $stats['total'] }}</h3>
+                    <h6 class="text-muted small fw-bold uppercase">Transfers</h6>
+                    <h3 class="fw-bold mb-0 text-brand-dark">{{ $stats['total'] }}</h3>
                 </div>
-                <div class="stat-icon text-primary">
-                    <i class="bi bi-arrow-left-right"></i>
+                <div class="bg-brand-mint p-3 rounded-circle text-brand-dark">
+                    <i class="bi bi-arrow-left-right fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card stat-card bg-white h-100">
-            <div class="d-flex justify-content-between">
+        <div class="card card-premium p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted">CHF Received</h6>
-                    <h3 class="fw-bold mb-0">{{ number_format($stats['total_chf'], 2) }}</h3>
+                    <h6 class="text-muted small fw-bold uppercase">CHF Received</h6>
+                    <h3 class="fw-bold mb-0 text-brand-dark">{{ number_format($stats['total_chf'], 2) }}</h3>
                 </div>
-                <div class="stat-icon text-success">
-                    <i class="bi bi-wallet2"></i>
+                <div class="bg-brand-lime p-3 rounded-circle text-brand-dark">
+                    <i class="bi bi-wallet2 fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card stat-card bg-white h-100">
-            <div class="d-flex justify-content-between">
+        <div class="card card-premium p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted">INR Sent</h6>
-                    <h3 class="fw-bold mb-0">₹ {{ number_format($stats['total_inr'], 2) }}</h3>
+                    <h6 class="text-muted small fw-bold uppercase">INR Sent</h6>
+                    <h3 class="fw-bold mb-0 text-brand-dark">₹ {{ number_format($stats['total_inr'], 2) }}</h3>
                 </div>
-                <div class="stat-icon text-info">
-                    <i class="bi bi-currency-rupee"></i>
+                <div class="bg-light p-3 rounded-circle text-brand-dark border">
+                    <i class="bi bi-currency-rupee fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card stat-card bg-white h-100">
-            <div class="d-flex justify-content-between">
+        <div class="card card-premium p-4 h-100 bg-brand-dark text-white">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted">Wallet Balance</h6>
+                    <h6 class="text-brand-lime small fw-bold uppercase">Wallet Balance</h6>
                     <h3 class="fw-bold mb-0">{{ number_format($wallet->chf_balance, 2) }} CHF</h3>
                 </div>
-                <div class="stat-icon text-warning">
-                    <i class="bi bi-bank"></i>
+                <div class="bg-white bg-opacity-10 p-3 rounded-circle text-brand-lime">
+                    <i class="bi bi-bank fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
+<div class="row g-4">
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold">Recent Actions</h5>
-                <a href="{{ route('agent.transfers.create') }}" class="btn btn-primary btn-sm">New Transfer</a>
+        <div class="table-premium-container">
+            <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+                <h5 class="mb-0 fw-bold text-brand-dark">Recent Activity</h5>
+                <a href="{{ route('agent.transfers.create') }}" class="btn btn-brand btn-sm px-4">New Transfer</a>
             </div>
-            <div class="card-body">
-                <div class="text-center py-5">
-                    <img src="https://img.icons8.com/clouds/100/000000/empty-box.png" alt="No data" class="mb-3">
-                    <p class="text-muted">Ready to process your first remittance?</p>
-                    <a href="{{ route('agent.customers.create') }}" class="btn btn-outline-primary shadow-sm">Add First Customer</a>
+            <div class="text-center py-5">
+                <div class="bg-gray-light d-inline-block p-4 rounded-circle mb-4">
+                    <i class="bi bi-lightning-charge opacity-25 h1 mb-0"></i>
                 </div>
+                <p class="text-muted">Ready to process your first remittance?</p>
+                <a href="{{ route('agent.customers.create') }}" class="btn btn-brand-outline px-4">Add First Customer</a>
             </div>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card h-100">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold">Quick Stats</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
+        <div class="card card-premium p-4 h-100">
+            <h5 class="mb-4 fw-bold text-brand-dark">Quick Summary</h5>
+            <div class="space-y-4">
+                <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
                     <span class="text-muted">Total Customers</span>
-                    <span class="fw-bold">{{ $customerCount }}</span>
+                    <span class="fw-bold text-brand-dark f-5">{{ $customerCount }}</span>
                 </div>
-                <div class="d-flex justify-content-between mb-3 border-bottom pb-2">
-                    <span class="text-muted">Completed Transfers</span>
-                    <span class="text-success fw-bold">{{ $stats['completed'] }}</span>
+                <div class="d-flex justify-content-between align-items-center py-3 border-bottom">
+                    <span class="text-muted">Completed</span>
+                    <span class="badge bg-brand-mint text-brand-dark px-3">{{ $stats['completed'] }}</span>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">Failed Transfers</span>
-                    <span class="text-danger fw-bold">{{ $stats['failed'] }}</span>
+                <div class="d-flex justify-content-between align-items-center py-3">
+                    <span class="text-muted">Failed</span>
+                    <span class="badge bg-danger text-white px-3">{{ $stats['failed'] }}</span>
                 </div>
             </div>
         </div>

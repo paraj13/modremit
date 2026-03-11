@@ -28,12 +28,12 @@ class PublicFxService
             try {
                 $response = Http::get($this->baseUrl . $from);
                 
-                if ($response->successful()) {
-                    $data = $response->json();
-                    return $data['rates'] ?? null;
+                if ($response->ok()) {
+                    $data = $response->collect();
+                    return $data->get('rates');
                 }
                 
-                Log::error("Failed to fetch FX rates for {$from}: " . $response->body());
+                Log::error("Failed to fetch FX rates for {$from}: " . $response->status());
                 return null;
             } catch (\Exception $e) {
                 Log::error("Exception while fetching FX rates: " . $e->getMessage());

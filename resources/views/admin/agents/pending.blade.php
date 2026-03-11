@@ -1,66 +1,63 @@
 @extends('layouts.admin')
 
-@section('page_title', 'Pending Agents')
+@section('page_title', 'Pending Agent Applications')
 
 @section('content')
 <div class="row mb-4">
     <div class="col-12">
-        <a href="{{ route('admin.agents.index') }}" class="btn btn-brand-outline d-inline-flex align-items-center">
+        <a href="{{ route('admin.agents.index') }}" class="btn btn-brand-outline">
             <i class="bi bi-arrow-left me-2"></i> Back to Agents
         </a>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm card-premium">
-    <div class="card-header bg-white py-3">
-        <h5 class="mb-0 fw-bold">Agent Applications</h5>
+<div class="table-premium-container">
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3">
+        <h5 class="mb-0 fw-bold text-brand-dark">Agent Registration Requests</h5>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle pending-agent-table w-100">
-                <thead class="bg-light">
-                    <tr>
-                        <th width="50px">No</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Applied Date</th>
-                        <th width="180px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle table-premium">
+            <thead>
+                <tr>
+                    <th width="50px">No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Applied Date</th>
+                    <th width="220px" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($agents as $index => $agent)
+                <tr>
+                    <td>{{ $agents->firstItem() + $index }}</td>
+                    <td class="fw-bold">{{ $agent->name }}</td>
+                    <td>{{ $agent->email }}</td>
+                    <td>{{ $agent->phone ?? 'N/A' }}</td>
+                    <td>{{ $agent->created_at->format('M d, Y') }}</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <form action="{{ route('admin.agents.approve', $agent->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-brand px-3">Approve</button>
+                            </form>
+                            <form action="{{ route('admin.agents.reject', $agent->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-outline-danger px-3 rounded-pill">Reject</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">No pending applications found.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4 px-3">
+        {{ $agents->links() }}
     </div>
 </div>
-
 @endsection
-
-@push('scripts')
-<script type="text/javascript">
-  $(function () {
-    var table = $('.pending-agent-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.agents.pending') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-            {data: 'name', name: 'name', className: 'fw-bold'},
-            {data: 'email', name: 'email'},
-            {data: 'phone', name: 'phone'},
-            {data: 'created_at', name: 'created_at', render: function(data){
-                return new Date(data).toLocaleDateString();
-            }},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-        ],
-        language: {
-            searchPlaceholder: "Search applications...",
-            search: ""
-        }
-    });
-
-    $('.dataTables_filter input').addClass('form-control form-control-sm shadow-none border-0 bg-light px-3 py-2').css('width', '250px');
-  });
-</script>
-@endpush

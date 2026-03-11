@@ -5,65 +5,64 @@
 @section('content')
 <div class="row mb-4">
     <div class="col-12 text-end">
-        <a href="{{ route('admin.agents.create') }}" class="btn btn-primary d-inline-flex align-items-center">
+        <a href="{{ route('admin.agents.create') }}" class="btn btn-brand">
             <i class="bi bi-person-plus me-2"></i> Create New Agent
         </a>
     </div>
 </div>
 
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white py-3">
-        <h5 class="mb-0 fw-bold">Active Platform Agents</h5>
+<div class="table-premium-container">
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3">
+        <h5 class="mb-0 fw-bold text-brand-dark">Active Platform Agents</h5>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle agent-table w-100">
-                <thead class="bg-light">
-                    <tr>
-                        <th width="50px">No</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                        <th>Joined Date</th>
-                        <th width="180px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle table-premium">
+            <thead>
+                <tr>
+                    <th width="50px">No</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Status</th>
+                    <th>Joined</th>
+                    <th width="200px" class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($agents as $index => $agent)
+                <tr>
+                    <td>{{ $agents->firstItem() + $index }}</td>
+                    <td class="fw-bold">{{ $agent->name }}</td>
+                    <td>{{ $agent->email }}</td>
+                    <td>{{ $agent->phone ?? 'N/A' }}</td>
+                    <td>
+                        <span class="badge {{ $agent->is_active ? 'bg-brand-mint text-brand-dark' : 'bg-danger text-white' }} px-3">
+                            {{ $agent->is_active ? 'ACTIVE' : 'INACTIVE' }}
+                        </span>
+                    </td>
+                    <td>{{ $agent->created_at->format('M d, Y') }}</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('admin.agents.edit', $agent->id) }}" class="btn btn-sm btn-outline-dark rounded-3 px-3">Edit</a>
+                            <form action="{{ route('admin.agents.toggle', $agent->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="btn btn-sm {{ $agent->is_active ? 'btn-outline-danger' : 'btn-outline-success' }} rounded-3 px-3">
+                                    {{ $agent->is_active ? 'Disable' : 'Enable' }}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-muted">No agents found.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4 px-3">
+        {{ $agents->links() }}
     </div>
 </div>
-
 @endsection
-
-@push('scripts')
-<script type="text/javascript">
-  $(function () {
-    var table = $('.agent-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.agents.index') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-            {data: 'name', name: 'name', className: 'fw-bold'},
-            {data: 'email', name: 'email'},
-            {data: 'phone', name: 'phone'},
-            {data: 'status', name: 'status', orderable: false, searchable: false},
-            {data: 'created_at', name: 'created_at', render: function(data){
-                return new Date(data).toLocaleDateString();
-            }},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-        ],
-        language: {
-            searchPlaceholder: "Search agents...",
-            search: ""
-        }
-    });
-
-    // Style the search box
-    $('.dataTables_filter input').addClass('form-control form-control-sm shadow-none border-0 bg-light px-3 py-2').css('width', '250px');
-  });
-</script>
-@endpush

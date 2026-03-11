@@ -11,28 +11,53 @@
     </div>
 </div>
 
-<div class="card border-0 shadow-sm card-premium">
-    <div class="card-header bg-white py-3">
+<div class="table-premium-container">
+    <div class="d-flex justify-content-between align-items-center mb-4 px-3">
         <h5 class="mb-0 fw-bold text-brand-dark">Live Exchange Rates</h5>
     </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle data-table w-100">
-                <thead class="bg-light">
-                    <tr>
-                        <th width="50px">No</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Rate</th>
-                        <th>Status</th>
-                        <th>Last Updated</th>
-                        <th width="180px">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle table-premium">
+            <thead>
+                <tr>
+                    <th width="50px">No</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Rate</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                    <th width="180px" class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($fxRates as $index => $fx)
+                <tr>
+                    <td>{{ $fxRates->firstItem() + $index }}</td>
+                    <td class="fw-bold text-brand-dark">{{ $fx->from_currency }}</td>
+                    <td class="fw-bold text-brand-dark">{{ $fx->to_currency }}</td>
+                    <td class="text-brand-dark fw-bold">{{ number_format($fx->rate, 4) }}</td>
+                    <td>
+                        <span class="badge {{ $fx->is_active ? 'bg-brand-mint text-brand-dark' : 'bg-danger text-white' }} px-3">
+                            {{ $fx->is_active ? 'ACTIVE' : 'INACTIVE' }}
+                        </span>
+                    </td>
+                    <td><span class="text-muted small">{{ $fx->updated_at->format('M d, Y H:i') }}</span></td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <button data-id="{{ $fx->id }}" class="btn btn-sm btn-outline-dark rounded-3 px-3 editFx">Edit</button>
+                            <button data-id="{{ $fx->id }}" class="btn btn-sm btn-outline-danger rounded-3 px-3 deleteFx">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="text-center py-5 text-muted">No FX rates found.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="mt-4 px-3">
+        {{ $fxRates->links() }}
     </div>
 </div>
 
@@ -80,32 +105,7 @@
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
     });
-    
-    var table = $('.data-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.fx.index') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
-            {data: 'from_currency', name: 'from_currency', className: 'fw-bold text-brand-dark'},
-            {data: 'to_currency', name: 'to_currency', className: 'fw-bold text-brand-dark'},
-            {data: 'rate', name: 'rate', className: 'text-primary fw-bold'},
-            {data: 'is_active', name: 'is_active', render: function(data){
-                return data ? '<span class="badge bg-success-subtle text-success border border-success-subtle px-3">Active</span>' : '<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3">Inactive</span>';
-            }},
-            {data: 'updated_at', name: 'updated_at', render: function(data){
-                return '<span class="text-muted small">' + new Date(data).toLocaleString() + '</span>';
-            }},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-        ],
-        language: {
-            searchPlaceholder: "Search currencies...",
-            search: ""
-        }
-    });
 
-    $('.dataTables_filter input').addClass('form-control form-control-sm shadow-none border-0 bg-light px-3 py-2').css('width', '250px');
-     
     $('#createNewFx').click(function () {
         $('#saveBtn').val("create-fx");
         $('#fx_id').val('');
@@ -118,7 +118,7 @@
       var fx_id = $(this).data('id');
       $.get("{{ route('admin.fx.index') }}" +'/' + fx_id +'/edit', function (data) {
           $('#modelHeading').html("Edit FX Rate");
-          $('#saveBtn').val("edit-user");
+          $('#saveBtn').val("edit-fx");
           $('#ajaxModal').modal('show');
           $('#fx_id').val(data.id);
           $('#from_currency').val(data.from_currency);
@@ -139,8 +139,7 @@
           success: function (data) {
               $('#fxForm').trigger("reset");
               $('#ajaxModal').modal('hide');
-              table.draw();
-              $('#saveBtn').html('Save Rate');
+              location.reload(); // Simple reload for standard table
           },
           error: function (data) {
               console.log('Error:', data);
@@ -156,7 +155,7 @@
                 type: "DELETE",
                 url: "{{ route('admin.fx.index') }}"+'/'+fx_id,
                 success: function (data) {
-                    table.draw();
+                    location.reload();
                 },
                 error: function (data) {
                     console.log('Error:', data);
@@ -164,7 +163,6 @@
             });
         }
     });
-     
   });
 </script>
 @endpush

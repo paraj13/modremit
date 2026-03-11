@@ -135,10 +135,6 @@
             100% { transform: translateX(-50%); }
         }
 
-        .marquee:hover .marquee-content {
-            animation-play-state: paused;
-        }
-
         .star-rating {
             color: var(--brand-lime);
             margin-bottom: 10px;
@@ -180,14 +176,20 @@
             padding: 4px 10px;
             border-radius: 8px;
         }
-        .lang-switcher .active {
-            background: rgba(0,0,0,0.05);
+        .glass-nav {
+            top: 0 !important;
+            z-index: 1050;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 991px) {
+            .hero-title { font-size: 3.5rem; }
         }
     </style>
 </head>
 <body>
     <div class="hero">
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar navbar-expand-lg sticky-top glass-nav">
             <div class="container">
                 <a class="navbar-brand" href="#">MODREMIT</a>
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
@@ -232,10 +234,10 @@
                             <div class="input-group-modern">
                                 <input type="number" id="send_amount" class="amount-input" value="1000">
                                 <select id="from_currency" class="currency-select">
-                                    <option value="CHF" data-flag="ch" selected>CHF</option>
-                                    <option value="USD" data-flag="us">USD</option>
-                                    <option value="EUR" data-flag="eu">EUR</option>
-                                    <option value="GBP" data-flag="gb">GBP</option>
+                                    <option value="CHF" data-flag="ch" data-name="Swiss Franc" selected>CHF</option>
+                                    <option value="USD" data-flag="us" data-name="United States Dollar">USD</option>
+                                    <option value="EUR" data-flag="eu" data-name="Euro">EUR</option>
+                                    <option value="GBP" data-flag="gb" data-name="British Pound">GBP</option>
                                 </select>
                             </div>
                         </div>
@@ -261,12 +263,13 @@
                             <div class="input-group-modern">
                                 <input type="text" id="receive_amount" class="amount-input" readonly>
                                 <select id="to_currency" class="currency-select">
-                                    <option value="INR" data-flag="in" selected>INR</option>
-                                    <option value="EUR" data-flag="eu">EUR</option>
-                                    <option value="USD" data-flag="us">USD</option>
-                                    <option value="GBP" data-flag="gb">GBP</option>
-                                    <option value="PHP" data-flag="ph">PHP</option>
-                                    <option value="PKR" data-flag="pk">PKR</option>
+                                    <option value="INR" data-flag="in" data-name="Indian Rupee" selected>INR</option>
+                                    <option value="EUR" data-flag="eu" data-name="Euro">EUR</option>
+                                    <option value="USD" data-flag="us" data-name="United States Dollar">USD</option>
+                                    <option value="GBP" data-flag="gb" data-name="British Pound">GBP</option>
+                                    <option value="CHF" data-flag="ch" data-name="Swiss Franc">CHF</option>
+                                    <option value="PHP" data-flag="ph" data-name="Philippine Peso">PHP</option>
+                                    <option value="PKR" data-flag="pk" data-name="Pakistani Rupee">PKR</option>
                                 </select>
                             </div>
                         </div>
@@ -407,30 +410,112 @@
                 <h2 class="section-title">{{ __('messages.faq') }}</h2>
             </div>
             <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="accordion accordion-flush" id="faqAccordion">
-                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden">
+                <!-- Left Column -->
+                <div class="col-md-6 mb-4">
+                    <div class="accordion accordion-flush" id="faqAccordionLeft">
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
                                     How long does a transfer take?
                                 </button>
                             </h2>
-                            <div id="f1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body p-4 pt-0 text-muted">
-                                    Most transfers arrive within minutes. Some local bank settlements might take up to 24 hours depending on the destination.
-                                </div>
+                            <div id="f1" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                                <div class="accordion-body p-4 pt-0 text-muted">Most transfers arrive within minutes. Some local bank settlements might take up to 24 hours.</div>
                             </div>
                         </div>
-                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden">
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-transparent shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
-                                    Are my funds secure?
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
+                                    What currencies are supported?
                                 </button>
                             </h2>
-                            <div id="f2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                <div class="accordion-body p-4 pt-0 text-muted">
-                                    Absolutely. We use bank-grade encryption and are fully regulated in all operating jurisdictions.
-                                </div>
+                            <div id="f2" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                                <div class="accordion-body p-4 pt-0 text-muted">We support major global currencies including CHF, EUR, USD, GBP, INR, PHP, and PKR.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
+                                    Is KYC required?
+                                </button>
+                            </h2>
+                            <div id="f3" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                                <div class="accordion-body p-4 pt-0 text-muted">Yes, we require a quick one-time identity verification (KYC) to comply with financial regulations.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f4">
+                                    What are the transfer limits?
+                                </button>
+                            </h2>
+                            <div id="f4" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                                <div class="accordion-body p-4 pt-0 text-muted">Limits vary based on your verification level and the destination country.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f5">
+                                    How secure is the platform?
+                                </button>
+                            </h2>
+                            <div id="f5" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
+                                <div class="accordion-body p-4 pt-0 text-muted">We use bank-grade 256-bit encryption and are fully regulated in all jurisdictions.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Column -->
+                <div class="col-md-6 mb-4">
+                    <div class="accordion accordion-flush" id="faqAccordionRight">
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f6">
+                                    How can I become an agent?
+                                </button>
+                            </h2>
+                            <div id="f6" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                                <div class="accordion-body p-4 pt-0 text-muted">You can register as an agent through our portal. Once approved, you can start processing.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f7">
+                                    What fees are charged?
+                                </button>
+                            </h2>
+                            <div id="f7" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                                <div class="accordion-body p-4 pt-0 text-muted">We charge a small flat fee and provide real mid-market exchange rates.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f8">
+                                    Can I track my transaction?
+                                </button>
+                            </h2>
+                            <div id="f8" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                                <div class="accordion-body p-4 pt-0 text-muted">Yes, you'll receive real-time updates via SMS and email.</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f9">
+                                    Is there a mobile app?
+                                </button>
+                            </h2>
+                            <div id="f9" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                                <div class="accordion-body p-4 pt-0 text-muted">Our platform is mobile-optimized for all devices, and an app is coming soon!</div>
+                            </div>
+                        </div>
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f10">
+                                    Do you offer business accounts?
+                                </button>
+                            </h2>
+                            <div id="f10" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
+                                <div class="accordion-body p-4 pt-0 text-muted">Yes, we provide specialized onboarding and limits for registered business entities.</div>
                             </div>
                         </div>
                     </div>
@@ -500,21 +585,29 @@
                 new Choices(select, {
                     searchEnabled: true,
                     itemSelectText: '',
+                    shouldSort: false,
                     callbackOnCreateTemplates: function(template) {
                         return {
                             item: (classNames, data) => {
-                                const flag = data.customProperties && data.customProperties.flag ? data.customProperties.flag : data.element.dataset.flag;
+                                const flag = data.element.dataset.flag;
                                 return template(`
                                     <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}">
-                                        <span class="fi fi-${flag} me-2"></span> ${data.label}
+                                        <span class="fi fi-${flag} me-2 rounded-1 shadow-sm"></span> <span class="fw-bold">${data.value}</span>
                                     </div>
                                 `);
                             },
                             choice: (classNames, data) => {
-                                const flag = data.customProperties && data.customProperties.flag ? data.customProperties.flag : data.element.dataset.flag;
+                                const flag = data.element.dataset.flag;
+                                const name = data.element.dataset.name;
                                 return template(`
                                     <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice data-id="${data.id}" data-value="${data.value}" ${data.disabled ? 'aria-disabled="true"' : 'role="option"'}>
-                                        <span class="fi fi-${flag} me-2"></span> ${data.label}
+                                        <div class="d-flex align-items-center py-1">
+                                            <span class="fi fi-${flag} me-3 fs-5 rounded-1 shadow-sm border border-white border-opacity-25"></span>
+                                            <div style="line-height: 1.1;">
+                                                <div class="fw-bold text-dark">${data.value}</div>
+                                                <div class="text-muted small" style="font-size: 0.75rem;">${name}</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 `);
                             },

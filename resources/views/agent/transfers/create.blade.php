@@ -3,28 +3,28 @@
 @section('page_title', 'New Money Transfer')
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-lg-9">
+<div class="row">
+    <div class="col-12">
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-            <div class="card-header bg-primary py-4 border-0">
+            <div class="card-header bg-brand-dark py-4 border-0">
                 <div class="d-flex align-items-center">
-                    <div class="bg-white bg-opacity-25 rounded-circle p-2 me-3">
-                        <i class="bi bi-send-fill text-white h4 mb-0"></i>
+                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                        <i class="bi bi-send-fill text-brand-dark h4 mb-0"></i>
                     </div>
                     <div>
                         <h4 class="fw-bold mb-0 text-white">Initiate Remittance</h4>
-                        <p class="text-white text-opacity-75 small mb-0">Send money securely from CHF to INR</p>
+                        <p class="text-brand-lime small mb-0 opacity-75">Send money securely from CHF to INR</p>
                     </div>
                 </div>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body p-0 bg-white">
                 <form id="transferForm" action="{{ route('agent.transfers.store') }}" method="POST">
                     @csrf
                     
                     <div class="p-4 p-md-5 border-bottom">
                         <div class="d-flex align-items-center mb-4">
-                            <span class="badge bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">1</span>
-                            <h5 class="fw-bold mb-0 text-dark">Select Beneficiary</h5>
+                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">1</span>
+                            <h5 class="fw-bold mb-0 text-brand-dark">Select Beneficiary</h5>
                         </div>
 
                         <div class="row g-4">
@@ -59,34 +59,34 @@
                         </div>
                     </div>
 
-                    <div class="p-4 p-md-5 border-bottom bg-light bg-opacity-50">
+                    <div class="p-4 p-md-5 border-bottom bg-gray-light bg-opacity-30">
                         <div class="d-flex align-items-center mb-4">
-                            <span class="badge bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">2</span>
-                            <h5 class="fw-bold mb-0 text-dark">Amount & Exchange Rate</h5>
+                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">2</span>
+                            <h5 class="fw-bold mb-0 text-brand-dark">Amount & Exchange Rate</h5>
                         </div>
 
                         <div class="row g-4 align-items-end">
                             <div class="col-md-7">
                                 <label class="form-label fw-bold small text-muted">SEND AMOUNT</label>
                                 <div class="input-group input-group-lg bg-white rounded-3 shadow-none border overflow-hidden">
-                                    <span class="input-group-text bg-white border-0 px-4 fw-bold text-dark">CHF</span>
+                                    <span class="input-group-text bg-white border-0 px-4 fw-bold text-brand-dark">CHF</span>
                                     <input type="number" name="chf_amount" id="chf_amount" class="form-control border-0 shadow-none ps-0" step="0.01" min="10" placeholder="0.00" required>
-                                    <button type="button" id="get_quote_btn" class="btn btn-primary px-4 fw-bold">Get Live Quote</button>
+                                    <button type="button" id="get_quote_btn" class="btn btn-brand rounded-0 px-4">Get Live Quote</button>
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <div id="quote_display" class="p-3 bg-white border border-primary border-opacity-25 rounded-3" style="display: none;">
+                                <div id="quote_display" class="p-3 bg-white border border-brand-lime rounded-3 shadow-sm" style="display: none;">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="small text-muted fw-bold">RECIPIENT GETS</span>
-                                        <span class="h4 mb-0 fw-bold text-primary">₹ <span id="quote_inr">0.00</span></span>
+                                        <span class="small text-muted fw-bold uppercase">RECIPIENT GETS</span>
+                                        <span class="h4 mb-0 fw-bold text-brand-dark">₹ <span id="quote_inr">0.00</span></span>
                                     </div>
                                     <div class="d-flex justify-content-between small">
-                                        <span class="text-muted">Rate: 1 CHF = <span id="quote_rate" class="fw-bold text-dark">0.00</span> INR</span>
-                                        <span class="text-muted">Fee: <span id="quote_fee" class="fw-bold text-danger">0.00</span> CHF</span>
+                                        <span class="text-muted">Rate: 1 CHF = <span id="quote_rate" class="fw-bold text-brand-dark">0.00</span> INR</span>
+                                        <span class="text-danger fw-bold">Fee: <span id="quote_fee">0.00</span> CHF</span>
                                     </div>
                                     <div class="mt-2 pt-2 border-top x-small text-muted d-flex justify-content-between">
                                         <span>Ref: <span id="quote_id"></span></span>
-                                        <span class="text-primary fw-bold"><i class="bi bi-clock-history me-1"></i> Valid 5m</span>
+                                        <span class="text-brand-dark fw-bold"><i class="bi bi-clock-history me-1"></i> Valid 5m</span>
                                     </div>
                                 </div>
                             </div>
@@ -95,17 +95,17 @@
 
                     <div class="p-4 p-md-5">
                         <div class="d-flex align-items-center mb-4">
-                            <span class="badge bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">3</span>
-                            <h5 class="fw-bold mb-0 text-dark">Finalize & Memo</h5>
+                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">3</span>
+                            <h5 class="fw-bold mb-0 text-brand-dark">Finalize & Memo</h5>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold small text-muted">REMITTANCE PURPOSE / NOTES</label>
-                            <textarea name="notes" class="form-control bg-light border-0 shadow-none px-3 py-3" rows="3" placeholder="e.g. Family maintenance, gift..."></textarea>
+                            <textarea name="notes" class="form-control bg-light border-0 shadow-none px-3 py-3 rounded-4" rows="3" placeholder="e.g. Family maintenance, gift..."></textarea>
                         </div>
 
                         <div class="d-grid pt-2">
-                            <button type="submit" id="submit_btn" class="btn btn-primary btn-lg rounded-pill shadow-sm py-3 fw-bold" disabled>
+                            <button type="submit" id="submit_btn" class="btn btn-brand btn-lg py-3 shadow-none" disabled>
                                  <i class="bi bi-lock-fill me-2"></i> Confirm and Execute Transfer
                             </button>
                         </div>

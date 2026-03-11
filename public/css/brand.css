@@ -1,11 +1,13 @@
 :root {
-    --brand-lime: #9FE870;
+    --brand-lime: rgba(159, 232, 112, 1);
     --brand-dark: #25330F;
     --brand-mint: #D3FF8A;
     --white: #FFFFFF;
     --gray-light: #F8FAFC;
     --text-muted: #64748B;
-    --brand-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --brand-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
 }
 
 body {
@@ -68,15 +70,85 @@ body {
 }
 
 .form-control-premium {
-    border-radius: 12px;
-    padding: 12px 20px;
+    border-radius: 16px;
+    padding: 14px 22px;
     border: 1px solid #E2E8F0;
     background-color: var(--white);
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.95rem;
 }
 
 .form-control-premium:focus {
-    border-color: var(--brand-lime);
-    box-shadow: 0 0 0 4px rgba(159, 232, 112, 0.15);
+    border-color: var(--brand-dark);
+    box-shadow: 0 0 0 4px rgba(37, 51, 15, 0.05);
     outline: none;
+}
+
+/* Glass Morphism */
+.glass-nav {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    transition: all 0.4s ease;
+}
+
+/* Premium Tables */
+.table-premium-container {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 1.5rem;
+    box-shadow: var(--brand-shadow);
+    overflow: hidden;
+}
+
+.table-premium {
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-premium thead th {
+    background-color: var(--gray-light);
+    color: var(--brand-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 1.25rem 1rem;
+    border: none;
+}
+
+.table-premium tbody td {
+    padding: 1.25rem 1rem;
+    vertical-align: middle;
+    border-top: 1px solid rgba(0,0,0,0.03);
+    color: var(--brand-dark);
+    font-size: 0.9rem;
+}
+
+.table-premium tbody tr:hover {
+    background-color: rgba(159, 232, 112, 0.05);
+}
+
+.table-premium tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Secondary Buttons */
+.btn-brand-mint {
+    background-color: var(--brand-mint);
+    color: var(--brand-dark);
+    border-radius: 50px;
+    padding: 12px 30px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-brand-mint:hover {
+    background-color: #c4f075;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(211, 255, 138, 0.3);
 }

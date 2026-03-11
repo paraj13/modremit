@@ -13,37 +13,11 @@ class ComplianceController extends Controller
 
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = \App\Models\ComplianceLog::with(['transaction.agent', 'transaction.customer'])->select('compliance_logs.*');
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('agent', function($row){
-                    return $row->transaction->agent->name ?? 'N/A';
-                })
-                ->addColumn('customer', function($row){
-                    return $row->transaction->customer->name ?? 'N/A';
-                })
-                ->addColumn('amount', function($row){
-                    return 'CHF ' . number_format($row->transaction->chf_amount, 2);
-                })
-                ->editColumn('status', function($row){
-                    $class = match($row->status) {
-                        'pending'   => 'bg-warning text-dark',
-                        'reviewed'  => 'bg-info',
-                        'cleared'   => 'bg-success',
-                        'escalated' => 'bg-danger',
-                        default     => 'bg-secondary',
-                    };
-                    return '<span class="badge '.$class.'">'.ucfirst($row->status).'</span>';
-                })
-                ->addColumn('action', function($row){
-                    return '<a href="'.route('admin.compliance.show', $row->id).'" class="btn btn-sm btn-outline-primary">Review</a>';
-                })
-                ->rawColumns(['status', 'action'])
-                ->make(true);
-        }
+        $logs = \App\Models\ComplianceLog::with(['transaction.agent', 'transaction.customer'])
+            ->latest()
+            ->paginate(10);
 
-        return view('admin.compliance.index');
+        return view('admin.compliance.index', compact('logs'));
     }
 
     public function show(int $id)

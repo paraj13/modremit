@@ -11,20 +11,8 @@ class FxRateController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = FxRate::select(['id', 'from_currency', 'to_currency', 'rate', 'is_active', 'updated_at']);
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($row){
-                    $btn = '<a href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-sm btn-outline-primary editFx me-1">Edit</a>';
-                    $btn .= ' <a href="javascript:void(0)" data-id="'.$row->id.'" class="btn btn-sm btn-outline-danger deleteFx">Delete</a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-
-        return view('admin.fx.index');
+        $fxRates = FxRate::latest()->paginate(10);
+        return view('admin.fx.index', compact('fxRates'));
     }
 
     public function store(Request $request)
