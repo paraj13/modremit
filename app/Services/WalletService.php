@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Wallet;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class WalletService
 {
@@ -15,20 +16,54 @@ class WalletService
         );
     }
 
-    public function credit(int $agentId, float $amount): Wallet
+    public function deposit(int $agentId, float $amount, string $description = 'Admin Credit', ?int $adminId = null): Wallet
     {
-        $wallet = $this->getForAgent($agentId);
-        $wallet->increment('chf_balance', $amount);
-        return $wallet->fresh();
+        return DB::transaction(function () use ($agentId, $amount, $description, $adminId) {
+            $wallet = $this->getForAgent($agentId);
+            $wallet->increment('chf_balance', $amount);
+            $wallet->increment('total_received', $amount);
+
+            $wallet->transactions()->create([
+                'type'         => 'deposit',
+                'amount'       => $amount,
+                'description'  => $description,
+                'reference_type' => 'User',
+                'reference_id'   => $adminId ?? Auth::id(),
+                'status'       => 'completed',
+                'created_by'   => $adminId ?? Auth::id(),
+            ]);
+
+            return $wallet->fresh();
+        });
     }
 
-    public function debit(int $agentId, float $amount): bool
+    public function debitForTransfer(int $agentId, float $amount, \App\Models\Transaction $transaction): bool
     {
-        $wallet = $this->getForAgent($agentId);
-        if ($wallet->chf_balance < $amount) {
-            return false;
-        }
-        $wallet->decrement('chf_balance', $amount);
-        return true;
+        return DB::transaction(function () use ($agentId, $amount, $transaction) {
+            $wallet = $this->getForAgent($agentId);
+            
+            if ($wallet->chf_balance < $amount) {
+                return false;
+            }
+
+            $wallet->decrement('chf_balance', $amount);
+            
+            $wallet->transactions()->create([
+                'type'         => 'transfer',
+                'amount'       => -$amount,
+                'description'  => 'Transfer to ' . $transaction->recipient->name,
+                'reference_type' => 'Transaction',
+                'reference_id'   => $transaction->id,
+                'status'       => 'completed',
+                'created_by'   => $agentId,
+            ]);
+
+            return true;
+        });
+    }
+
+    public function getHistory(int $agentId)
+    {
+        return $this->getForAgent($agentId)->transactions()->latest()->paginate(20);
     }
 }

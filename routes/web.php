@@ -26,9 +26,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/compliance', [Admin\ComplianceController::class, 'index'])->name('compliance.index');
     Route::get('/compliance/{id}', [Admin\ComplianceController::class, 'show'])->name('compliance.show');
-    Route::post('/compliance/{id}/review', [Admin\ComplianceController::class, 'review'])->name('compliance.review');
+    Route::get('/compliance/{id}/review', [Admin\ComplianceController::class, 'review'])->name('compliance.review');
 
-    Route::resource('fx', Admin\FxRateController::class)->names('fx');
+    // Wallet Management
+    Route::get('/wallets', [Admin\WalletController::class, 'index'])->name('wallets.index');
+    Route::get('/wallets/{agent}/credit', [Admin\WalletController::class, 'showCreditForm'])->name('wallets.credit.form');
+    Route::post('/wallets/{agent}/credit', [Admin\WalletController::class, 'credit'])->name('wallets.credit');
 });
 
 // Agent Routes
@@ -49,6 +52,10 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
 
     Route::get('/transactions', [Agent\TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transactions/{id}', [Agent\TransactionController::class, 'show'])->name('transactions.show');
+
+    // Wallet
+    Route::get('/wallet', [Agent\WalletController::class, 'index'])->name('wallet.index');
+    Route::get('/wallet/topup', [Agent\WalletController::class, 'topUp'])->name('wallet.topup');
 });
 
 // Language Switcher

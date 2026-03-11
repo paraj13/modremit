@@ -24,4 +24,9 @@ class Wallet extends Model
     {
         return $this->belongsTo(User::class, 'agent_id');
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
 }

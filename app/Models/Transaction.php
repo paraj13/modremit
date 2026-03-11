@@ -12,15 +12,15 @@ class Transaction extends Model
 
     protected $fillable = [
         'agent_id', 'customer_id', 'recipient_id', 'fx_quote_id',
-        'chf_amount', 'inr_amount', 'commission', 'rate',
+        'target_currency', 'chf_amount', 'target_amount', 'commission', 'rate',
         'payment_ref', 'revolut_payment_id',
         'status', 'flagged', 'notes', 'failure_reason', 'metadata',
     ];
 
     protected $casts = [
-        'chf_amount'     => 'decimal:4',
-        'inr_amount'     => 'decimal:4',
-        'commission' => 'decimal:4',
+        'chf_amount'    => 'decimal:4',
+        'target_amount' => 'decimal:4',
+        'commission'    => 'decimal:4',
         'rate'           => 'decimal:6',
         'flagged'        => 'boolean',
         'metadata'       => 'array',

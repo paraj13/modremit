@@ -38,7 +38,7 @@
                     </div>
                     <div class="col-md-5 text-end">
                         <div class="text-muted small text-uppercase">Recipient Receives</div>
-                        <div class="h3 fw-bold text-success">₹ {{ number_format($transaction->inr_amount, 2) }} <span class="h6 text-muted">INR</span></div>
+                        <div class="h3 fw-bold text-success">{{ number_format($transaction->target_amount, 2) }} <span class="h6 text-muted">{{ $transaction->target_currency }}</span></div>
                     </div>
                 </div>
             </div>

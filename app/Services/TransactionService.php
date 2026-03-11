@@ -65,22 +65,32 @@ class TransactionService
         $agentId    = Auth::id();
         $chfAmount  = (float) $data['chf_amount'];
 
+        // Step 0: Check wallet balance
+        $wallet = $this->wallet->getForAgent($agentId);
+        if ($wallet->chf_balance < $chfAmount) {
+            throw new \Exception('Insufficient wallet balance. Please top up your wallet.');
+        }
+
         // Step 1: Fetch and store FX quote
-        $quote = $this->fxService->fetchAndStoreQuote($chfAmount, $agentId);
+        $quote = $this->fxService->fetchAndStoreQuote($chfAmount, $agentId, $data['target_currency'] ?? 'INR');
 
         // Step 2: Create transaction as pending
         $transaction = $this->transactions->create([
-            'agent_id'      => $agentId,
-            'customer_id'   => $data['customer_id'],
-            'recipient_id'  => $data['recipient_id'],
-            'fx_quote_id'   => $quote->id,
-            'chf_amount'    => $chfAmount,
-            'inr_amount'    => $quote->inr_amount,
-            'commission'    => $quote->fee,
-            'rate'          => $quote->rate,
-            'status'        => 'pending',
-            'notes'         => $data['notes'] ?? null,
+            'agent_id'        => $agentId,
+            'customer_id'     => $data['customer_id'],
+            'recipient_id'    => $data['recipient_id'],
+            'fx_quote_id'     => $quote->id,
+            'target_currency' => $quote->to_currency,
+            'chf_amount'      => $chfAmount,
+            'target_amount'   => $quote->target_amount,
+            'commission'      => $quote->fee,
+            'rate'            => $quote->rate,
+            'status'          => 'pending',
+            'notes'           => $data['notes'] ?? null,
         ]);
+
+        // Step 2.5: Deduct from wallet
+        $this->wallet->debitForTransfer($agentId, $chfAmount, $transaction);
 
         // Step 3 & 4: Execute payment via Revolut
         try {
@@ -88,10 +98,14 @@ class TransactionService
 
             $recipient = $transaction->recipient;
             $paymentRef = $this->revolutPayment->sendPayment([
-                'amount'          => $quote->inr_amount,
-                'currency'        => 'INR',
+                'amount'          => $quote->target_amount,
+                'currency'        => $quote->to_currency,
                 'recipient_name'  => $recipient->name,
                 'account_number'  => $recipient->account_number,
+                'iban'            => $recipient->iban,
+                'swift_code'      => $recipient->swift_code,
+                'routing_number'  => $recipient->routing_number,
+                'sort_code'       => $recipient->sort_code,
                 'ifsc_code'       => $recipient->ifsc_code,
                 'upi_id'          => $recipient->upi_id,
                 'reference'       => 'TXN-' . $transaction->id,

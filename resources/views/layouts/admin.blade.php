@@ -24,7 +24,7 @@
 <a class="nav-link {{ request()->routeIs('admin.compliance.*') ? 'active' : '' }}" href="{{ route('admin.compliance.index') }}">
     <i class="bi bi-shield-lock"></i> Compliance
 </a>
-<a class="nav-link {{ request()->routeIs('admin.fx.*') ? 'active' : '' }}" href="{{ route('admin.fx.index') }}">
-    <i class="bi bi-currency-exchange"></i> FX Quotes
+<a class="nav-link {{ request()->routeIs('admin.wallets.*') ? 'active' : '' }}" href="{{ route('admin.wallets.index') }}">
+    <i class="bi bi-wallet-fill"></i> Agent Wallets
 </a>
 @endsection

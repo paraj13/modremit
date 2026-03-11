@@ -15,21 +15,23 @@ class FxService
     ) {}
 
     /** Fetch a live quote from Revolut and persist it */
-    public function fetchAndStoreQuote(float $chfAmount, ?int $agentId = null): \App\Models\FxQuote
+    public function fetchAndStoreQuote(float $chfAmount, ?int $agentId = null, string $targetCurrency = 'INR'): \App\Models\FxQuote
     {
-        $quoteData = $this->revolutFx->fetchQuote($chfAmount);
+        $quoteData = $this->revolutFx->fetchQuote($chfAmount, $targetCurrency);
 
         // Apply commission (e.g. 2%)
         $commissionRate = (float) config('remittance.commission_rate', 2);
         $commission = round($chfAmount * ($commissionRate / 100), 2);
         $netChf = $chfAmount - $commission;
-        $inrAmount = round($netChf * $quoteData['rate'], 2);
+        $targetAmount = round($netChf * $quoteData['rate'], 2);
 
         return $this->fxQuotes->create([
             'agent_id'      => $agentId,
             'revolut_quote_id' => $quoteData['quote_id'] ?? null,
             'chf_amount'    => $chfAmount,
-            'inr_amount'    => $inrAmount,
+            'target_amount' => $targetAmount,
+            'from_currency' => 'CHF',
+            'to_currency'   => $targetCurrency,
             'rate'          => $quoteData['rate'],
             'fee'           => $commission,
             'expires_at'    => $quoteData['expires_at'] ?? now()->addMinutes(5),

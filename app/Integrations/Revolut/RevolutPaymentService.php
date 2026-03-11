@@ -7,7 +7,7 @@ class RevolutPaymentService
     public function __construct(private RevolutClient $client) {}
 
     /**
-     * Send INR payment to a recipient's bank/UPI.
+     * Send payment to a recipient's bank/payout method.
      * Returns the payment reference ID.
      */
     public function sendPayment(array $data): string
@@ -22,11 +22,15 @@ class RevolutPaymentService
             'receiver'    => [
                 'beneficiary_name' => $data['recipient_name'],
                 'account_number'   => $data['account_number'] ?? null,
-                'sort_code'        => $data['ifsc_code'] ?? null,
+                'sort_code'        => $data['sort_code'] ?? null,
+                'iban'             => $data['iban'] ?? null,
+                'swift_code'       => $data['swift_code'] ?? null,
+                'routing_number'   => $data['routing_number'] ?? null,
+                'ifsc_code'        => $data['ifsc_code'] ?? null,
                 'upi_id'           => $data['upi_id'] ?? null,
             ],
-            'amount'      => (int) round($data['amount'] * 100), // in paise
-            'currency'    => 'INR',
+            'amount'      => (int) round($data['amount'] * 100), // in sub-units
+            'currency'    => $data['currency'] ?? 'INR',
             'reference'   => $data['reference'] ?? 'MODREMIT',
         ];
 

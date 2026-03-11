@@ -59,7 +59,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         return [
             'total'        => Transaction::count(),
             'total_chf'    => Transaction::sum('chf_amount'),
-            'total_inr'    => Transaction::sum('inr_amount'),
+            'total_target'    => Transaction::sum('target_amount'),
             'total_commission' => Transaction::sum('commission'),
             'failed'       => Transaction::where('status', 'failed')->count(),
             'flagged'      => Transaction::where('flagged', true)->count(),
@@ -73,7 +73,7 @@ class TransactionRepository implements TransactionRepositoryInterface
         return [
             'total'        => Transaction::where('agent_id', $agentId)->count(),
             'total_chf'    => Transaction::where('agent_id', $agentId)->sum('chf_amount'),
-            'total_inr'    => Transaction::where('agent_id', $agentId)->sum('inr_amount'),
+            'total_target'    => Transaction::where('agent_id', $agentId)->sum('target_amount'),
             'total_commission' => Transaction::where('agent_id', $agentId)->sum('commission'),
             'failed'       => Transaction::where('agent_id', $agentId)->where('status', 'failed')->count(),
             'pending'      => Transaction::where('agent_id', $agentId)->where('status', 'pending')->count(),

@@ -15,4 +15,7 @@
 <a class="nav-link {{ request()->routeIs('agent.transactions.*') ? 'active' : '' }}" href="{{ route('agent.transactions.index') }}">
     <i class="bi bi-clock-history"></i> History
 </a>
+<a class="nav-link {{ request()->routeIs('agent.wallet.*') ? 'active' : '' }}" href="{{ route('agent.wallet.index') }}">
+    <i class="bi bi-wallet2"></i> My Wallet
+</a>
 @endsection

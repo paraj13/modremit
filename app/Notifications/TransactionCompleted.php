@@ -27,7 +27,7 @@ class TransactionCompleted extends Notification implements ShouldQueue
             ->greeting('Hello ' . $notifiable->name . '!')
             ->line('The remittance transaction has been successfully completed.')
             ->line('Amount Sent: ' . $this->transaction->chf_amount . ' CHF')
-            ->line('Amount Received: ' . $this->transaction->inr_amount . ' INR')
+            ->line('Amount Received: ' . $this->transaction->target_amount . ' ' . $this->transaction->target_currency)
             ->line('Recipient: ' . $this->transaction->recipient->name)
             ->line('Payment Reference: ' . $this->transaction->payment_ref)
             ->action('View Transaction', url('/agent/transactions/' . $this->transaction->id))

@@ -12,6 +12,7 @@ class Recipient extends Model
 
     protected $fillable = [
         'customer_id', 'name', 'bank_name', 'account_number',
+        'iban', 'swift_code', 'routing_number', 'sort_code',
         'ifsc_code', 'upi_id', 'country', 'is_active',
     ];
 

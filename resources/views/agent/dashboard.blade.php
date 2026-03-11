@@ -34,27 +34,29 @@
         <div class="card card-premium p-4 h-100">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted small fw-bold uppercase">INR Sent</h6>
-                    <h3 class="fw-bold mb-0 text-brand-dark">₹ {{ number_format($stats['total_inr'], 2) }}</h3>
+                    <h6 class="text-muted small fw-bold uppercase">Target Sent</h6>
+                    <h3 class="fw-bold mb-0 text-brand-dark">{{ number_format($stats['total_target'], 2) }}</h3>
                 </div>
                 <div class="bg-light p-3 rounded-circle text-brand-dark border">
-                    <i class="bi bi-currency-rupee fs-4"></i>
+                    <i class="bi bi-globe fs-4"></i>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-premium p-4 h-100 bg-brand-dark text-white">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <h6 class="text-brand-lime small fw-bold uppercase">Wallet Balance</h6>
-                    <h3 class="fw-bold mb-0">{{ number_format($wallet->chf_balance, 2) }} CHF</h3>
-                </div>
-                <div class="bg-white bg-opacity-10 p-3 rounded-circle text-brand-lime">
-                    <i class="bi bi-bank fs-4"></i>
+        <a href="{{ route('agent.wallet.index') }}" class="text-decoration-none">
+            <div class="card card-premium p-4 h-100 bg-brand-dark text-white shadow-hover transition">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-brand-lime small fw-bold uppercase">Wallet Balance</h6>
+                        <h3 class="fw-bold mb-0">{{ number_format($wallet->chf_balance, 2) }} CHF</h3>
+                    </div>
+                    <div class="bg-white bg-opacity-10 p-3 rounded-circle text-brand-lime">
+                        <i class="bi bi-bank fs-4"></i>
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 </div>
 

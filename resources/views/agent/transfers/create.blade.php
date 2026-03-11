@@ -13,7 +13,7 @@
                     </div>
                     <div>
                         <h4 class="fw-bold mb-0 text-white">Initiate Remittance</h4>
-                        <p class="text-brand-lime small mb-0 opacity-75">Send money securely from CHF to INR</p>
+                        <p class="text-brand-lime small mb-0 opacity-75">Send money securely from CHF to multiple currencies</p>
                     </div>
                 </div>
             </div>
@@ -71,6 +71,14 @@
                                 <div class="input-group input-group-lg bg-white rounded-3 shadow-none border overflow-hidden">
                                     <span class="input-group-text bg-white border-0 px-4 fw-bold text-brand-dark">CHF</span>
                                     <input type="number" name="chf_amount" id="chf_amount" class="form-control border-0 shadow-none ps-0" step="0.01" min="10" placeholder="0.00" required>
+                                    <select name="target_currency" id="target_currency" class="form-select border-0 bg-light fw-bold" style="max-width: 120px;">
+                                        <option value="INR" selected>INR</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="USD">USD</option>
+                                        <option value="GBP">GBP</option>
+                                        <option value="PKR">PKR</option>
+                                        <option value="PHP">PHP</option>
+                                    </select>
                                     <button type="button" id="get_quote_btn" class="btn btn-brand rounded-0 px-4">Get Live Quote</button>
                                 </div>
                             </div>
@@ -78,10 +86,10 @@
                                 <div id="quote_display" class="p-3 bg-white border border-brand-lime rounded-3 shadow-sm" style="display: none;">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <span class="small text-muted fw-bold uppercase">RECIPIENT GETS</span>
-                                        <span class="h4 mb-0 fw-bold text-brand-dark">₹ <span id="quote_inr">0.00</span></span>
+                                        <span class="h4 mb-0 fw-bold text-brand-dark"><span class="selected_target_currency">₹</span> <span id="quote_target_amount">0.00</span></span>
                                     </div>
                                     <div class="d-flex justify-content-between small">
-                                        <span class="text-muted">Rate: 1 CHF = <span id="quote_rate" class="fw-bold text-brand-dark">0.00</span> INR</span>
+                                        <span class="text-muted">Rate: 1 CHF = <span id="quote_rate" class="fw-bold text-brand-dark">0.00</span> <span class="selected_target_currency">INR</span></span>
                                         <span class="text-danger fw-bold">Fee: <span id="quote_fee">0.00</span> CHF</span>
                                     </div>
                                     <div class="mt-2 pt-2 border-top x-small text-muted d-flex justify-content-between">
@@ -153,6 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     getQuoteBtn.addEventListener('click', function() {
         const amount = chfAmountInput.value;
+        const targetCurrency = document.getElementById('target_currency').value;
+        
         if (!amount || amount < 10) {
             alert('Please enter a valid amount (Min 10 CHF)');
             return;
@@ -167,12 +177,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
-            body: JSON.stringify({ chf_amount: amount })
+            body: JSON.stringify({ 
+                chf_amount: amount,
+                target_currency: targetCurrency
+            })
         })
         .then(response => response.json())
         .then(data => {
+            const symbols = { 'INR': '₹', 'EUR': '€', 'USD': '$', 'GBP': '£', 'PHP': '₱', 'PKR': 'Rs' };
+            const symbol = symbols[data.to_currency] || data.to_currency;
+
+            document.querySelectorAll('.selected_target_currency').forEach(el => el.textContent = symbol);
             document.getElementById('quote_rate').textContent = data.rate;
-            document.getElementById('quote_inr').textContent = parseFloat(data.inr_amount).toLocaleString('en-IN', {maximumFractionDigits: 2});
+            document.getElementById('quote_target_amount').textContent = parseFloat(data.target_amount).toLocaleString('en-US', {maximumFractionDigits: 2});
             document.getElementById('quote_fee').textContent = data.fee;
             document.getElementById('quote_id').textContent = data.revolut_quote_id ? data.revolut_quote_id.substring(0, 8) : 'LCL-001';
             

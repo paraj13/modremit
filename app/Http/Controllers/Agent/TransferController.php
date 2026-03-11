@@ -29,10 +29,15 @@ class TransferController extends Controller
     public function getQuote(Request $request)
     {
         $request->validate([
-            'chf_amount' => 'required|numeric|min:1',
+            'chf_amount'      => 'required|numeric|min:1',
+            'target_currency' => 'required|string|size:3',
         ]);
 
-        $quote = $this->fxService->fetchAndStoreQuote($request->chf_amount, auth()->id());
+        $quote = $this->fxService->fetchAndStoreQuote(
+            $request->chf_amount, 
+            auth()->id(), 
+            $request->target_currency
+        );
 
         return response()->json($quote);
     }
@@ -42,8 +47,9 @@ class TransferController extends Controller
         $data = $request->validate([
             'customer_id'   => 'required|integer',
             'recipient_id'  => 'required|integer',
-            'chf_amount'    => 'required|numeric|min:1',
-            'notes'         => 'nullable|string',
+            'chf_amount'      => 'required|numeric|min:1',
+            'target_currency' => 'required|string|size:3',
+            'notes'           => 'nullable|string',
         ]);
 
         $transaction = $this->transactionService->initiateTransfer($data);
