@@ -5,46 +5,62 @@
 @section('content')
 <div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="card stat-card bg-primary text-white h-100">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h6 class="opacity-75">Platform Volume</h6>
-                    <h3 class="fw-bold mb-0">{{ number_format($stats['total_chf'], 0) }} CHF</h3>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden pt-1 bg-primary">
+            <div class="card-body bg-white py-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-primary bg-opacity-10 p-3 rounded-3 text-primary">
+                        <i class="bi bi-bank h4 mb-0"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="text-muted mb-1 small fw-bold">PLATFORM VOLUME</h6>
+                        <h4 class="fw-bold mb-0">CHF {{ number_format($stats['total_chf'], 0) }}</h4>
+                    </div>
                 </div>
-                <div class="stat-icon"><i class="bi bi-bank"></i></div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card stat-card bg-success text-white h-100">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h6 class="opacity-75">Total Commission</h6>
-                    <h3 class="fw-bold mb-0">{{ number_format($stats['total_commission'], 2) }} CHF</h3>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden pt-1 bg-success">
+            <div class="card-body bg-white py-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-success bg-opacity-10 p-3 rounded-3 text-success">
+                        <i class="bi bi-graph-up-arrow h4 mb-0"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="text-muted mb-1 small fw-bold">TOTAL COMMISSION</h6>
+                        <h4 class="fw-bold mb-0">CHF {{ number_format($stats['total_commission'], 2) }}</h4>
+                    </div>
                 </div>
-                <div class="stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card stat-card bg-dark text-white h-100 {{ $stats['flagged'] > 0 ? 'border border-danger border-2' : '' }}">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h6 class="opacity-75">Compliance Alerts</h6>
-                    <h3 class="fw-bold mb-0 text-{{ $stats['flagged'] > 0 ? 'danger' : 'white' }}">{{ $stats['flagged'] }}</h3>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden pt-1 bg-danger text-dark">
+            <div class="card-body bg-white py-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-danger bg-opacity-10 p-3 rounded-3 text-danger">
+                        <i class="bi bi-shield-exclamation h4 mb-0"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="text-muted mb-1 small fw-bold">COMPLIANCE ALERTS</h6>
+                        <h4 class="fw-bold mb-0 text-{{ $stats['flagged'] > 0 ? 'danger' : 'dark' }}">{{ $stats['flagged'] }}</h4>
+                    </div>
                 </div>
-                <div class="stat-icon text-danger"><i class="bi bi-shield-exclamation"></i></div>
             </div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card stat-card bg-white h-100">
-            <div class="d-flex justify-content-between">
-                <div>
-                    <h6 class="text-muted">Total Transfers</h6>
-                    <h3 class="fw-bold mb-0">{{ $stats['total'] }}</h3>
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden pt-1 bg-dark">
+            <div class="card-body bg-white py-4">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0 bg-dark bg-opacity-10 p-3 rounded-3 text-dark">
+                        <i class="bi bi-arrow-left-right h4 mb-0"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="text-muted mb-1 small fw-bold">TOTAL TRANSFERS</h6>
+                        <h4 class="fw-bold mb-0">{{ $stats['total'] }}</h4>
+                    </div>
                 </div>
-                <div class="stat-icon text-muted"><i class="bi bi-arrow-left-right"></i></div>
             </div>
         </div>
     </div>
@@ -52,31 +68,27 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white py-4 border-0 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold">Recent System Activity</h5>
-                <a href="{{ route('admin.compliance.index') }}" class="btn btn-outline-danger btn-sm">Reviews Needed ({{ $pendingCompliance }})</a>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.transactions.index') }}" class="btn btn-light btn-sm px-3 rounded-pill">View All</a>
+                    @if($pendingCompliance > 0)
+                        <a href="{{ route('admin.compliance.index') }}" class="btn btn-outline-danger btn-sm px-3 rounded-pill">
+                            <i class="bi bi-exclamation-octagon me-1"></i> Reviews Needed: {{ $pendingCompliance }}
+                        </a>
+                    @endif
+                </div>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Agent</th>
-                                <th>CHF</th>
-                                <th>INR</th>
-                                <th>Recipient</th>
-                                <th>Status</th>
-                                <th>Flagged</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="text-muted italic">
-                                <td colspan="7" class="text-center py-4">Global transaction log monitor active.</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="card-body px-4 pb-4">
+                <div class="alert alert-info border-0 rounded-3 mb-0 py-3">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-info-circle-fill me-3 h4 mb-0"></i>
+                        <div>
+                             <strong>Monitor platform health in real-time.</strong>
+                             Use the navigation menu to manage agents, review compliance flags, and configure FX rates.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

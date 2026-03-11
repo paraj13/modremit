@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\ComplianceService;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class ComplianceController extends Controller
 {
@@ -12,8 +13,37 @@ class ComplianceController extends Controller
 
     public function index(Request $request)
     {
-        $logs = $this->complianceService->all($request->all());
-        return view('admin.compliance.index', compact('logs'));
+        if ($request->ajax()) {
+            $data = \App\Models\ComplianceLog::with(['transaction.agent', 'transaction.customer'])->select('compliance_logs.*');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('agent', function($row){
+                    return $row->transaction->agent->name ?? 'N/A';
+                })
+                ->addColumn('customer', function($row){
+                    return $row->transaction->customer->name ?? 'N/A';
+                })
+                ->addColumn('amount', function($row){
+                    return 'CHF ' . number_format($row->transaction->chf_amount, 2);
+                })
+                ->editColumn('status', function($row){
+                    $class = match($row->status) {
+                        'pending'   => 'bg-warning text-dark',
+                        'reviewed'  => 'bg-info',
+                        'cleared'   => 'bg-success',
+                        'escalated' => 'bg-danger',
+                        default     => 'bg-secondary',
+                    };
+                    return '<span class="badge '.$class.'">'.ucfirst($row->status).'</span>';
+                })
+                ->addColumn('action', function($row){
+                    return '<a href="'.route('admin.compliance.show', $row->id).'" class="btn btn-sm btn-outline-primary">Review</a>';
+                })
+                ->rawColumns(['status', 'action'])
+                ->make(true);
+        }
+
+        return view('admin.compliance.index');
     }
 
     public function show(int $id)

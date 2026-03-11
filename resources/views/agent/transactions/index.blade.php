@@ -3,61 +3,63 @@
 @section('page_title', 'Transaction History')
 
 @section('content')
-<div class="card">
+<div class="card border-0 shadow-sm card-premium">
     <div class="card-header bg-white py-3">
-        <h5 class="mb-0 fw-bold">Recent Remittances</h5>
+        <h5 class="mb-0 fw-bold text-brand-dark">My Transactions</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+            <table class="table table-hover align-middle transaction-table w-100">
+                <thead class="bg-light">
                     <tr>
-                        <th>Date</th>
-                        <th>Transaction ID</th>
-                        <th>Customer / Recipient</th>
-                        <th>CHF Amount</th>
-                        <th>INR Amount</th>
+                        <th width="50px">No</th>
+                        <th>Customer</th>
+                        <th>Recipient</th>
+                        <th>Amount</th>
                         <th>Status</th>
-                        <th class="text-end">Action</th>
+                        <th>Date</th>
+                        <th width="120px">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($transactions as $txn)
-                    <tr>
-                        <td class="small">{{ $txn->created_at->format('M d, H:i') }}</td>
-                        <td><span class="font-monospace text-muted">{{ str_pad($txn->id, 8, '0', STR_PAD_LEFT) }}</span></td>
-                        <td>
-                            <div class="fw-bold">{{ $txn->customer->name }}</div>
-                            <div class="small text-muted">To: {{ $txn->recipient->name }}</div>
-                        </td>
-                        <td>{{ number_format($txn->chf_amount, 2) }}</td>
-                        <td>₹ {{ number_format($txn->inr_amount, 2) }}</td>
-                        <td>
-                            @php
-                                $statusClass = match($txn->status) {
-                                    'completed' => 'bg-success',
-                                    'failed' => 'bg-danger',
-                                    'processing' => 'bg-info text-dark',
-                                    default => 'bg-warning text-dark'
-                                };
-                            @endphp
-                            <span class="badge {{ $statusClass }}">{{ ucfirst($txn->status) }}</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="{{ route('agent.transactions.show', $txn->id) }}" class="btn btn-sm btn-link">Details</a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">No transactions found.</td>
-                    </tr>
-                    @endforelse
                 </tbody>
             </table>
-        </div>
-        <div class="mt-4">
-            {{ $transactions->links() }}
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+  $(function () {
+    var table = $('.transaction-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('agent.transactions.index') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+            {data: 'customer', name: 'customer.name', className: 'fw-bold'},
+            {data: 'recipient', name: 'recipient.name'},
+            {data: 'amount', name: 'chf_amount', className: 'text-brand-dark fw-bold'},
+            {data: 'status', name: 'status', render: function(data){
+                let cls = 'bg-secondary';
+                if(data === 'completed') cls = 'bg-success';
+                if(data === 'processing') cls = 'bg-info';
+                if(data === 'failed') cls = 'bg-danger';
+                return `<span class="badge ${cls} px-3">${data.toUpperCase()}</span>`;
+            }},
+            {data: 'created_at', name: 'created_at', render: function(data){
+                return `<span class="text-muted small">${new Date(data).toLocaleDateString()}</span>`;
+            }},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ],
+        language: {
+            searchPlaceholder: "Search transactions...",
+            search: ""
+        }
+    });
+
+    $('.dataTables_filter input').addClass('form-control form-control-sm shadow-none border-0 bg-light px-3 py-2').css('width', '250px');
+  });
+</script>
+@endpush

@@ -21,9 +21,18 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            if ($user->status !== 'approved') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is pending approval. Please contact an administrator.',
+                ])->onlyInput('email');
+            }
+
             $request->session()->regenerate();
 
-            if (Auth::user()->hasRole('admin')) {
+            if ($user->hasRole('admin')) {
                 return redirect()->intended('/admin/dashboard');
             }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Agent;
 use App\Http\Controllers\Controller;
 use App\Services\CustomerService;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
 {
@@ -12,8 +13,39 @@ class CustomerController extends Controller
 
     public function index(Request $request)
     {
-        $customers = $this->customerService->listForAgent($request->all());
-        return view('agent.customers.index', compact('customers'));
+        if ($request->ajax()) {
+            $data = \App\Models\Customer::where('agent_id', auth()->id())
+                ->withCount('recipients')
+                ->select('customers.*');
+                
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->editColumn('kyc_status', function($row){
+                    $class = match($row->kyc_status) {
+                        'approved' => 'bg-success',
+                        'rejected' => 'bg-danger',
+                        'pending'  => 'bg-warning text-dark',
+                        default    => 'bg-secondary'
+                    };
+                    return '<span class="badge '.$class.' px-3">'.strtoupper($row->kyc_status).'</span>';
+                })
+                ->addColumn('contact', function($row){
+                    return '<div>'.$row->email.'</div><small class="text-muted small">'.$row->phone.'</small>';
+                })
+                ->addColumn('action', function($row){
+                    $btn = '<a href="'.route('agent.customers.show', $row->id).'" class="btn btn-sm btn-outline-info me-1">View</a>';
+                    $btn .= '<a href="'.route('agent.customers.edit', $row->id).'" class="btn btn-sm btn-outline-primary me-1">Edit</a>';
+                    $btn .= '<form action="'.route('agent.customers.refresh-kyc', $row->id).'" method="POST" class="d-inline">
+                                '.csrf_field().'
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Refresh</button>
+                             </form>';
+                    return $btn;
+                })
+                ->rawColumns(['kyc_status', 'contact', 'action'])
+                ->make(true);
+        }
+
+        return view('agent.customers.index');
     }
 
     public function create()

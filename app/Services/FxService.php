@@ -15,7 +15,7 @@ class FxService
     ) {}
 
     /** Fetch a live quote from Revolut and persist it */
-    public function fetchAndStoreQuote(float $chfAmount, int $agentId): \App\Models\FxQuote
+    public function fetchAndStoreQuote(float $chfAmount, ?int $agentId = null): \App\Models\FxQuote
     {
         $quoteData = $this->revolutFx->fetchQuote($chfAmount);
 

@@ -1,72 +1,65 @@
 @extends('layouts.agent')
 
-@section('page_title', 'Customers')
+@section('page_title', 'Customer Management')
 
 @section('content')
-<div class="card">
-    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-        <h5 class="mb-0 fw-bold">Customer Management</h5>
-        <a href="{{ route('agent.customers.create') }}" class="btn btn-primary">Add New Customer</a>
+<div class="row mb-4">
+    <div class="col-12 text-end">
+        <a href="{{ route('agent.customers.create') }}" class="btn btn-brand">
+            <i class="bi bi-person-plus-fill me-2"></i> Add New Customer
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm card-premium">
+    <div class="card-header bg-white py-3 border-0">
+        <h5 class="mb-0 fw-bold text-brand-dark">My Registered Customers</h5>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+            <table class="table table-hover align-middle customer-table w-100">
+                <thead class="bg-light">
                     <tr>
+                        <th width="50px">No</th>
                         <th>Name</th>
-                        <th>Contact</th>
+                        <th>Contact info</th>
                         <th>KYC Status</th>
                         <th>Recipients</th>
-                        <th class="text-end">Actions</th>
+                        <th width="220px">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($customers as $customer)
-                    <tr>
-                        <td>
-                            <div class="fw-bold">{{ $customer->name }}</div>
-                            <small class="text-muted">Added {{ $customer->created_at->format('M d, Y') }}</small>
-                        </td>
-                        <td>
-                            <div>{{ $customer->email }}</div>
-                            <small class="text-muted">{{ $customer->phone }}</small>
-                        </td>
-                        <td>
-                            @php
-                                $badgeClass = match($customer->kyc_status) {
-                                    'approved' => 'bg-success',
-                                    'rejected' => 'bg-danger',
-                                    'pending' => 'bg-warning text-dark',
-                                    default => 'bg-secondary'
-                                };
-                            @endphp
-                            <span class="badge {{ $badgeClass }}">{{ ucfirst($customer->kyc_status) }}</span>
-                        </td>
-                        <td>
-                            <span class="badge bg-info text-dark">{{ $customer->recipients_count ?? $customer->recipients->count() }} Recipients</span>
-                        </td>
-                        <td class="text-end">
-                            <a href="{{ route('agent.customers.show', $customer->id) }}" class="btn btn-sm btn-outline-info">View</a>
-                            <a href="{{ route('agent.customers.edit', $customer->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                            <form action="{{ route('agent.customers.refresh-kyc', $customer->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-sm btn-outline-secondary">Refresh KYC</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="text-center py-5">
-                            <p class="text-muted mb-0">No customers found.</p>
-                        </td>
-                    </tr>
-                    @endforelse
                 </tbody>
             </table>
-        </div>
-        <div class="mt-4">
-            {{ $customers->links() }}
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script type="text/javascript">
+  $(function () {
+    var table = $('.customer-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('agent.customers.index') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+            {data: 'name', name: 'name', className: 'fw-bold text-brand-dark'},
+            {data: 'contact', name: 'email'},
+            {data: 'kyc_status', name: 'kyc_status'},
+            {data: 'recipients_count', name: 'recipients_count', searchable: false, render: function(data){
+                return '<span class="badge bg-brand-mint text-brand-dark border-0 px-3">' + data + ' Recipients</span>';
+            }},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ],
+        language: {
+            searchPlaceholder: "Search customers...",
+            search: ""
+        }
+    });
+
+    $('.dataTables_filter input').addClass('form-control form-control-sm shadow-none border-0 bg-light px-3 py-2').css('width', '250px');
+  });
+</script>
+@endpush

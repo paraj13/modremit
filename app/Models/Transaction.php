@@ -13,7 +13,7 @@ class Transaction extends Model
     protected $fillable = [
         'agent_id', 'customer_id', 'recipient_id', 'fx_quote_id',
         'chf_amount', 'inr_amount', 'commission', 'rate',
-        'payment_reference', 'revolut_payment_id',
+        'payment_ref', 'revolut_payment_id',
         'status', 'flagged', 'notes', 'failure_reason', 'metadata',
     ];
 
