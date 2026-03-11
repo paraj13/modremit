@@ -26,7 +26,7 @@
         /* Hero Styling */
         .hero {
             background-color: var(--brand-lime);
-            padding: 40px 0 100px 0;
+            padding: 0 0 100px 0;
             position: relative;
         }
 
@@ -181,6 +181,75 @@
             z-index: 1050;
         }
 
+        .currency-dropdown{
+            position:relative;
+            width:180px;
+        }
+
+        .currency-trigger{
+            width:100%;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:10px 12px;
+            border-radius:12px;
+            border:1px solid #e5e7eb;
+            background:white;
+            font-weight:600;
+            cursor:pointer;
+        }
+
+        .flag-icon{
+            width:18px;
+            height:14px;
+            object-fit:cover;
+            border-radius:2px;
+        }
+
+        .currency-name{
+            font-size:13px;
+            color:var(--text-muted);
+        }
+
+        .dropdown-arrow{
+            margin-left:auto;
+            font-size:10px;
+        }
+
+        .currency-menu{
+            position:absolute;
+            top:calc(100% + 8px);
+            left:0;
+            width:220px;
+            max-height: 300px;
+            overflow-y: auto;
+            background:white;
+            border-radius:16px;
+            border:1px solid rgba(0,0,0,0.05);
+            box-shadow:0 15px 40px rgba(0,0,0,0.12);
+            display:none;
+            z-index:100;
+            padding: 8px;
+        }
+
+        .currency-item{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 12px;
+            cursor:pointer;
+        }
+
+        .currency-item:hover{
+            background:var(--gray-light);
+        }
+
+        .currency-item.active{
+            background:var(--brand-mint);
+        }
+
+
+
         /* Responsive Fixes */
         @media (max-width: 991px) {
             .hero-title { font-size: 3.5rem; }
@@ -188,9 +257,8 @@
     </style>
 </head>
 <body>
-    <div class="hero">
-        <nav class="navbar navbar-expand-lg sticky-top glass-nav">
-            <div class="container">
+    <nav class="navbar navbar-expand-lg sticky-top glass-nav">
+        <div class="container">
                 <a class="navbar-brand" href="#">MODREMIT</a>
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
                     <span class="navbar-toggler-icon"></span>
@@ -213,8 +281,9 @@
                 </div>
             </div>
         </nav>
-
-        <div class="container pt-5 mt-4">
+        
+        <div class="hero">
+        <div class="container pt-5">
             <div class="row align-items-center">
                 <div class="col-lg-7">
                     <h1 class="hero-title">{{ __('messages.hero_title') }}</h1>
@@ -233,12 +302,49 @@
                             <label class="pod-label">{{ __('messages.you_send') }}</label>
                             <div class="input-group-modern">
                                 <input type="number" id="send_amount" class="amount-input" value="1000">
-                                <select id="from_currency" class="currency-select">
-                                    <option value="CHF" data-flag="ch" data-name="Swiss Franc" selected>CHF</option>
-                                    <option value="USD" data-flag="us" data-name="United States Dollar">USD</option>
-                                    <option value="EUR" data-flag="eu" data-name="Euro">EUR</option>
-                                    <option value="GBP" data-flag="gb" data-name="British Pound">GBP</option>
-                                </select>
+                                <div class="currency-dropdown" id="from_currency_dropdown">
+                                    <input type="hidden" name="from_currency" id="from_currency" value="CHF">
+                                    <button class="currency-trigger" type="button">
+                                        <img src="https://flagcdn.com/ch.svg" class="flag-icon">
+                                        <span class="currency-code">CHF</span>
+                                        <span class="dropdown-arrow">▼</span>
+                                    </button>
+
+                                    <div class="currency-menu">
+                                        <div class="currency-item" data-code="CHF" data-name="Swiss Franc">
+                                            <img src="https://flagcdn.com/ch.svg" class="flag-icon">
+                                            <div class="d-flex flex-column" style="line-height: 1.1;">
+                                                <span class="fw-bold">CHF</span>
+                                                <span class="currency-name" style="font-size: 10px;">Swiss Franc</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="currency-item" data-code="USD" data-name="US Dollar">
+                                            <img src="https://flagcdn.com/us.svg" class="flag-icon">
+                                            <div class="d-flex flex-column" style="line-height: 1.1;">
+                                                <span class="fw-bold">USD</span>
+                                                <span class="currency-name" style="font-size: 10px;">United States Dollar</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="currency-item" data-code="EUR" data-name="Euro">
+                                            <img src="https://flagcdn.com/eu.svg" class="flag-icon">
+                                            <div class="d-flex flex-column" style="line-height: 1.1;">
+                                                <span class="fw-bold">EUR</span>
+                                                <span class="currency-name" style="font-size: 10px;">Euro</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="currency-item" data-code="GBP" data-name="British Pound">
+                                            <img src="https://flagcdn.com/gb.svg" class="flag-icon">
+                                            <div class="d-flex flex-column" style="line-height: 1.1;">
+                                                <span class="fw-bold">GBP</span>
+                                                <span class="currency-name" style="font-size: 10px;">British Pound</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -262,15 +368,75 @@
                             <label class="pod-label">{{ __('messages.recipient_gets') }}</label>
                             <div class="input-group-modern">
                                 <input type="text" id="receive_amount" class="amount-input" readonly>
-                                <select id="to_currency" class="currency-select">
-                                    <option value="INR" data-flag="in" data-name="Indian Rupee" selected>INR</option>
-                                    <option value="EUR" data-flag="eu" data-name="Euro">EUR</option>
-                                    <option value="USD" data-flag="us" data-name="United States Dollar">USD</option>
-                                    <option value="GBP" data-flag="gb" data-name="British Pound">GBP</option>
-                                    <option value="CHF" data-flag="ch" data-name="Swiss Franc">CHF</option>
-                                    <option value="PHP" data-flag="ph" data-name="Philippine Peso">PHP</option>
-                                    <option value="PKR" data-flag="pk" data-name="Pakistani Rupee">PKR</option>
-                                </select>
+<div class="currency-dropdown" id="to_currency_dropdown">
+    <input type="hidden" name="to_currency" id="to_currency" value="INR">
+
+    <button class="currency-trigger" type="button">
+        <img src="https://flagcdn.com/in.svg" class="flag-icon">
+        <span class="currency-code">INR</span>
+        <span class="dropdown-arrow">▼</span>
+    </button>
+
+    <div class="currency-menu">
+
+        <div class="currency-item" data-code="INR" data-name="Indian Rupee">
+            <img src="https://flagcdn.com/in.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">INR</span>
+                <span class="currency-name" style="font-size: 10px;">Indian Rupee</span>
+            </div>
+        </div>
+
+        <div class="currency-item" data-code="EUR" data-name="Euro">
+            <img src="https://flagcdn.com/eu.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">EUR</span>
+                <span class="currency-name" style="font-size: 10px;">Euro</span>
+            </div>
+        </div>
+
+        <div class="currency-item" data-code="USD" data-name="United States Dollar">
+            <img src="https://flagcdn.com/us.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">USD</span>
+                <span class="currency-name" style="font-size: 10px;">United States Dollar</span>
+            </div>
+        </div>
+
+        <div class="currency-item" data-code="GBP" data-name="British Pound">
+            <img src="https://flagcdn.com/gb.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">GBP</span>
+                <span class="currency-name" style="font-size: 10px;">British Pound</span>
+            </div>
+        </div>
+
+        <div class="currency-item" data-code="CHF" data-name="Swiss Franc">
+            <img src="https://flagcdn.com/ch.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">CHF</span>
+                <span class="currency-name" style="font-size: 10px;">Swiss Franc</span>
+            </div>
+        </div>
+
+        <div class="currency-item" data-code="PHP" data-name="Philippine Peso">
+            <img src="https://flagcdn.com/ph.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">PHP</span>
+                <span class="currency-name" style="font-size: 10px;">Philippine Peso</span>
+            </div>
+        </div>
+
+        <div class="currency-item" data-code="PKR" data-name="Pakistani Rupee">
+            <img src="https://flagcdn.com/pk.svg" class="flag-icon">
+            <div class="d-flex flex-column" style="line-height: 1.1;">
+                <span class="fw-bold">PKR</span>
+                <span class="currency-name" style="font-size: 10px;">Pakistani Rupee</span>
+            </div>
+        </div>
+
+    </div>
+</div>
                             </div>
                         </div>
 
@@ -335,7 +501,7 @@
             </div>
             <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center">
+                    <div class="card-premium h-100 text-center " style="background-color: var(--brand-lime);">
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-calculator fs-3"></i>
                         </div>
@@ -344,7 +510,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center">
+                    <div class="card-premium h-100 text-center" style="background-color: var(--brand-lime);">
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-person-check fs-3"></i>
                         </div>
@@ -353,7 +519,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center">
+                    <div class="card-premium h-100 text-center" style="background-color: var(--brand-lime);">
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-credit-card fs-3"></i>
                         </div>
@@ -362,7 +528,7 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center">
+                    <div class="card-premium h-100 text-center" style="background-color: var(--brand-lime);">
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-check-circle-fill fs-3"></i>
                         </div>
@@ -375,7 +541,7 @@
     </section>
 
     <!-- Supported Countries -->
-    <section id="countries">
+    <section id="countries" style="background-color: var(--brand-lime);">
         <div class="container">
             <div class="section-header text-center">
                 <span class="section-tag">{{ __('messages.countries') }}</span>
@@ -414,7 +580,7 @@
                 <div class="col-md-6 mb-4">
                     <div class="accordion accordion-flush" id="faqAccordionLeft">
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
-                            <h2 class="accordion-header">
+                            <h2 class="accordion-header" >
                                 <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
                                     How long does a transfer take?
                                 </button>
@@ -574,6 +740,41 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+                        const trigger = document.querySelector('.currency-trigger');
+            const menu = document.querySelector('.currency-menu');
+            const fromInput = document.getElementById('from_currency');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', () => {
+                menu.style.display = 'none';
+            });
+
+            document.querySelectorAll('.currency-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const flag = this.querySelector('img').src;
+                    const code = this.dataset.code;
+                    const name = this.dataset.name;
+
+                    trigger.querySelector('img').src = flag;
+                    trigger.querySelector('.currency-code').innerText = code;
+                    if(trigger.querySelector('.currency-name')) {
+                        trigger.querySelector('.currency-name').innerText = name;
+                    }
+                    fromInput.value = code;
+
+                    // Update active state
+                    document.querySelectorAll('.currency-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+
+                    menu.style.display = 'none';
+                    fetchQuote();
+                });
+            });
+
             // Enhanced Choices.js with Flags
             const cityChoicesItems = {
                 'CHF': '🇨🇭', 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 
