@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Http\Controllers\Agent;
+
+use App\Http\Controllers\Controller;
+use App\Services\CustomerService;
+use Illuminate\Http\Request;
+
+class CustomerController extends Controller
+{
+    public function __construct(private CustomerService $customerService) {}
+
+    public function index(Request $request)
+    {
+        $customers = $this->customerService->listForAgent($request->all());
+        return view('agent.customers.index', compact('customers'));
+    }
+
+    public function create()
+    {
+        return view('agent.customers.create');
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $this->customerService->create($data);
+
+        return redirect()->route('agent.customers.index')->with('success', 'Customer created and KYC initiated.');
+    }
+
+    public function show(int $id)
+    {
+        $customer = $this->customerService->findOwned($id);
+        if (!$customer) abort(404);
+        return view('agent.customers.show', compact('customer'));
+    }
+
+    public function edit(int $id)
+    {
+        $customer = $this->customerService->findOwned($id);
+        if (!$customer) abort(404);
+        return view('agent.customers.edit', compact('customer'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $data = $request->validate([
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
+        ]);
+
+        $this->customerService->update($id, $data);
+        return redirect()->route('agent.customers.index')->with('success', 'Customer updated.');
+    }
+
+    public function refreshKyc(int $id)
+    {
+        $status = $this->customerService->refreshKycStatus($id);
+        return back()->with('success', 'KYC Status: ' . ucfirst($status ?? 'pending'));
+    }
+}
