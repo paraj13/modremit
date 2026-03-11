@@ -79,11 +79,12 @@
 </head>
 <body>
     <div id="sidebar">
-        <div class="px-4 py-5 mb-2">
-            <h3 class="mb-0 fw-800 text-brand-lime" style="letter-spacing: -1.5px;">MODREMIT</h3>
-            <span class="badge-premium mt-2 d-inline-block">@yield('role_badge', 'Portal')</span>
+        <div class="px-4 py-3">
+        <x-logo-light />
+        <hr>
+            <!-- <span class="badge-premium mt-2 d-inline-block">@yield('role_badge', 'Portal')</span> -->
         </div>
-        <nav class="nav flex-column mt-2">
+        <nav class="nav flex-column">
             @yield('sidebar_nav')
             <div class="mt-auto px-4 pb-4">
                 <hr class="my-4" style="opacity: 0.05;">

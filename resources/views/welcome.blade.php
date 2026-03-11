@@ -18,7 +18,7 @@
 
     <style>
         body {
-            background-color: var(--white);
+            background-color: var(--white-home);
             overflow-x: hidden;
             line-height: 1.6;
         }
@@ -53,12 +53,16 @@
 
         /* Converter Pod */
         .converter-pod {
-            background: var(--white);
+            background: var(--white-home);
             border-radius: 24px;
             padding: 30px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
             max-width: 520px;
             margin: 40px auto 0 auto;
+        }
+
+        .accordion-button {
+            background-color: var(--white-home);
         }
 
         .pod-label {
@@ -127,7 +131,7 @@
             width: 300px;
             white-space: normal;
             vertical-align: top;
-            color: var(--white);
+            color: var(--white-home);
         }
 
         @keyframes marquee {
@@ -259,7 +263,8 @@
 <body>
     <nav class="navbar navbar-expand-lg sticky-top glass-nav">
         <div class="container">
-                <a class="navbar-brand" href="#">MODREMIT</a>
+        <x-logo />
+
                 <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -441,7 +446,7 @@
                         </div>
 
                         <div id="loader" class="text-center d-none mb-3">
-                            <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                            <div class="spinner-border spinner-border-sm text-brand-lime" role="status"></div>
                         </div>
 
                         <a href="{{ route('register') }}" class="btn-brand w-100 py-3 text-center text-decoration-none d-block">
@@ -493,11 +498,11 @@
     </div>
 
     <!-- How It Works -->
-    <section id="how-it-works" class="bg-light">
+    <section id="how-it-works">
         <div class="container">
             <div class="section-header text-center">
                 <span class="section-tag">{{ __('messages.how_it_works') }}</span>
-                <h2 class="section-title">Transparent & Simple</h2>
+                <h2 class="section-title text-dark">{{ __('messages.transparent_simple') }}</h2>
             </div>
             <div class="row g-4">
                 <div class="col-md-3">
@@ -505,8 +510,8 @@
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-calculator fs-3"></i>
                         </div>
-                        <h4 class="fw-bold mb-3">1. Check Rates</h4>
-                        <p class="text-muted small">Choose currencies and see our guaranteed live rates and low fees.</p>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_1_title') }}</h4>
+                        <p class="text-dark opacity-75 small">{{ __('messages.step_1_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -514,8 +519,8 @@
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-person-check fs-3"></i>
                         </div>
-                        <h4 class="fw-bold mb-3">2. Register</h4>
-                        <p class="text-muted small">Create a free account in minutes. Securely verify your identity.</p>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_2_title') }}</h4>
+                        <p class="text-dark opacity-75 small">{{ __('messages.step_2_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -523,8 +528,8 @@
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-credit-card fs-3"></i>
                         </div>
-                        <h4 class="fw-bold mb-3">3. Pay & Send</h4>
-                        <p class="text-muted small">Pay via bank transfer or card. We'll start the conversion instantly.</p>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_3_title') }}</h4>
+                        <p class="text-dark opacity-75 small">{{ __('messages.step_3_desc') }}</p>
                     </div>
                 </div>
                 <div class="col-md-3">
@@ -532,8 +537,74 @@
                         <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
                             <i class="bi bi-check-circle-fill fs-3"></i>
                         </div>
-                        <h4 class="fw-bold mb-3">4. Arrives!</h4>
-                        <p class="text-muted small">The recipient gets the money directly in their local currency.</p>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_4_title') }}</h4>
+                        <p class="text-dark opacity-75 small">{{ __('messages.step_4_desc') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Core Features -->
+    <section id="features" class="bg-white">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-tag">{{ __('messages.features') }}</span>
+                <h2 class="section-title text-dark">{{ __('messages.why_choose_us') }}</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                        <div class="text-brand-dark mb-4 d-inline-block">
+                            <i class="bi bi-shield-lock-fill fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.feature_1_title') }}</h4>
+                        <p class="text-muted mb-0">{{ __('messages.feature_1_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                        <div class="text-brand-dark mb-4 d-inline-block">
+                            <i class="bi bi-percent fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.feature_2_title') }}</h4>
+                        <p class="text-muted mb-0">{{ __('messages.feature_2_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                        <div class="text-brand-dark mb-4 d-inline-block">
+                            <i class="bi bi-geo-alt-fill fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.feature_3_title') }}</h4>
+                        <p class="text-muted mb-0">{{ __('messages.feature_3_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                        <div class="text-brand-dark mb-4 d-inline-block">
+                            <i class="bi bi-lightning-charge-fill fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.feature_4_title') }}</h4>
+                        <p class="text-muted mb-0">{{ __('messages.feature_4_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                        <div class="text-brand-dark mb-4 d-inline-block">
+                            <i class="bi bi-globe fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.feature_5_title') }}</h4>
+                        <p class="text-muted mb-0">{{ __('messages.feature_5_desc') }}</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                        <div class="text-brand-dark mb-4 d-inline-block">
+                            <i class="bi bi-headset fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3 text-dark">{{ __('messages.feature_6_title') }}</h4>
+                        <p class="text-muted mb-0">{{ __('messages.feature_6_desc') }}</p>
                     </div>
                 </div>
             </div>
@@ -544,8 +615,8 @@
     <section id="countries" style="background-color: var(--brand-lime);">
         <div class="container">
             <div class="section-header text-center">
-                <span class="section-tag">{{ __('messages.countries') }}</span>
-                <h2 class="section-title">We move money across borders</h2>
+                <span class="section-tag" style="background: var(--brand-dark); color: var(--brand-lime);">{{ __('messages.countries') }}</span>
+                <h2 class="section-title text-dark">{{ __('messages.move_borders') }}</h2>
             </div>
             <div class="row row-cols-2 row-cols-md-4 g-4">
                 @php
@@ -578,55 +649,55 @@
             <div class="row">
                 <!-- Left Column -->
                 <div class="col-md-6 mb-4">
-                    <div class="accordion accordion-flush" id="faqAccordionLeft">
-                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
+                    <div class="accordion accordion-flush" id="faqAccordionLeft" >
+                        <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm" > 
                             <h2 class="accordion-header" >
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
-                                    How long does a transfer take?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f1">
+                                    {{ __('messages.q1') }}
                                 </button>
                             </h2>
                             <div id="f1" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body p-4 pt-0 text-muted">Most transfers arrive within minutes. Some local bank settlements might take up to 24 hours.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a1') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
-                                    What currencies are supported?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f2">
+                                    {{ __('messages.q2') }}
                                 </button>
                             </h2>
                             <div id="f2" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body p-4 pt-0 text-muted">We support major global currencies including CHF, EUR, USD, GBP, INR, PHP, and PKR.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a2') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
-                                    Is KYC required?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f3">
+                                    {{ __('messages.q3') }}
                                 </button>
                             </h2>
                             <div id="f3" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body p-4 pt-0 text-muted">Yes, we require a quick one-time identity verification (KYC) to comply with financial regulations.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a3') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f4">
-                                    What are the transfer limits?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f4">
+                                    {{ __('messages.q4') }}
                                 </button>
                             </h2>
                             <div id="f4" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body p-4 pt-0 text-muted">Limits vary based on your verification level and the destination country.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a4') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f5">
-                                    How secure is the platform?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f5">
+                                    {{ __('messages.q5') }}
                                 </button>
                             </h2>
                             <div id="f5" class="accordion-collapse collapse" data-bs-parent="#faqAccordionLeft">
-                                <div class="accordion-body p-4 pt-0 text-muted">We use bank-grade 256-bit encryption and are fully regulated in all jurisdictions.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a5') }}</div>
                             </div>
                         </div>
                     </div>
@@ -636,52 +707,52 @@
                     <div class="accordion accordion-flush" id="faqAccordionRight">
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f6">
-                                    How can I become an agent?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f6">
+                                    {{ __('messages.q6') }}
                                 </button>
                             </h2>
                             <div id="f6" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body p-4 pt-0 text-muted">You can register as an agent through our portal. Once approved, you can start processing.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a6') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f7">
-                                    What fees are charged?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f7">
+                                    {{ __('messages.q7') }}
                                 </button>
                             </h2>
                             <div id="f7" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body p-4 pt-0 text-muted">We charge a small flat fee and provide real mid-market exchange rates.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a7') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f8">
-                                    Can I track my transaction?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f8">
+                                    {{ __('messages.q8') }}
                                 </button>
                             </h2>
                             <div id="f8" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body p-4 pt-0 text-muted">Yes, you'll receive real-time updates via SMS and email.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a8') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f9">
-                                    Is there a mobile app?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f9">
+                                    {{ __('messages.q9') }}
                                 </button>
                             </h2>
                             <div id="f9" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body p-4 pt-0 text-muted">Our platform is mobile-optimized for all devices, and an app is coming soon!</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a9') }}</div>
                             </div>
                         </div>
                         <div class="accordion-item card-premium mb-3 bg-white p-0 overflow-hidden border shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold p-4 bg-white shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f10">
-                                    Do you offer business accounts?
+                                <button class="accordion-button collapsed fw-bold p-4 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#f10">
+                                    {{ __('messages.q10') }}
                                 </button>
                             </h2>
                             <div id="f10" class="accordion-collapse collapse" data-bs-parent="#faqAccordionRight">
-                                <div class="accordion-body p-4 pt-0 text-muted">Yes, we provide specialized onboarding and limits for registered business entities.</div>
+                                <div class="accordion-body p-4 pt-0 text-muted">{{ __('messages.a10') }}</div>
                             </div>
                         </div>
                     </div>
@@ -704,26 +775,26 @@
                     </div>
                 </div>
                 <div class="col-lg-2">
-                    <h6 class="fw-bold mb-4">Company</h6>
+                    <h6 class="fw-bold mb-4">{{ __('messages.company') }}</h6>
                     <ul class="list-unstyled opacity-50 small">
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">About Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Careers</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.about_us') }}</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.careers') }}</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.privacy_policy') }}</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2">
-                    <h6 class="fw-bold mb-4">Support</h6>
+                    <h6 class="fw-bold mb-4">{{ __('messages.support') }}</h6>
                     <ul class="list-unstyled opacity-50 small">
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Help Center</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Contact Us</a></li>
-                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">Security</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.help_center') }}</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.contact_us') }}</a></li>
+                        <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.security') }}</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-4">
-                    <h6 class="fw-bold mb-4">Stay Updated</h6>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control bg-transparent border-secondary text-white" placeholder="Email address">
-                        <button class="btn btn-brand" type="button">Subscribe</button>
+                    <h6 class="fw-bold mb-4">{{ __('messages.stay_updated') }}</h6>
+                    <div class="input-group mb-3 premium-subscribe">
+                        <input type="text" class="form-control bg-transparent border-secondary text-white py-3 ps-4" placeholder="{{ __('messages.email_placeholder') }}" style="border-radius: 12px 0 0 12px;">
+                        <button class="btn btn-brand px-4 fw-bold" type="button" style="border-radius: 0 12px 12px 0;">{{ __('messages.subscribe') }}</button>
                     </div>
                 </div>
             </div>
@@ -740,39 +811,46 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                        const trigger = document.querySelector('.currency-trigger');
-            const menu = document.querySelector('.currency-menu');
-            const fromInput = document.getElementById('from_currency');
+            // Corrected Multi-Dropdown Logic
+            document.querySelectorAll('.currency-dropdown').forEach(dropdown => {
+                const trigger = dropdown.querySelector('.currency-trigger');
+                const menu = dropdown.querySelector('.currency-menu');
+                const input = dropdown.querySelector('input[type="hidden"]');
 
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Close other dropdowns
+                    document.querySelectorAll('.currency-menu').forEach(m => {
+                        if (m !== menu) m.style.display = 'none';
+                    });
+                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                });
+
+                menu.querySelectorAll('.currency-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const flag = this.querySelector('img').src;
+                        const code = this.dataset.code;
+                        const name = this.dataset.name;
+
+                        trigger.querySelector('img').src = flag;
+                        trigger.querySelector('.currency-code').innerText = code;
+                        if (trigger.querySelector('.currency-name')) {
+                            trigger.querySelector('.currency-name').innerText = name;
+                        }
+                        input.value = code;
+
+                        // Update active state
+                        menu.querySelectorAll('.currency-item').forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+
+                        menu.style.display = 'none';
+                        fetchQuote(); // Trigger rate update
+                    });
+                });
             });
 
             document.addEventListener('click', () => {
-                menu.style.display = 'none';
-            });
-
-            document.querySelectorAll('.currency-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const flag = this.querySelector('img').src;
-                    const code = this.dataset.code;
-                    const name = this.dataset.name;
-
-                    trigger.querySelector('img').src = flag;
-                    trigger.querySelector('.currency-code').innerText = code;
-                    if(trigger.querySelector('.currency-name')) {
-                        trigger.querySelector('.currency-name').innerText = name;
-                    }
-                    fromInput.value = code;
-
-                    // Update active state
-                    document.querySelectorAll('.currency-item').forEach(i => i.classList.remove('active'));
-                    this.classList.add('active');
-
-                    menu.style.display = 'none';
-                    fetchQuote();
-                });
+                document.querySelectorAll('.currency-menu').forEach(m => m.style.display = 'none');
             });
 
             // Enhanced Choices.js with Flags
@@ -858,9 +936,10 @@
                 }
             }
 
-            [sendInput, fromSelect, toSelect].forEach(el => {
+            [sendInput].forEach(el => {
                 el.addEventListener('change', fetchQuote);
             });
+            // We removed to_currency from the change list because we handle it in the custom dropdown click
             sendInput.addEventListener('input', debounce(fetchQuote, 500));
 
             function debounce(func, wait) {

@@ -2,8 +2,9 @@
     --brand-lime: rgba(159, 232, 112, 1);
     --brand-dark: #25330F;
     --brand-mint: #D3FF8A;
-    --white: #FFFFFF;
-    --gray-light: #F8FAFC;
+    --white-home: #d8ffc7;
+    --white: #ffffff;
+    --gray-light:  rgb(248, 255, 244);
     --text-muted: #64748B;
     --brand-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
     --glass-bg: rgba(255, 255, 255, 0.7);
@@ -20,8 +21,17 @@ body {
     background-color: var(--brand-dark) !important;
 }
 
+.bg-brand-light {
+    background-color: var(--brand-lime) !important;
+}
+
+
 .text-brand-lime {
     color: var(--brand-lime) !important;
+}
+
+.text-brand-dark {
+    color: var(--brand-dark) !important;
 }
 
 .btn-brand {
