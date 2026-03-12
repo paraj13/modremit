@@ -37,11 +37,16 @@ class SumsubClient
     public function post(string $path, array $data = []): array
     {
         try {
-            $body     = json_encode($data);
-            $response = $this->http->post($path, [
+            $body     = !empty($data) ? json_encode($data) : '';
+            $options  = [
                 'headers' => $this->buildHeaders('POST', '/' . ltrim($path, '/'), $body),
-                'body'    => $body,
-            ]);
+            ];
+
+            if ($body !== '') {
+                $options['body'] = $body;
+            }
+
+            $response = $this->http->post($path, $options);
             return json_decode($response->getBody()->getContents(), true) ?? [];
         } catch (RequestException $e) {
             logger()->error('Sumsub post error', ['path' => $path, 'message' => $e->getMessage()]);

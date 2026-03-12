@@ -25,6 +25,9 @@ body {
     background-color: var(--brand-lime) !important;
 }
 
+.bg-brand-mint{
+    background-color: var(--brand-mint);
+}
 
 .text-brand-lime {
     color: var(--brand-lime) !important;

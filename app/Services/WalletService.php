@@ -16,9 +16,9 @@ class WalletService
         );
     }
 
-    public function deposit(int $agentId, float $amount, string $description = 'Admin Credit', ?int $adminId = null): Wallet
+    public function deposit(int $agentId, float $amount, string $description = 'Admin Credit', ?int $adminId = null, ?string $paymentMethod = null, ?string $stripeSessionId = null): Wallet
     {
-        return DB::transaction(function () use ($agentId, $amount, $description, $adminId) {
+        return DB::transaction(function () use ($agentId, $amount, $description, $adminId, $paymentMethod, $stripeSessionId) {
             $wallet = $this->getForAgent($agentId);
             $wallet->increment('chf_balance', $amount);
             $wallet->increment('total_received', $amount);
@@ -27,6 +27,8 @@ class WalletService
                 'type'         => 'deposit',
                 'amount'       => $amount,
                 'description'  => $description,
+                'payment_method' => $paymentMethod,
+                'stripe_session_id' => $stripeSessionId,
                 'reference_type' => 'User',
                 'reference_id'   => $adminId ?? Auth::id(),
                 'status'       => 'completed',

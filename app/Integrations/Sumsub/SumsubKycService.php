@@ -12,10 +12,11 @@ class SumsubKycService
     public function createApplicant(Customer $customer): ?string
     {
         if (config('integrations.sumsub.app_token') === 'dummy_sumsub_app_token') {
+            print("Dummy mode enabled, returning dummy applicant ID");
             return 'dummy_applicant_' . $customer->id . '_' . uniqid();
         }
 
-        $level = config('integrations.sumsub.level_name', 'basic-kyc-level');
+        $level = config('integrations.sumsub.level_name', 'id-and-liveness');
 
         $response = $this->client->post("resources/applicants?levelName={$level}", [
             'externalUserId' => 'customer_' . $customer->id,
@@ -28,6 +29,26 @@ class SumsubKycService
         ]);
 
         return $response['id'] ?? null;
+    }
+
+    /** Generate a hosted WebSDK verification link for an applicant */
+    public function generateWebSdkLink(string $applicantId): ?string
+    {
+        if (str_starts_with($applicantId, 'dummy_applicant_')) {
+            return "https://cockpit.sumsub.com/checktest/sdk-link?applicantId={$applicantId}";
+        }
+
+        $level = config('integrations.sumsub.level_name', 'basic-kyc');
+        $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
+        $externalUserId = $customer ? 'customer_' . $customer->id : 'unknown';
+
+        $response = $this->client->post("resources/sdkIntegrations/levels/-/websdkLink", [
+            'levelName' => $level,
+            'userId'    => $externalUserId,
+            'ttlInSecs' => 86400, // 24 hours
+        ]);
+
+        return $response['url'] ?? null;
     }
 
     /** Get the KYC verification status for an applicant */

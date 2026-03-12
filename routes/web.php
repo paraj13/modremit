@@ -56,7 +56,14 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
     // Wallet
     Route::get('/wallet', [Agent\WalletController::class, 'index'])->name('wallet.index');
     Route::get('/wallet/topup', [Agent\WalletController::class, 'topUp'])->name('wallet.topup');
+    Route::post('/wallet/checkout', [Agent\WalletController::class, 'checkout'])->name('wallet.checkout');
 });
+
+// Stripe Webhook
+Route::post('/stripe/webhook', [App\Http\Controllers\StripeWebhookController::class, 'handle']);
+
+// Sumsub Webhook
+Route::post('/sumsub/webhook', [App\Http\Controllers\SumsubWebhookController::class, 'handle']);
 
 // Language Switcher
 Route::get('/lang/{locale}', function ($locale) {

@@ -9,6 +9,7 @@ class WalletTransaction extends Model
     protected $fillable = [
         'wallet_id', 'type', 'amount', 'currency', 'description',
         'reference_type', 'reference_id', 'status', 'created_by',
+        'stripe_session_id', 'payment_method',
     ];
 
     protected $casts = [

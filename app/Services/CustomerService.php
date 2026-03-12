@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\Integrations\Sumsub\SumsubKycService;
+use App\Mail\VerifyKycMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class CustomerService
 {
@@ -37,6 +39,7 @@ class CustomerService
     {
         $data['agent_id'] = Auth::id();
         $customer = $this->customers->create($data);
+        print("Customer created: " . $customer->id);
 
         // Trigger KYC submission asynchronously (wrapped in try-catch for dummy keys)
         try {
@@ -46,11 +49,21 @@ class CustomerService
                     'sumsub_applicant_id' => $applicantId,
                     'kyc_status' => 'pending',
                 ]);
+                
                 $customer->refresh();
+
+                
+                // Generate WebSDK link and send email
+                $verificationLink = $this->kyc->generateWebSdkLink($applicantId);
+                logger()->info('Sumsub applicant created', ['applicantId' => $applicantId]);
+                if ($verificationLink) {
+                    Mail::to($customer->email)->send(new VerifyKycMail($customer, $verificationLink));
+                    print("Verification email sent to: " . $customer->email);
+                }
             }
         } catch (\Exception $e) {
             // Log but don't fail the customer creation
-            logger()->warning('Sumsub applicant creation failed', ['error' => $e->getMessage()]);
+            logger()->warning('Sumsub applicant creation or email failed', ['error' => $e->getMessage()]);
         }
 
         return $customer;

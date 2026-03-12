@@ -34,6 +34,7 @@ class CustomerController extends Controller
             'phone' => 'required|string|max:20',
         ]);
 
+        print("Creating customer...");
         $this->customerService->create($data);
 
         return redirect()->route('agent.customers.index')->with('success', 'Customer created and KYC initiated.');

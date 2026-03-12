@@ -32,7 +32,11 @@
                 @forelse($agents as $index => $agent)
                 <tr>
                     <td>{{ $agents->firstItem() + $index }}</td>
-                    <td class="fw-bold">{{ $agent->name }}</td>
+                    <td class="fw-bold">
+                        <a href="{{ route('admin.agents.show', $agent->id) }}" class="text-brand-dark text-decoration-none">
+                            {{ $agent->name }}
+                        </a>
+                    </td>
                     <td>{{ $agent->email }}</td>
                     <td>{{ $agent->phone ?? 'N/A' }}</td>
                     <td>
@@ -43,6 +47,7 @@
                     <td>{{ $agent->created_at->format('M d, Y') }}</td>
                     <td class="text-end">
                         <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('admin.agents.show', $agent->id) }}" class="btn btn-sm btn-outline-primary rounded-3 px-3">View</a>
                             <a href="{{ route('admin.agents.edit', $agent->id) }}" class="btn btn-sm btn-outline-dark rounded-3 px-3">Edit</a>
                             <form action="{{ route('admin.agents.toggle', $agent->id) }}" method="POST">
                                 @csrf

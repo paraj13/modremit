@@ -65,7 +65,10 @@
         <div class="table-premium-container">
             <div class="d-flex justify-content-between align-items-center mb-4 px-2">
                 <h5 class="mb-0 fw-bold text-brand-dark">Recent Activity</h5>
-                <a href="{{ route('agent.transfers.create') }}" class="btn btn-brand btn-sm px-4">New Transfer</a>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('agent.wallet.topup') }}" class="btn btn-brand-outline btn-sm px-4">Top-Up Wallet</a>
+                    <a href="{{ route('agent.transfers.create') }}" class="btn btn-brand btn-sm px-4">New Transfer</a>
+                </div>
             </div>
             <div class="text-center py-5">
                 <div class="bg-gray-light d-inline-block p-4 rounded-circle mb-4">

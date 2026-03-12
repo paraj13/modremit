@@ -21,28 +21,31 @@
                     </div>
                 </div>
 
-                <form>
+                <form action="{{ route('agent.wallet.checkout') }}" method="POST">
+                    @csrf
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-muted">TARGET AMOUNT (CHF)</label>
-                        <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border-0">
+                        <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
                             <span class="input-group-text bg-light border-0 px-4 fw-bold text-brand-dark">CHF</span>
-                            <input type="number" class="form-control bg-light border-0 shadow-none ps-0" placeholder="0.00" min="10" step="0.01">
+                            <input type="number" name="amount" class="form-control bg-light border-0 shadow-none ps-0" placeholder="0.00" min="10" step="0.01" required>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label fw-bold small text-muted">DEPOSIT SLIP / PROOF (OPTIONAL)</label>
-                        <input type="file" class="form-control rounded-3 border-0 bg-light p-3">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold small text-muted">ADDITIONAL NOTES</label>
-                        <textarea class="form-control rounded-3 border-0 bg-light p-3" rows="3" placeholder="Reference number, bank name, etc."></textarea>
+                        <label class="form-label fw-bold small text-muted">PAYMENT METHOD</label>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="p-3 border rounded-3 bg-light d-flex align-items-center">
+                                    <i class="bi bi-credit-card fs-4 me-2 text-primary"></i>
+                                    <span class="small fw-bold">Credit Card</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-grid">
-                        <button type="button" class="btn btn-brand btn-lg rounded-3 py-3 fw-bold" onclick="alert('This feature is coming soon! Please contact Admin for manual credit.')">
-                            <i class="bi bi-send-fill me-2"></i> Submit Request
+                        <button type="submit" class="btn btn-brand btn-lg rounded-3 py-3 fw-bold">
+                            <i class="bi bi-credit-card-fill me-2"></i> Pay with Card (Stripe)
                         </button>
                     </div>
                 </form>

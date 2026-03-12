@@ -69,6 +69,20 @@ class AgentController extends Controller
         return redirect()->route('admin.agents.index')->with('success', 'Agent created successfully.');
     }
 
+    public function show(User $agent)
+    {
+        $agent->load(['wallet', 'wallet.transactions' => function($q) {
+            $q->latest()->limit(50);
+        }]);
+
+        $stats = [
+            'total_added' => $agent->wallet ? $agent->wallet->transactions()->where('type', 'deposit')->where('status', 'completed')->sum('amount') : 0,
+            'total_sent'  => $agent->wallet ? abs($agent->wallet->transactions()->where('type', 'transfer')->where('status', 'completed')->sum('amount')) : 0,
+        ];
+
+        return view('admin.agents.show', compact('agent', 'stats'));
+    }
+
     public function edit(User $agent)
     {
         return view('admin.agents.edit', compact('agent'));
