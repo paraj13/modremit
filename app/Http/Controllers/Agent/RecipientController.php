@@ -14,6 +14,12 @@ class RecipientController extends Controller
         private CustomerService $customerService
     ) {}
 
+    public function index()
+    {
+        $recipients = $this->recipientService->listForAgent(auth()->id());
+        return view('agent.recipients.index', compact('recipients'));
+    }
+
     public function create(Request $request)
     {
         $customerId = $request->customer_id;

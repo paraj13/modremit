@@ -64,6 +64,28 @@ class WalletService
         });
     }
 
+    public function creditCommission(int $agentId, float $amount, \App\Models\Transaction $transaction): bool
+    {
+        return DB::transaction(function () use ($agentId, $amount, $transaction) {
+            $wallet = $this->getForAgent($agentId);
+            
+            $wallet->increment('chf_balance', $amount);
+            $wallet->increment('total_commission', $amount);
+            
+            $wallet->transactions()->create([
+                'type'         => 'commission',
+                'amount'       => $amount,
+                'description'  => 'Commission for TXN-' . $transaction->id,
+                'reference_type' => 'Transaction',
+                'reference_id'   => $transaction->id,
+                'status'       => 'completed',
+                'created_by'   => $agentId,
+            ]);
+
+            return true;
+        });
+    }
+
     public function getHistory(int $agentId)
     {
         return $this->getForAgent($agentId)->transactions()->latest()->paginate(20);

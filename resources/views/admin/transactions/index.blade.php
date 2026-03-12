@@ -29,7 +29,10 @@
                     <td class="fw-bold">{{ $transaction->agent->name ?? 'N/A' }}</td>
                     <td>{{ $transaction->customer->name ?? 'N/A' }}</td>
                     <td>{{ $transaction->recipient->name ?? 'N/A' }}</td>
-                    <td class="text-brand-dark fw-bold">CHF {{ number_format($transaction->chf_amount, 2) }}</td>
+                    <td>
+                        <div class="fw-bold text-brand-dark">CHF {{ number_format($transaction->chf_amount, 2) }}</div>
+                        <div class="small text-muted">S: {{ number_format($transaction->send_amount, 2) }} | C: {{ number_format($transaction->commission, 2) }}</div>
+                    </td>
                     <td>{{ number_format($transaction->rate, 4) }}</td>
                     <td>
                         @php

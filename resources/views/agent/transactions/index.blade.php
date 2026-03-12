@@ -26,7 +26,10 @@
                     <td>{{ $transactions->firstItem() + $index }}</td>
                     <td class="fw-bold text-brand-dark">{{ $transaction->customer->name ?? 'N/A' }}</td>
                     <td>{{ $transaction->recipient->name ?? 'N/A' }}</td>
-                    <td class="text-brand-dark fw-bold">CHF {{ number_format($transaction->chf_amount, 2) }}</td>
+                    <td>
+                        <div class="fw-bold text-brand-dark">CHF {{ number_format($transaction->chf_amount, 2) }}</div>
+                        <div class="small text-muted">Send: {{ number_format($transaction->send_amount, 2) }} | Comm: {{ number_format($transaction->commission, 2) }}</div>
+                    </td>
                     <td>
                         @php
                             $badgeClass = match($transaction->status) {

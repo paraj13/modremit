@@ -83,18 +83,32 @@
                                 </div>
                             </div>
                             <div class="col-md-5">
-                                <div id="quote_display" class="p-3 bg-white border border-brand-lime rounded-3 shadow-sm" style="display: none;">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span class="small text-muted fw-bold uppercase">RECIPIENT GETS</span>
-                                        <span class="h4 mb-0 fw-bold text-brand-dark"><span class="selected_target_currency">₹</span> <span id="quote_target_amount">0.00</span></span>
+                                <div id="quote_display" class="p-4 bg-white border border-brand-lime rounded-4 shadow-sm" style="display: none;">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="small text-muted fw-bold uppercase">RECIPIENT RECEIVES</span>
+                                        <span class="h3 mb-0 fw-bold text-success"><span class="selected_target_currency">₹</span> <span id="quote_target_amount">0.00</span></span>
                                     </div>
-                                    <div class="d-flex justify-content-between small">
-                                        <span class="text-muted">Rate: 1 CHF = <span id="quote_rate" class="fw-bold text-brand-dark">0.00</span> <span class="selected_target_currency">INR</span></span>
-                                        <span class="text-danger fw-bold">Fee: <span id="quote_fee">0.00</span> CHF</span>
+                                    <div class="space-y-2 border-top pt-3">
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="text-muted">Amount Sent:</span>
+                                            <span class="fw-bold text-brand-dark"><span id="quote_send_amount">0.00</span> CHF</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between small mb-1">
+                                            <span class="text-muted">Commission:</span>
+                                            <span class="fw-bold text-danger"><span id="quote_fee">0.00</span> CHF</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between small mb-2">
+                                            <span class="text-muted">Exchange Rate:</span>
+                                            <span class="fw-bold text-brand-dark">1 CHF = <span id="quote_rate">0.00</span> <span class="selected_target_currency">INR</span></span>
+                                        </div>
+                                        <div class="d-flex justify-content-between pt-2 border-top">
+                                            <span class="fw-bold text-brand-dark">Total Payable:</span>
+                                            <span class="fw-bold text-brand-dark"><span id="quote_total">0.00</span> CHF</span>
+                                        </div>
                                     </div>
-                                    <div class="mt-2 pt-2 border-top x-small text-muted d-flex justify-content-between">
-                                        <span>Ref: <span id="quote_id"></span></span>
-                                        <span class="text-brand-dark fw-bold"><i class="bi bi-clock-history me-1"></i> Valid 5m</span>
+                                    <div class="mt-3 pt-2 x-small text-muted d-flex justify-content-between opacity-50">
+                                        <span>Quote Ref: <span id="quote_id"></span></span>
+                                        <span><i class="bi bi-clock-history me-1"></i> Valid for 5m</span>
                                     </div>
                                 </div>
                             </div>
@@ -168,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        getQuoteBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Fetching...';
+        getQuoteBtn.classList.add('btn-loading');
         getQuoteBtn.disabled = true;
 
         fetch('{{ route("agent.transfers.quote") }}', {
@@ -190,7 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.selected_target_currency').forEach(el => el.textContent = symbol);
             document.getElementById('quote_rate').textContent = data.rate;
             document.getElementById('quote_target_amount').textContent = parseFloat(data.target_amount).toLocaleString('en-US', {maximumFractionDigits: 2});
-            document.getElementById('quote_fee').textContent = data.fee;
+            document.getElementById('quote_send_amount').textContent = parseFloat(data.send_amount).toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('quote_fee').textContent = parseFloat(data.fee).toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('quote_total').textContent = parseFloat(data.chf_amount).toLocaleString('en-US', {minimumFractionDigits: 2});
             document.getElementById('quote_id').textContent = data.revolut_quote_id ? data.revolut_quote_id.substring(0, 8) : 'LCL-001';
             
             document.getElementById('quote_display').style.display = 'block';
@@ -200,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Failed to fetch quote. Please try again.');
         })
         .finally(() => {
-            getQuoteBtn.innerHTML = 'Get Live Quote';
+            getQuoteBtn.classList.remove('btn-loading');
             getQuoteBtn.disabled = false;
         });
     });

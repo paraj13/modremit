@@ -10,17 +10,20 @@ class FxQuote extends Model
     use HasFactory;
 
     protected $fillable = [
-        'agent_id', 'quote_id', 'chf_amount', 'target_amount', 'rate',
-        'fee', 'from_currency', 'to_currency', 'expires_at', 'raw_response',
+        'agent_id', 'quote_id', 'chf_amount', 'send_amount', 'target_amount', 'rate',
+        'fee', 'agent_commission', 'admin_commission', 'from_currency', 'to_currency', 'expires_at', 'raw_response',
     ];
 
     protected $casts = [
-        'expires_at'    => 'datetime',
-        'raw_response'  => 'array',
-        'chf_amount'    => 'decimal:4',
-        'target_amount' => 'decimal:4',
-        'rate'          => 'decimal:6',
-        'fee'           => 'decimal:4',
+        'expires_at'       => 'datetime',
+        'raw_response'     => 'array',
+        'chf_amount'       => 'decimal:4',
+        'send_amount'      => 'decimal:4',
+        'target_amount'    => 'decimal:4',
+        'rate'             => 'decimal:6',
+        'fee'              => 'decimal:4',
+        'agent_commission' => 'decimal:4',
+        'admin_commission' => 'decimal:4',
     ];
 
     public function agent()

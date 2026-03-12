@@ -22,7 +22,7 @@ class RegisterController extends Controller
 
         $user = $this->create($request->all());
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Registration successful. Admin will review and approve your account shortly.');
     }
 
     protected function validator(array $data)
@@ -42,7 +42,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
-            'status' => 'approved',
+            'status' => 'pending',
             'is_active' => false,
         ]);
 

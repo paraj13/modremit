@@ -28,9 +28,21 @@
 
                 <div class="row align-items-center">
                     <div class="col-md-5">
-                        <div class="text-muted small text-uppercase">Amount Sent</div>
-                        <div class="h3 fw-bold">{{ number_format($transaction->chf_amount, 2) }} <span class="h6 text-muted">CHF</span></div>
-                        <div class="small text-muted">Incl. Commission: {{ number_format($transaction->commission, 2) }} CHF</div>
+                        <div class="text-muted small text-uppercase">Financial Breakdown</div>
+                        <div class="mt-2">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Amount Sent:</span>
+                                <span class="fw-bold">{{ number_format($transaction->send_amount, 2) }} CHF</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted">Commission:</span>
+                                <span class="fw-bold">{{ number_format($transaction->commission, 2) }} CHF</span>
+                            </div>
+                            <div class="d-flex justify-content-between pt-2 border-top">
+                                <span class="fw-bold text-brand-dark">Total Paid:</span>
+                                <span class="fw-bold text-brand-dark h5 mb-0">{{ number_format($transaction->chf_amount, 2) }} CHF</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-2 text-center text-muted">
                         <i class="bi bi-arrow-right h3"></i>

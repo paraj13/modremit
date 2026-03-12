@@ -13,8 +13,8 @@ class AgentSeeder extends Seeder
     {
         $agent = User::create([
             'name'     => 'Main Agent',
-            'email'    => 'agent@modremit.com',
-            'password' => Hash::make('password'),
+            'email'    => 'agent@gmail.com',
+            'password' => Hash::make('12345678'),
             'is_active'=> true,
         ]);
 

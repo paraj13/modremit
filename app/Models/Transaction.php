@@ -12,18 +12,21 @@ class Transaction extends Model
 
     protected $fillable = [
         'agent_id', 'customer_id', 'recipient_id', 'fx_quote_id',
-        'target_currency', 'chf_amount', 'target_amount', 'commission', 'rate',
+        'target_currency', 'chf_amount', 'target_amount', 'send_amount', 'commission', 'agent_commission', 'admin_commission', 'rate',
         'payment_ref', 'revolut_payment_id',
         'status', 'flagged', 'notes', 'failure_reason', 'metadata',
     ];
 
     protected $casts = [
-        'chf_amount'    => 'decimal:4',
-        'target_amount' => 'decimal:4',
-        'commission'    => 'decimal:4',
-        'rate'           => 'decimal:6',
-        'flagged'        => 'boolean',
-        'metadata'       => 'array',
+        'chf_amount'       => 'decimal:4',
+        'target_amount'    => 'decimal:4',
+        'send_amount'      => 'decimal:4',
+        'commission'       => 'decimal:4',
+        'agent_commission' => 'decimal:4',
+        'admin_commission' => 'decimal:4',
+        'rate'             => 'decimal:6',
+        'flagged'          => 'boolean',
+        'metadata'         => 'array',
     ];
 
     const STATUS_PENDING    = 'pending';

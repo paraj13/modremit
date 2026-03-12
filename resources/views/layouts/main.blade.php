@@ -134,6 +134,31 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global Form Loader
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
+                    if (submitBtn && !submitBtn.classList.contains('no-loader')) {
+                        submitBtn.classList.add('btn-loading');
+                        if (submitBtn.classList.contains('btn-light') || submitBtn.classList.contains('btn-brand-mint')) {
+                            submitBtn.classList.add('btn-loading-dark');
+                        }
+                    }
+                });
+            });
+
+            // Manual button loader utility
+            window.showLoader = function(btn) {
+                btn.classList.add('btn-loading');
+                if (btn.classList.contains('btn-light') || btn.classList.contains('btn-brand-mint')) {
+                    btn.classList.add('btn-loading-dark');
+                }
+            };
+        });
+    </script>
     @stack('scripts')
 </body>
 </html>

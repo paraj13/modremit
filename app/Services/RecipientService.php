@@ -15,6 +15,11 @@ class RecipientService
         return $this->recipients->allForCustomer($customerId);
     }
 
+    public function listForAgent(int $agentId)
+    {
+        return $this->recipients->allForAgent($agentId);
+    }
+
     public function find(int $id)
     {
         return $this->recipients->findById($id);

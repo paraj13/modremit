@@ -9,6 +9,9 @@
 <a class="nav-link {{ request()->routeIs('agent.customers.*') ? 'active' : '' }}" href="{{ route('agent.customers.index') }}">
     <i class="bi bi-person-lines-fill"></i> Customers
 </a>
+<a class="nav-link {{ request()->routeIs('agent.recipients.*') ? 'active' : '' }}" href="{{ route('agent.recipients.index') }}">
+    <i class="bi bi-people"></i> Beneficiaries
+</a>
 <a class="nav-link {{ request()->routeIs('agent.transfers.*') ? 'active' : '' }}" href="{{ route('agent.transfers.create') }}">
     <i class="bi bi-send-plus"></i> New Transfer
 </a>

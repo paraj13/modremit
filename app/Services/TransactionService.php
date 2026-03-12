@@ -37,14 +37,14 @@ class TransactionService
         return $this->transactions->findById($id);
     }
 
-    public function getStats(): array
+    public function getStats(array $params = []): array
     {
-        return $this->transactions->getStats();
+        return $this->transactions->getStats($params);
     }
 
-    public function getStatsForAgent(int $agentId): array
+    public function getStatsForAgent(int $agentId, array $params = []): array
     {
-        return $this->transactions->getStatsForAgent($agentId);
+        return $this->transactions->getStatsForAgent($agentId, $params);
     }
 
     public function getFlagged()
@@ -76,17 +76,20 @@ class TransactionService
 
         // Step 2: Create transaction as pending
         $transaction = $this->transactions->create([
-            'agent_id'        => $agentId,
-            'customer_id'     => $data['customer_id'],
-            'recipient_id'    => $data['recipient_id'],
-            'fx_quote_id'     => $quote->id,
-            'target_currency' => $quote->to_currency,
-            'chf_amount'      => $chfAmount,
-            'target_amount'   => $quote->target_amount,
-            'commission'      => $quote->fee,
-            'rate'            => $quote->rate,
-            'status'          => 'pending',
-            'notes'           => $data['notes'] ?? null,
+            'agent_id'         => $agentId,
+            'customer_id'      => $data['customer_id'],
+            'recipient_id'     => $data['recipient_id'],
+            'fx_quote_id'      => $quote->id,
+            'target_currency'  => $quote->to_currency,
+            'chf_amount'       => $chfAmount, // Total Paid
+            'send_amount'      => $quote->send_amount,
+            'target_amount'    => $quote->target_amount,
+            'commission'       => $quote->fee,
+            'agent_commission' => $quote->agent_commission,
+            'admin_commission' => $quote->admin_commission,
+            'rate'             => $quote->rate,
+            'status'           => 'pending',
+            'notes'            => $data['notes'] ?? null,
         ]);
 
         // Step 2.5: Deduct from wallet
@@ -115,6 +118,12 @@ class TransactionService
                 'status'       => 'completed',
                 'payment_ref'  => $paymentRef,
             ]);
+
+            // Credit commission to agent wallet
+            $transaction->refresh();
+            if ($transaction->agent_commission > 0) {
+                $this->wallet->creditCommission($transaction->agent_id, $transaction->agent_commission, $transaction);
+            }
 
             // Notify agent
             Auth::user()->notify(new TransactionCompleted($transaction->fresh()));

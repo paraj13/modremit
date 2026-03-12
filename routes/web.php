@@ -16,6 +16,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
+    // Admin Approval Routes (Must come before resource)
+    Route::get('/agents/pending', [App\Http\Controllers\Admin\AgentController::class, 'pending'])->name('agents.pending');
+    Route::post('/agents/{id}/approve', [App\Http\Controllers\Admin\AgentController::class, 'approve'])->name('agents.approve');
+    Route::post('/agents/{id}/reject', [App\Http\Controllers\Admin\AgentController::class, 'reject'])->name('agents.reject');
+
     Route::resource('agents', Admin\AgentController::class);
     Route::get('/transactions', [Admin\TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/customers', [Admin\CustomerController::class, 'index'])->name('customers.index');
@@ -41,6 +46,7 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
     Route::resource('customers', Agent\CustomerController::class);
     Route::post('customers/{id}/refresh-kyc', [Agent\CustomerController::class, 'refreshKyc'])->name('customers.refresh-kyc');
 
+    Route::get('recipients', [Agent\RecipientController::class, 'index'])->name('recipients.index');
     Route::get('recipients/create', [Agent\RecipientController::class, 'create'])->name('recipients.create');
     Route::post('recipients', [Agent\RecipientController::class, 'store'])->name('recipients.store');
     Route::get('recipients/{id}/edit', [Agent\RecipientController::class, 'edit'])->name('recipients.edit');
@@ -77,9 +83,3 @@ Route::get('/lang/{locale}', function ($locale) {
 Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
 
-// Admin Approval Routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/agents/pending', [App\Http\Controllers\Admin\AgentController::class, 'pending'])->name('agents.pending');
-    Route::post('/agents/{id}/approve', [App\Http\Controllers\Admin\AgentController::class, 'approve'])->name('agents.approve');
-    Route::post('/agents/{id}/reject', [App\Http\Controllers\Admin\AgentController::class, 'reject'])->name('agents.reject');
-});

@@ -16,13 +16,19 @@ class DashboardController extends Controller
         private WalletService $walletService
     ) {}
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         $agentId = Auth::id();
-        $stats = $this->transactionService->getStatsForAgent($agentId);
+        $params = [
+            'month' => $request->get('month', date('m')),
+            'year'  => $request->get('year', date('Y')),
+        ];
+
+        $stats = $this->transactionService->getStatsForAgent($agentId, $params);
         $customerCount = $this->customerService->listForAgent()->total();
         $wallet = $this->walletService->getForAgent($agentId);
+        $recentTransactions = $this->transactionService->listForAgent(['limit' => 5]);
 
-        return view('agent.dashboard', compact('stats', 'customerCount', 'wallet'));
+        return view('agent.dashboard', compact('stats', 'customerCount', 'wallet', 'recentTransactions', 'params'));
     }
 }

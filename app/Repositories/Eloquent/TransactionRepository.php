@@ -54,30 +54,91 @@ class TransactionRepository implements TransactionRepositoryInterface
             ->paginate(20);
     }
 
-    public function getStats(): array
+    public function getStats(array $params = []): array
     {
-        return [
-            'total'        => Transaction::count(),
-            'total_chf'    => Transaction::sum('chf_amount'),
-            'total_target'    => Transaction::sum('target_amount'),
-            'total_commission' => Transaction::sum('commission'),
-            'failed'       => Transaction::where('status', 'failed')->count(),
-            'flagged'      => Transaction::where('flagged', true)->count(),
-            'pending'      => Transaction::where('status', 'pending')->count(),
-            'completed'    => Transaction::where('status', 'completed')->count(),
+        $query = Transaction::query();
+        $this->applyDateFilter($query, $params);
+
+        $stats = [
+            'total'             => (clone $query)->count(),
+            'total_chf'         => (clone $query)->sum('chf_amount'),
+            'total_send'        => (clone $query)->sum('send_amount'),
+            'total_commission'  => (clone $query)->sum('commission'),
+            'agent_commissions' => (clone $query)->sum('agent_commission'),
+            'admin_commissions' => (clone $query)->sum('admin_commission'),
+            'failed'            => (clone $query)->where('status', 'failed')->count(),
+            'flagged'           => (clone $query)->where('flagged', true)->count(),
+            'pending'           => (clone $query)->where('status', 'pending')->count(),
+            'completed'         => (clone $query)->where('status', 'completed')->count(),
         ];
+
+        $stats['chart_data'] = $this->getChartData($params);
+
+        return $stats;
     }
 
-    public function getStatsForAgent(int $agentId): array
+    public function getStatsForAgent(int $agentId, array $params = []): array
     {
+        $query = Transaction::where('agent_id', $agentId);
+        $this->applyDateFilter($query, $params);
+
+        $stats = [
+            'total'             => (clone $query)->count(),
+            'total_chf'         => (clone $query)->sum('chf_amount'),
+            'total_send'        => (clone $query)->sum('send_amount'),
+            'total_commission'  => (clone $query)->sum('commission'),
+            'agent_commission'  => (clone $query)->sum('agent_commission'),
+            'failed'            => (clone $query)->where('status', 'failed')->count(),
+            'pending'           => (clone $query)->where('status', 'pending')->count(),
+            'completed'         => (clone $query)->where('status', 'completed')->count(),
+        ];
+
+        $stats['chart_data'] = $this->getChartData($params, $agentId);
+
+        return $stats;
+    }
+
+    private function applyDateFilter($query, array $params)
+    {
+        $month = $params['month'] ?? date('m');
+        $year = $params['year'] ?? date('Y');
+
+        if ($month && $year) {
+            $query->whereMonth('created_at', $month)->whereYear('created_at', $year);
+        } elseif ($year) {
+            $query->whereYear('created_at', $year);
+        }
+    }
+
+    private function getChartData(array $params, ?int $agentId = null): array
+    {
+        $month = $params['month'] ?? date('m');
+        $year = $params['year'] ?? date('Y');
+
+        $query = Transaction::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('count(*) as count'),
+            DB::raw('sum(chf_amount) as volume'),
+            DB::raw('sum(commission) as commission')
+        );
+
+        if ($agentId) {
+            $query->where('agent_id', $agentId);
+        }
+
+        if ($month && $year) {
+            $query->whereMonth('created_at', $month)->whereYear('created_at', $year);
+        } elseif ($year) {
+            $query->whereYear('created_at', $year);
+        }
+
+        $results = $query->groupBy('date')->orderBy('date')->get();
+
         return [
-            'total'        => Transaction::where('agent_id', $agentId)->count(),
-            'total_chf'    => Transaction::where('agent_id', $agentId)->sum('chf_amount'),
-            'total_target'    => Transaction::where('agent_id', $agentId)->sum('target_amount'),
-            'total_commission' => Transaction::where('agent_id', $agentId)->sum('commission'),
-            'failed'       => Transaction::where('agent_id', $agentId)->where('status', 'failed')->count(),
-            'pending'      => Transaction::where('agent_id', $agentId)->where('status', 'pending')->count(),
-            'completed'    => Transaction::where('agent_id', $agentId)->where('status', 'completed')->count(),
+            'labels' => $results->pluck('date')->toArray(),
+            'transactions' => $results->pluck('count')->toArray(),
+            'volume' => $results->pluck('volume')->toArray(),
+            'commissions' => $results->pluck('commission')->toArray(),
         ];
     }
 }

@@ -10,31 +10,43 @@ use App\Integrations\Revolut\RevolutFxService;
 class FxService
 {
     public function __construct(
-        private RevolutFxService $revolutFx,
+        private FxRatesService $fxRates,
         private FxQuoteRepositoryInterface $fxQuotes
     ) {}
 
     /** Fetch a live quote from Revolut and persist it */
     public function fetchAndStoreQuote(float $chfAmount, ?int $agentId = null, string $targetCurrency = 'INR'): \App\Models\FxQuote
     {
-        $quoteData = $this->revolutFx->fetchQuote($chfAmount, $targetCurrency);
+        // Use the unified FX service for consistency
+        // For actual transfers, we fetch a fresh rate (cache = false)
+        $fxData = $this->fxRates->getRate('CHF', $targetCurrency, false);
+        $rate = $fxData['rate'];
 
         // Apply commission (e.g. 2%)
         $commissionRate = (float) config('remittance.commission_rate', 2);
-        $commission = round($chfAmount * ($commissionRate / 100), 2);
-        $netChf = $chfAmount - $commission;
-        $targetAmount = round($netChf * $quoteData['rate'], 2);
+        $totalCommission = round($chfAmount * ($commissionRate / 100), 2);
+        
+        // Split commission (Default 60% to agent, 40% to admin)
+        $agentSplit = (float) config('remittance.agent_commission_split', 60);
+        $agentCommission = round($totalCommission * ($agentSplit / 100), 2);
+        $adminCommission = $totalCommission - $agentCommission;
+
+        $sendAmount = $chfAmount - $totalCommission;
+        $targetAmount = round($sendAmount * $rate, 2);
 
         return $this->fxQuotes->create([
-            'agent_id'      => $agentId,
-            'revolut_quote_id' => $quoteData['quote_id'] ?? null,
-            'chf_amount'    => $chfAmount,
-            'target_amount' => $targetAmount,
-            'from_currency' => 'CHF',
-            'to_currency'   => $targetCurrency,
-            'rate'          => $quoteData['rate'],
-            'fee'           => $commission,
-            'expires_at'    => $quoteData['expires_at'] ?? now()->addMinutes(5),
+            'agent_id'         => $agentId,
+            'revolut_quote_id' => null, // Unified flow uses the rate directly
+            'chf_amount'       => $chfAmount, // Total Paid
+            'send_amount'      => $sendAmount,
+            'target_amount'    => $targetAmount,
+            'from_currency'    => 'CHF',
+            'to_currency'      => $targetCurrency,
+            'rate'             => $rate,
+            'fee'              => $totalCommission,
+            'agent_commission' => $agentCommission,
+            'admin_commission' => $adminCommission,
+            'expires_at'       => now()->addMinutes(5),
         ]);
     }
 

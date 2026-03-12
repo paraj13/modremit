@@ -13,11 +13,18 @@ class DashboardController extends Controller
         private ComplianceService $complianceService
     ) {}
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $stats = $this->transactionService->getStats();
-        $pendingCompliance = $this->complianceService->pending()->count();
+        $params = [
+            'month' => $request->get('month', date('m')),
+            'year'  => $request->get('year', date('Y')),
+        ];
 
-        return view('admin.dashboard', compact('stats', 'pendingCompliance'));
+        $stats = $this->transactionService->getStats($params);
+        $pendingCompliance = $this->complianceService->pending()->count();
+        $pendingAgents = \App\Models\User::role('agent')->where('status', 'pending')->count();
+        $recentTransactions = $this->transactionService->listAll(['limit' => 5]);
+
+        return view('admin.dashboard', compact('stats', 'pendingCompliance', 'recentTransactions', 'pendingAgents', 'params'));
     }
 }
