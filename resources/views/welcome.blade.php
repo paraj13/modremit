@@ -291,6 +291,11 @@
         <div class="container pt-5">
             <div class="row align-items-center">
                 <div class="col-lg-7">
+                    <div class="mb-3 d-inline-block">
+                        <span class="badge bg-brand-dark text-brand-lime px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm border border-dark">
+                            <i class="bi bi-lightning-charge-fill me-1 text-warning"></i> Current Rate: 1 CHF = {{ number_format($baseRate ?? 0, 2) }} INR
+                        </span>
+                    </div>
                     <h1 class="hero-title">{{ __('messages.hero_title') }}</h1>
                     <p class="fs-5 text-dark-emphasis mb-5 pe-lg-5">
                         {{ __('messages.hero_subtitle') }}

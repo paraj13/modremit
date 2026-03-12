@@ -64,6 +64,88 @@ class SumsubKycService
         return $response['reviewResult']['reviewAnswer'] ?? 'pending';
     }
 
+    /** Retrieve detailed KYC data including image links */
+    public function getApplicantData(string $applicantId): array
+    {
+        if (str_starts_with($applicantId, 'dummy_applicant_')) {
+            return [
+                'document_type' => 'PASSPORT',
+                'doc_front' => 'https://ui-avatars.com/api/?name=Pass+Front&background=random&size=400',
+                'doc_back' => null,
+                'selfie' => 'https://ui-avatars.com/api/?name=Selfie+IMG&background=random&size=400',
+            ];
+        }
+
+        try {
+            // Get Applicant Metadata to find image IDs
+            $metadata = $this->client->get("resources/applicants/{$applicantId}/metadata/resources");
+            $docType = 'UNKNOWN';
+            $frontImageId = null;
+            $backImageId = null;
+            $selfieImageId = null;
+
+            // Extract the items array
+            $items = $metadata['items'] ?? [];
+
+            foreach ($items as $item) {
+                // Determine document types from idDocDef
+                $def = $item['idDocDef'] ?? [];
+                $type = $def['idDocType'] ?? null;
+                $subType = $def['idDocSubType'] ?? null;
+                
+                // Also check root for alternate structures
+                $internalDocType = $item['docType'] ?? null;
+
+                // Set main document type, ignoring selfie
+                if ($type && !in_array($type, ['SELFIE', 'VIDEO_SELFIE', 'FACE', 'LIVENESS'])) {
+                    $docType = $type;
+                }
+                
+                // Identify if image is a Selfie or a Document side
+                if (in_array($type, ['SELFIE', 'VIDEO_SELFIE', 'FACE', 'LIVENESS']) || $internalDocType === 'face') {
+                    $selfieImageId = $item['id'];
+                } else {
+                    if ($subType === 'FRONT_SIDE' || (isset($item['side']) && strtolower($item['side']) === 'front')) {
+                        $frontImageId = $item['id'];
+                    } elseif ($subType === 'BACK_SIDE' || (isset($item['side']) && strtolower($item['side']) === 'back')) {
+                        $backImageId = $item['id'];
+                    } elseif ($frontImageId === null) {
+                        $frontImageId = $item['id']; // fallback
+                    }
+                }
+            }
+            return [
+                'document_type' => $docType,
+                'doc_front' => $frontImageId ? $this->getSecureImageBase64($applicantId, $frontImageId) : null,
+                'doc_back'  => $backImageId ? $this->getSecureImageBase64($applicantId, $backImageId) : null,
+                'selfie'    => $selfieImageId ? $this->getSecureImageBase64($applicantId, $selfieImageId) : null,
+            ];
+        } catch (\Exception $e) {
+            logger()->error("Sumsub KYC Data Fetch Error", ['error' => $e->getMessage()]);
+            return [
+                'document_type' => 'ERROR_FETCHING',
+                'doc_front' => null,
+                'doc_back' => null,
+                'selfie' => null,
+            ];
+        }
+    }
+
+    /** 
+     * Helper to fetch an image and convert it to Data URI for secure display 
+     * without exposing backend Sumsub tokens to the frontend
+     */
+    private function getSecureImageBase64(string $applicantId, string $imageId): ?string
+    {
+        try {
+             $imageData = $this->client->getRaw("resources/inspections/{$applicantId}/resources/{$imageId}");
+             $base64 = base64_encode($imageData);
+             return "data:image/jpeg;base64,{$base64}";
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
     /** Handle a Sumsub webhook payload */
     public function handleWebhook(array $payload): void
     {

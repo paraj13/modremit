@@ -18,7 +18,11 @@
                 @endforeach
             </select>
             <select name="year" class="form-select form-select-sm border-0 shadow-sm rounded-3 px-3" style="width: auto;">
-                @foreach(range(date('Y')-2, date('Y')) as $y)
+                @php
+                    $startYear = date('Y') - 1;
+                    $endYear = date('Y') + 1;
+                @endphp
+                @foreach(range($startYear, $endYear) as $y)
                     <option value="{{ $y }}" {{ $params['year'] == $y ? 'selected' : '' }}>{{ $y }}</option>
                 @endforeach
             </select>
@@ -189,29 +193,36 @@
             }],
             chart: {
                 height: 350,
-                type: 'area',
+                type: 'bar',
                 toolbar: { show: false },
-                fontFamily: 'Inter, sans-serif'
+                fontFamily: 'Inter, sans-serif',
+                stacked: false
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    borderRadius: 4
+                },
             },
             colors: ['#D3FF8A', '#25330F'],
             dataLabels: { enabled: false },
-            stroke: { curve: 'smooth', width: 3 },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 0.45,
-                    opacityTo: 0.05,
-                    stops: [20, 100, 100, 100]
-                }
-            },
+            stroke: { show: true, width: 2, colors: ['transparent'] },
             xaxis: {
                 type: 'datetime',
                 categories: chartData.labels
             },
-            yaxis: {
-                title: { text: 'Amount (CHF)' }
-            },
+            yaxis: [
+                {
+                    title: { text: 'Volume (CHF)' },
+                    seriesName: 'Volume (CHF)'
+                },
+                {
+                    opposite: true,
+                    title: { text: 'Commission (CHF)' },
+                    seriesName: 'Commission (CHF)'
+                }
+            ],
             tooltip: {
                 x: { format: 'dd MMM yyyy' }
             }

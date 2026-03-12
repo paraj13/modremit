@@ -8,12 +8,16 @@ use Illuminate\Http\Request;
 class PublicController extends Controller
 {
     public function __construct(
-        private \App\Services\FxRatesService $fxRatesService
+        private \App\Services\FxService $fxService
     ) {}
 
     public function index()
     {
-        return view('welcome');
+        // Fetch base rate for display (1 CHF to default target INR)
+        $fxQuote = $this->fxService->fetchAndStoreQuote(1, null, 'INR');
+        $baseRate = $fxQuote->rate;
+
+        return view('welcome', compact('baseRate'));
     }
 
     public function getQuote(Request $request)
@@ -24,27 +28,17 @@ class PublicController extends Controller
             'to'     => 'required|string|size:3',
         ]);
 
-        $rateData = $this->fxRatesService->getRate(
-            $request->from,
-            $request->to
-        );
-
-        // Calculate public-facing quote with a standard fee (e.g. 1.5%)
-        $amount = (float) $request->amount;
-        $feeRate = 0.015;
-        $fee = round($amount * $feeRate, 2);
-        $netAmount = $amount - $fee;
-        $result = round($netAmount * $rateData['rate'], 2);
+        $fxQuote = $this->fxService->fetchAndStoreQuote((float) $request->amount, null, $request->to);
 
         $quote = [
-            'from' => $rateData['from'],
-            'to' => $rateData['to'],
-            'amount' => $amount,
-            'rate' => $rateData['rate'],
-            'fee' => $fee,
-            'net_amount' => $netAmount,
-            'result' => $result,
-            'last_updated' => $rateData['last_updated']
+            'from' => $fxQuote->from_currency,
+            'to' => $fxQuote->to_currency,
+            'amount' => $fxQuote->chf_amount,
+            'rate' => $fxQuote->rate,
+            'fee' => $fxQuote->fee,
+            'net_amount' => $fxQuote->send_amount,
+            'result' => $fxQuote->target_amount,
+            'last_updated' => $fxQuote->created_at->toDateTimeString()
         ];
 
         return response()->json($quote);

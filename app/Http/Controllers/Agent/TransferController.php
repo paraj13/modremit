@@ -49,12 +49,22 @@ class TransferController extends Controller
             'recipient_id'  => 'required|integer',
             'chf_amount'      => 'required|numeric|min:1',
             'target_currency' => 'required|string|size:3',
+            'quote_id'        => 'nullable|integer',
             'notes'           => 'nullable|string',
         ]);
 
-        $transaction = $this->transactionService->initiateTransfer($data);
-
-        return redirect()->route('agent.transactions.show', $transaction->id)
-            ->with('success', 'Transfer initiated successfully.');
+        try {
+            $transaction = $this->transactionService->initiateTransfer($data);
+            return redirect()->route('agent.transactions.show', $transaction->id)
+                ->with('success', 'Transfer initiated and sent for compliance review.');
+        } catch (\App\Exceptions\InsufficientWalletBalanceException $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Transfer failed: ' . $e->getMessage());
+        }
     }
 }

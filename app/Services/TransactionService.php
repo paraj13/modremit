@@ -53,56 +53,137 @@ class TransactionService
     }
 
     /**
-     * Orchestrates the full transfer workflow:
-     * Step 1 – Fetch FX quote from Revolut
-     * Step 2 – Create transaction record (pending)
-     * Step 3 – Execute exchange (CHF→INR)
-     * Step 4 – Send payment to recipient
-     * Step 5 – Compliance check
+     * Orchestrates the initiation of a transfer:
+     * Step 0: Validate balance
+     * Step 1: Resolve FX Quote
+     * Step 2: Create transaction as 'pending_compliance'
+     * Step 3: Create compliance log
+     * NOTE: Wallet deduction happens only after admin approval now.
      */
     public function initiateTransfer(array $data): Transaction
     {
         $agentId    = Auth::id();
         $chfAmount  = (float) $data['chf_amount'];
 
-        // Step 0: Check wallet balance
+        // Step 0: Check wallet balance BEFORE any persistence
         $wallet = $this->wallet->getForAgent($agentId);
         if ($wallet->chf_balance < $chfAmount) {
-            throw new \Exception('Insufficient wallet balance. Please top up your wallet.');
+            throw new \App\Exceptions\InsufficientWalletBalanceException();
         }
 
-        // Step 1: Fetch and store FX quote
-        $quote = $this->fxService->fetchAndStoreQuote($chfAmount, $agentId, $data['target_currency'] ?? 'INR');
+        // Step 1: Resolve FX quote
+        $quote = null;
+        if (!empty($data['quote_id'])) {
+            $quote = $this->fxService->findById($data['quote_id']);
+            if (!$quote || 
+                $quote->expires_at->isPast() || 
+                $quote->to_currency !== ($data['target_currency'] ?? 'INR') ||
+                abs($quote->chf_amount - $chfAmount) > 0.01) 
+            {
+                $quote = null;
+            }
+        }
 
-        // Step 2: Create transaction as pending
-        $transaction = $this->transactions->create([
-            'agent_id'         => $agentId,
-            'customer_id'      => $data['customer_id'],
-            'recipient_id'     => $data['recipient_id'],
-            'fx_quote_id'      => $quote->id,
-            'target_currency'  => $quote->to_currency,
-            'chf_amount'       => $chfAmount, // Total Paid
-            'send_amount'      => $quote->send_amount,
-            'target_amount'    => $quote->target_amount,
-            'commission'       => $quote->fee,
-            'agent_commission' => $quote->agent_commission,
-            'admin_commission' => $quote->admin_commission,
-            'rate'             => $quote->rate,
-            'status'           => 'pending',
-            'notes'            => $data['notes'] ?? null,
+        if (!$quote) {
+            $quote = $this->fxService->fetchAndStoreQuote($chfAmount, $agentId, $data['target_currency'] ?? 'INR');
+        }
+
+        return DB::transaction(function() use ($agentId, $chfAmount, $quote, $data) {
+            // Step 2: Create transaction as pending_compliance
+            $transaction = $this->transactions->create([
+                'agent_id'         => $agentId,
+                'customer_id'      => $data['customer_id'],
+                'recipient_id'     => $data['recipient_id'],
+                'fx_quote_id'      => $quote->id,
+                'target_currency'  => $quote->to_currency,
+                'chf_amount'       => $chfAmount,
+                'send_amount'      => $quote->send_amount,
+                'target_amount'    => $quote->target_amount,
+                'commission'       => $quote->fee,
+                'agent_commission' => $quote->agent_commission,
+                'admin_commission' => $quote->admin_commission,
+                'rate'             => $quote->rate,
+                'status'           => 'pending_compliance',
+                'notes'            => $data['notes'] ?? null,
+            ]);
+
+            // Step 3: Compliance check & flag
+            $this->compliance->checkAndFlag($transaction);
+
+            // If not flagged for a specific reason, create a generic compliance log for review
+            if (!$transaction->flagged) {
+                $this->compliance->flagTransaction($transaction, "Routine compliance review required.");
+            }
+
+            return $transaction;
+        });
+    }
+
+    /**
+     * Admin explicitly approves transaction.
+     * Deducts wallet, upgrades status, and executes payment.
+     */
+    public function approveTransaction(int $transactionId): bool
+    {
+        $transaction = $this->transactions->findById($transactionId);
+        if (!$transaction || $transaction->status !== 'pending_compliance') {
+            return false;
+        }
+
+        // Check wallet balance one last time before execution
+        $wallet = $this->wallet->getForAgent($transaction->agent_id);
+        if ($wallet->chf_balance < $transaction->chf_amount) {
+            $this->rejectTransaction($transactionId, "Insufficient agent wallet balance at time of execution.");
+            return false;
+        }
+
+        return DB::transaction(function() use ($transaction) {
+            // Deduct from wallet now
+            $this->wallet->debitForTransfer($transaction->agent_id, (float) $transaction->chf_amount, $transaction);
+
+            // Update status to processing
+            $this->updateStatus($transaction->id, 'processing');
+
+            // Trigger actual Revolut Payment
+            return $this->executePayment($transaction->id);
+        });
+    }
+
+    /**
+     * Admin explicitly rejects transaction.
+     * No wallet deduction occurs.
+     */
+    public function rejectTransaction(int $transactionId, string $notes): bool
+    {
+        $transaction = $this->transactions->findById($transactionId);
+        if (!$transaction || $transaction->status !== 'pending_compliance') {
+            return false;
+        }
+
+        $this->transactions->update($transaction->id, [
+            'status' => 'rejected',
+            'notes'  => $notes,
         ]);
 
-        // Step 2.5: Deduct from wallet
-        $this->wallet->debitForTransfer($agentId, $chfAmount, $transaction);
+        $transaction->agent->notify(new TransactionFailed($transaction->fresh()));
+        return true;
+    }
 
-        // Step 3 & 4: Execute payment via Revolut
+    /**
+     * Executes the actual payment via Revolut AFTER compliance approval.
+     */
+    public function executePayment(int $transactionId): bool
+    {
+        $transaction = $this->transactions->findById($transactionId);
+        if (!$transaction || $transaction->status !== 'processing') {
+            return false;
+        }
+
         try {
-            $this->transactions->update($transaction->id, ['status' => 'processing']);
-
             $recipient = $transaction->recipient;
             $paymentRef = $this->revolutPayment->sendPayment([
-                'amount'          => $quote->target_amount,
-                'currency'        => $quote->to_currency,
+                'amount'          => $transaction->target_amount,
+                'currency'        => $transaction->target_currency,
                 'recipient_name'  => $recipient->name,
                 'account_number'  => $recipient->account_number,
                 'iban'            => $recipient->iban,
@@ -120,28 +201,23 @@ class TransactionService
             ]);
 
             // Credit commission to agent wallet
-            $transaction->refresh();
             if ($transaction->agent_commission > 0) {
                 $this->wallet->creditCommission($transaction->agent_id, $transaction->agent_commission, $transaction);
             }
 
             // Notify agent
-            Auth::user()->notify(new TransactionCompleted($transaction->fresh()));
+            $transaction->agent->notify(new TransactionCompleted($transaction->fresh()));
 
+            return true;
         } catch (\Exception $e) {
             $this->transactions->update($transaction->id, [
                 'status' => 'failed',
                 'notes'  => $e->getMessage(),
             ]);
 
-            Auth::user()->notify(new TransactionFailed($transaction->fresh()));
+            $transaction->agent->notify(new TransactionFailed($transaction->fresh()));
+            return false;
         }
-
-        // Step 5: Compliance check
-        $fresh = $transaction->fresh();
-        $this->compliance->checkAndFlag($fresh);
-
-        return $fresh;
     }
 
     public function updateStatus(int $id, string $status)

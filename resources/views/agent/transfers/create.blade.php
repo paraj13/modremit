@@ -209,6 +209,17 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('quote_total').textContent = parseFloat(data.chf_amount).toLocaleString('en-US', {minimumFractionDigits: 2});
             document.getElementById('quote_id').textContent = data.revolut_quote_id ? data.revolut_quote_id.substring(0, 8) : 'LCL-001';
             
+            // Populate hidden quote_id and amount for the form
+            let quoteIdInput = document.getElementById('quote_id_input');
+            if (!quoteIdInput) {
+                quoteIdInput = document.createElement('input');
+                quoteIdInput.type = 'hidden';
+                quoteIdInput.name = 'quote_id';
+                quoteIdInput.id = 'quote_id_input';
+                document.getElementById('transferForm').appendChild(quoteIdInput);
+            }
+            quoteIdInput.value = data.id;
+
             document.getElementById('quote_display').style.display = 'block';
             submitBtn.disabled = false;
         })

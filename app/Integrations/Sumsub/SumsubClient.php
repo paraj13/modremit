@@ -66,4 +66,17 @@ class SumsubClient
             throw $e;
         }
     }
+
+    public function getRaw(string $path): string
+    {
+        try {
+            $response = $this->http->get($path, [
+                'headers' => $this->buildHeaders('GET', '/' . ltrim($path, '/')),
+            ]);
+            return $response->getBody()->getContents();
+        } catch (RequestException $e) {
+            logger()->error('Sumsub getRaw error', ['path' => $path, 'message' => $e->getMessage()]);
+            throw $e;
+        }
+    }
 }

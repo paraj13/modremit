@@ -31,7 +31,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/compliance', [Admin\ComplianceController::class, 'index'])->name('compliance.index');
     Route::get('/compliance/{id}', [Admin\ComplianceController::class, 'show'])->name('compliance.show');
-    Route::get('/compliance/{id}/review', [Admin\ComplianceController::class, 'review'])->name('compliance.review');
+    Route::post('/compliance/{id}/review', [Admin\ComplianceController::class, 'review'])->name('compliance.review');
 
     // Wallet Management
     Route::get('/wallets', [Admin\WalletController::class, 'index'])->name('wallets.index');

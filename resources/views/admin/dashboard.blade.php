@@ -18,7 +18,11 @@
                 @endforeach
             </select>
             <select name="year" class="form-select form-select-sm border-0 shadow-sm rounded-3 px-3" style="width: auto;">
-                @foreach(range(date('Y')-2, date('Y')) as $y)
+                @php
+                    $startYear = date('Y') - 1;
+                    $endYear = date('Y') + 1;
+                @endphp
+                @foreach(range($startYear, $endYear) as $y)
                     <option value="{{ $y }}" {{ $params['year'] == $y ? 'selected' : '' }}>{{ $y }}</option>
                 @endforeach
             </select>
@@ -168,25 +172,43 @@
         var volumeOptions = {
             series: [{
                 name: 'Volume (CHF)',
-                type: 'area',
+                type: 'bar',
                 data: chartData.volume
             }, {
                 name: 'Commissions (CHF)',
-                type: 'line',
+                type: 'bar',
                 data: chartData.commissions
             }],
             chart: {
                 height: 350,
-                type: 'line',
+                type: 'bar',
                 toolbar: { show: false },
-                fontFamily: 'Inter, sans-serif'
+                fontFamily: 'Inter, sans-serif',
+                stacked: false
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    borderRadius: 4
+                },
             },
             colors: ['#D3FF8A', '#25330F'],
-            stroke: { width: [0, 4], curve: 'smooth' },
-            fill: { opacity: [0.85, 1] },
+            dataLabels: { enabled: false },
+            stroke: { show: true, width: 2, colors: ['transparent'] },
             labels: chartData.labels,
             xaxis: { type: 'datetime' },
-            yaxis: { title: { text: 'Amount (CHF)' }},
+            yaxis: [
+                {
+                    title: { text: 'Volume (CHF)' },
+                    labels: { style: { colors: '#25330F' } }
+                },
+                {
+                    opposite: true,
+                    title: { text: 'Commission (CHF)' },
+                    labels: { style: { colors: '#25330F' } }
+                }
+            ],
             tooltip: { shared: true, intersect: false }
         };
 
