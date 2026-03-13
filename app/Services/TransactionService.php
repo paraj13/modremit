@@ -89,7 +89,7 @@ class TransactionService
         }
 
         return DB::transaction(function() use ($agentId, $chfAmount, $quote, $data) {
-            // Step 2: Create transaction as pending_compliance
+            // Step 2: Create transaction as processing
             $transaction = $this->transactions->create([
                 'agent_id'         => $agentId,
                 'customer_id'      => $data['customer_id'],
@@ -103,16 +103,25 @@ class TransactionService
                 'agent_commission' => $quote->agent_commission,
                 'admin_commission' => $quote->admin_commission,
                 'rate'             => $quote->rate,
-                'status'           => 'pending_compliance',
+                'status'           => 'processing',
                 'notes'            => $data['notes'] ?? null,
             ]);
 
-            // Step 3: Compliance check & flag
+            // Deduct from wallet immediately
+            $this->wallet->debitForTransfer($agentId, $chfAmount, $transaction);
+
+            // Step 3: Execute actual payment via Revolut (which updates status tracking & handles commission)
+            $this->executePayment($transaction->id);
+            
+            // Refresh transaction after execution to get latest status
+            $transaction = $transaction->fresh();
+
+            // Step 4: Compliance check & flag (strictly for monitoring purposes now)
             $this->compliance->checkAndFlag($transaction);
 
             // If not flagged for a specific reason, create a generic compliance log for review
             if (!$transaction->flagged) {
-                $this->compliance->flagTransaction($transaction, "Routine compliance review required.");
+                $this->compliance->flagTransaction($transaction, "Routine compliance record.");
             }
 
             return $transaction;

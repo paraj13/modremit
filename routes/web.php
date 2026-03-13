@@ -23,6 +23,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::resource('agents', Admin\AgentController::class);
     Route::get('/transactions', [Admin\TransactionController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/{id}', [Admin\TransactionController::class, 'show'])->name('transactions.show');
     Route::get('/customers', [Admin\CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{id}', [Admin\CustomerController::class, 'show'])->name('customers.show');
     Route::get('/recipients', [Admin\RecipientController::class, 'index'])->name('recipients.index');

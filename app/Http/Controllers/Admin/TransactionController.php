@@ -17,4 +17,10 @@ class TransactionController extends Controller
 
         return view('admin.transactions.index', compact('transactions'));
     }
+
+    public function show($id)
+    {
+        $transaction = Transaction::with(['agent', 'customer', 'recipient'])->findOrFail($id);
+        return view('admin.transactions.show', compact('transaction'));
+    }
 }

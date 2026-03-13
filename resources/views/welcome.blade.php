@@ -293,7 +293,8 @@
                 <div class="col-lg-7">
                     <div class="mb-3 d-inline-block">
                         <span class="badge bg-brand-dark text-brand-lime px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm border border-dark">
-                            <i class="bi bi-lightning-charge-fill me-1 text-warning"></i> Current Rate: 1 CHF = {{ number_format($baseRate ?? 0, 2) }} INR
+                            <i class="bi bi-lightning-charge-fill me-1 text-warning"></i>
+                            1 CHF = <span id="hero_rate_amount">{{ number_format($baseRate ?? 96.85, 2) }}</span> <span id="hero_rate_currency">INR</span> <span class="fi fi-in fi-badge me-1" id="hero_rate_flag" style="border-radius:3px;"></span>
                         </span>
                     </div>
                     <h1 class="hero-title">{{ __('messages.hero_title') }}</h1>
@@ -364,7 +365,7 @@
                                 <span class="text-muted small">{{ __('messages.fee') }}</span>
                             </div>
                             <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="text-muted small fw-bold"><i class="bi bi-x"></i> <span id="fx_rate">0.8601</span></span>
+                                <span class="text-muted small fw-bold"><i class="bi bi-x"></i> <span id="fx_rate">{{ number_format($baseRate ?? 96.85, 4) }}</span></span>
                                 <span class="text-muted small">{{ __('messages.rate') }}</span>
                             </div>
                             <div class="position-absolute top-50 start-0 translate-middle-x bg-white p-1" style="margin-left: -1px;">
@@ -816,15 +817,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Corrected Multi-Dropdown Logic
+
+            // ─── Currency Dropdown Logic ───────────────────────────────────────────
+            // Track currently selected currencies (simple state object)
+            const currencyState = {
+                from: document.getElementById('from_currency')?.value || 'CHF',
+                to:   document.getElementById('to_currency')?.value   || 'INR',
+            };
+
             document.querySelectorAll('.currency-dropdown').forEach(dropdown => {
                 const trigger = dropdown.querySelector('.currency-trigger');
-                const menu = dropdown.querySelector('.currency-menu');
-                const input = dropdown.querySelector('input[type="hidden"]');
+                const menu    = dropdown.querySelector('.currency-menu');
+                const input   = dropdown.querySelector('input[type="hidden"]');
 
                 trigger.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    // Close other dropdowns
                     document.querySelectorAll('.currency-menu').forEach(m => {
                         if (m !== menu) m.style.display = 'none';
                     });
@@ -837,19 +844,25 @@
                         const code = this.dataset.code;
                         const name = this.dataset.name;
 
+                        // Update visual trigger
                         trigger.querySelector('img').src = flag;
                         trigger.querySelector('.currency-code').innerText = code;
-                        if (trigger.querySelector('.currency-name')) {
-                            trigger.querySelector('.currency-name').innerText = name;
-                        }
-                        input.value = code;
+                        const nameEl = trigger.querySelector('.currency-name');
+                        if (nameEl) nameEl.innerText = name;
 
-                        // Update active state
+                        // Update hidden input and state
+                        input.value = code;
+                        if (input.id === 'from_currency') currencyState.from = code;
+                        if (input.id === 'to_currency')   currencyState.to   = code;
+
+                        // Update active state in menu
                         menu.querySelectorAll('.currency-item').forEach(i => i.classList.remove('active'));
                         this.classList.add('active');
 
                         menu.style.display = 'none';
-                        fetchQuote(); // Trigger rate update
+
+                        // Re-fetch with updated currencies
+                        fetchQuote();
                     });
                 });
             });
@@ -858,105 +871,122 @@
                 document.querySelectorAll('.currency-menu').forEach(m => m.style.display = 'none');
             });
 
-            // Enhanced Choices.js with Flags
-            const cityChoicesItems = {
-                'CHF': '🇨🇭', 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 
-                'INR': '🇮🇳', 'PHP': '🇵🇭', 'PKR': '🇵🇰'
-            };
 
-            const selectors = document.querySelectorAll('.currency-select');
-            selectors.forEach(select => {
-                new Choices(select, {
-                    searchEnabled: true,
-                    itemSelectText: '',
-                    shouldSort: false,
-                    callbackOnCreateTemplates: function(template) {
-                        return {
-                            item: (classNames, data) => {
-                                const flag = data.element.dataset.flag;
-                                return template(`
-                                    <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}">
-                                        <span class="fi fi-${flag} me-2 rounded-1 shadow-sm"></span> <span class="fw-bold">${data.value}</span>
-                                    </div>
-                                `);
-                            },
-                            choice: (classNames, data) => {
-                                const flag = data.element.dataset.flag;
-                                const name = data.element.dataset.name;
-                                return template(`
-                                    <div class="${classNames.item} ${classNames.itemChoice} ${data.disabled ? classNames.itemDisabled : classNames.itemSelectable}" data-select-text="${this.config.itemSelectText}" data-choice data-id="${data.id}" data-value="${data.value}" ${data.disabled ? 'aria-disabled="true"' : 'role="option"'}>
-                                        <div class="d-flex align-items-center py-1">
-                                            <span class="fi fi-${flag} me-3 fs-5 rounded-1 shadow-sm border border-white border-opacity-25"></span>
-                                            <div style="line-height: 1.1;">
-                                                <div class="fw-bold text-dark">${data.value}</div>
-                                                <div class="text-muted small" style="font-size: 0.75rem;">${name}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                `);
-                            },
-                        };
-                    }
-                });
-            });
-
-            // Converter Logic
-            const sendInput = document.getElementById('send_amount');
+            // ─── Converter Quote Logic ─────────────────────────────────────────────
+            const sendInput    = document.getElementById('send_amount');
             const receiveInput = document.getElementById('receive_amount');
-            const fromSelect = document.getElementById('from_currency');
-            const toSelect = document.getElementById('to_currency');
-            const feeDisplay = document.getElementById('fee_amount');
-            const rateDisplay = document.getElementById('fx_rate');
-            const loader = document.getElementById('loader');
+            const feeDisplay   = document.getElementById('fee_amount');
+            const rateDisplay  = document.getElementById('fx_rate');
+            const loader       = document.getElementById('loader');
 
             async function fetchQuote() {
-                loader.classList.remove('d-none');
+                const amount = parseFloat(sendInput.value) || 0;
+                if (amount < 1) return;
+
+                if (loader) loader.classList.remove('d-none');
+
                 try {
-                    const response = await fetch('/public/quote', {
+                    const res = await fetch('/public/quote', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                         },
                         body: JSON.stringify({
-                            amount: sendInput.value,
-                            from: fromSelect.value,
-                            to: toSelect.value
+                            amount: amount,
+                            from:   currencyState.from,
+                            to:     currencyState.to
                         })
                     });
-                    const data = await response.json();
-                    
+
+                    if (!res.ok) throw new Error('Network error ' + res.status);
+                    const data = await res.json();
+
                     if (data.error) {
-                        receiveInput.value = data.error;
+                        if (receiveInput) receiveInput.value = data.error;
                     } else {
-                        receiveInput.value = data.result.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                        feeDisplay.innerText = data.fee.toFixed(2);
-                        rateDisplay.innerText = data.rate.toFixed(4);
-                        document.querySelectorAll('.from_code').forEach(el => el.innerText = data.from);
+                        // Update receive amount
+                        if (receiveInput) {
+                            receiveInput.value = parseFloat(data.result).toLocaleString(undefined, {
+                                minimumFractionDigits: 2, maximumFractionDigits: 2
+                            });
+                        }
+                        // Update fee and rate displays
+                        if (feeDisplay) feeDisplay.innerText = parseFloat(data.fee || 0).toFixed(2);
+                        if (rateDisplay) {
+                            rateDisplay.innerText = parseFloat(data.rate || 0).toFixed(4);
+                        }
+                        // Update from_code labels
+                        document.querySelectorAll('.from_code').forEach(el => el.innerText = data.from || currencyState.from);
                     }
-                } catch (error) {
-                    console.error('Quote error:', error);
+                } catch (err) {
+                    console.error('FX Quote Error:', err);
+                    if (receiveInput) receiveInput.value = 'Error fetching rate';
                 } finally {
-                    loader.classList.add('d-none');
+                    if (loader) loader.classList.add('d-none');
                 }
             }
 
-            [sendInput].forEach(el => {
-                el.addEventListener('change', fetchQuote);
-            });
-            // We removed to_currency from the change list because we handle it in the custom dropdown click
-            sendInput.addEventListener('input', debounce(fetchQuote, 500));
-
-            function debounce(func, wait) {
-                let timeout;
-                return function() {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => func.apply(this, arguments), wait);
-                };
+            // Debounce helper
+            function debounce(fn, ms) {
+                let timer;
+                return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
             }
 
-            fetchQuote(); // Initial load
+            // Trigger on amount change
+            if (sendInput) {
+                sendInput.addEventListener('change', fetchQuote);
+                sendInput.addEventListener('input',  debounce(fetchQuote, 600));
+            }
+
+            // Initial load
+            fetchQuote();
+
+
+            // ─── Hero Badge Cycling ────────────────────────────────────────────────
+            const heroRates = [
+                { code: 'INR', rate: {{ $baseRate ?? 96.85 }}, flag: 'in' },
+                { code: 'USD', rate: 1.12,   flag: 'us' },
+                { code: 'CAD', rate: 1.52,   flag: 'ca' },
+                { code: 'EUR', rate: 1.04,   flag: 'eu' },
+                { code: 'GBP', rate: 0.89,   flag: 'gb' },
+                { code: 'PHP', rate: 64.10,  flag: 'ph' },
+                { code: 'PKR', rate: 311.50, flag: 'pk' },
+            ];
+
+            let heroIdx = 0;
+            const heroAmountEl   = document.getElementById('hero_rate_amount');
+            const heroCurrencyEl = document.getElementById('hero_rate_currency');
+            const heroFlagEl     = document.getElementById('hero_rate_flag');
+
+            if (heroAmountEl && heroCurrencyEl) {
+                heroAmountEl.style.transition   = 'opacity 0.3s ease';
+                heroCurrencyEl.style.transition = 'opacity 0.3s ease';
+                if (heroFlagEl) heroFlagEl.style.transition = 'opacity 0.3s ease';
+
+                setInterval(() => {
+                    heroIdx = (heroIdx + 1) % heroRates.length;
+                    const entry = heroRates[heroIdx];
+
+                    heroAmountEl.style.opacity   = '0';
+                    heroCurrencyEl.style.opacity = '0';
+                    if (heroFlagEl) heroFlagEl.style.opacity = '0';
+
+                    setTimeout(() => {
+                        heroAmountEl.textContent   = entry.rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        heroCurrencyEl.textContent = entry.code;
+                        if (heroFlagEl) {
+                            heroFlagEl.className      = `fi fi-${entry.flag} fi-badge me-1`;
+                            heroFlagEl.style.opacity  = '1';
+                        }
+                        heroAmountEl.style.opacity   = '1';
+                        heroCurrencyEl.style.opacity = '1';
+                    }, 300);
+                }, 2000);
+            }
+
         });
     </script>
 </body>
 </html>
+

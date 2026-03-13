@@ -54,7 +54,7 @@
         <div class="table-premium-container h-100">
             <div class="d-flex justify-content-between align-items-center mb-4 px-2">
                 <h5 class="mb-0 fw-bold text-brand-dark">Beneficiary Recipients</h5>
-                <a href="{{ route('agent.recipients.create', ['customer_id' => $customer->id]) }}" class="btn btn-brand btn-sm px-4">
+                <a href="{{ route('agent.recipients.create', ['eid' => \Illuminate\Support\Facades\Crypt::encryptString($customer->id)]) }}" class="btn btn-brand btn-sm px-4">
                      <i class="bi bi-plus-lg me-1"></i> Add New
                 </a>
             </div>
@@ -86,7 +86,7 @@
                                 <div class="btn-group">
                                     <a href="{{ route('agent.recipients.edit', $recipient->id) }}" class="btn btn-sm btn-outline-dark border rounded-pill px-3 me-2">Edit</a>
                                     @if($customer->kyc_status === 'approved')
-                                        <a href="{{ route('agent.transfers.create', ['customer_id' => $customer->id, 'recipient_id' => $recipient->id]) }}" class="btn btn-sm btn-brand rounded-pill px-3">
+                                        <a href="{{ route('agent.transfers.create', ['customer_id' => $customer->id, 'recipient_id' => $recipient->id, 'eid' => \Illuminate\Support\Facades\Crypt::encryptString($customer->id), 'return_to' => request('return_to')]) }}" class="btn btn-sm btn-brand rounded-pill px-3">
                                              <i class="bi bi-send-fill me-1"></i> Send
                                         </a>
                                     @endif

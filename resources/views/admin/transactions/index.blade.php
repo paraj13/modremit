@@ -6,9 +6,12 @@
 <div class="table-premium-container">
     <div class="d-flex justify-content-between align-items-center mb-4 px-3">
         <h5 class="mb-0 fw-bold text-brand-dark">Platform Transaction History</h5>
+        <div class="search-box">
+            <input type="text" class="form-control rounded-pill px-4 shadow-sm border-0 bg-white" placeholder="Search transactions..." data-search-target="#transactionsTable" style="min-width: 280px;">
+        </div>
     </div>
     <div class="table-responsive">
-        <table class="table table-hover align-middle table-premium">
+        <table class="table table-hover align-middle table-premium" id="transactionsTable">
             <thead>
                 <tr>
                     <th width="50px">No</th>
@@ -49,7 +52,7 @@
                     </td>
                     <td><span class="text-muted small">{{ $transaction->created_at->format('M d, Y H:i') }}</span></td>
                     <td class="text-end">
-                        <button class="btn btn-sm btn-outline-dark rounded-3 px-3 viewDetails" data-id="{{ $transaction->id }}">View</button>
+                        <a href="{{ route('admin.transactions.show', $transaction->id) }}" class="btn btn-sm btn-outline-dark rounded-3 px-3">View</a>
                     </td>
                 </tr>
                 @empty

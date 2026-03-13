@@ -31,6 +31,28 @@ class SumsubKycService
         return $response['id'] ?? null;
     }
 
+    /** Create an applicant in Sumsub for an Agent */
+    public function createAgentApplicant(\App\Models\User $agent): ?string
+    {
+        if (config('integrations.sumsub.app_token') === 'dummy_sumsub_app_token') {
+            return 'dummy_applicant_agent_' . $agent->id . '_' . uniqid();
+        }
+
+        $level = config('integrations.sumsub.level_name', 'id-and-liveness');
+
+        $response = $this->client->post("resources/applicants?levelName={$level}", [
+            'externalUserId' => 'agent_' . $agent->id,
+            'email'          => $agent->email,
+            'phone'          => $agent->phone ?? '',
+            'fixedInfo'      => [
+                'firstName' => explode(' ', $agent->name)[0] ?? $agent->name,
+                'lastName'  => explode(' ', $agent->name, 2)[1] ?? '',
+            ],
+        ]);
+
+        return $response['id'] ?? null;
+    }
+
     /** Generate a hosted WebSDK verification link for an applicant */
     public function generateWebSdkLink(string $applicantId): ?string
     {
@@ -168,6 +190,12 @@ class SumsubKycService
 
             // Notify the agent
             $customer->agent?->notify(new \App\Notifications\KycStatusUpdated($customer, $kycStatus));
+            return;
+        }
+
+        $agent = \App\Models\User::role('agent')->where('sumsub_applicant_id', $applicantId)->first();
+        if ($agent) {
+            $agent->update(['kyc_status' => $kycStatus]);
         }
     }
 }

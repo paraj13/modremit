@@ -6,27 +6,47 @@
 <div class="row align-items-center mb-4">
     <div class="col-md-6">
         <h5 class="fw-bold text-brand-dark mb-0">Performance Overview</h5>
-        <p class="text-muted small mb-0">Viewing data for {{ date('F', mktime(0, 0, 0, $params['month'], 1)) }} {{ $params['year'] }}</p>
+        <p class="text-muted small mb-0">
+            Viewing data for {{ date('F', mktime(0, 0, 0, $params['month'], 1)) }} {{ $params['year'] }}
+        </p>
     </div>
+
     <div class="col-md-6">
-        <form action="{{ route('agent.dashboard') }}" method="GET" class="d-flex justify-content-md-end gap-2 align-items-center">
-            <select name="month" class="form-select form-select-sm border-0 shadow-sm rounded-3 px-3" style="width: auto;">
+        <form action="{{ route('agent.dashboard') }}" method="GET"
+              class="d-flex justify-content-md-end align-items-center gap-2 flex-wrap">
+
+            <!-- Month -->
+            <select name="month"
+                class="form-select form-select-sm shadow-sm rounded-3"
+                style="width:140px;">
                 @foreach(range(1, 12) as $m)
-                    <option value="{{ sprintf('%02d', $m) }}" {{ $params['month'] == sprintf('%02d', $m) ? 'selected' : '' }}>
+                    <option value="{{ sprintf('%02d', $m) }}"
+                        {{ $params['month'] == sprintf('%02d', $m) ? 'selected' : '' }}>
                         {{ date('F', mktime(0, 0, 0, $m, 1)) }}
                     </option>
                 @endforeach
             </select>
-            <select name="year" class="form-select form-select-sm border-0 shadow-sm rounded-3 px-3" style="width: auto;">
+
+            <!-- Year -->
+            <select name="year"
+                class="form-select form-select-sm shadow-sm rounded-3"
+                style="width:110px;">
                 @php
                     $startYear = date('Y') - 1;
                     $endYear = date('Y') + 1;
                 @endphp
                 @foreach(range($startYear, $endYear) as $y)
-                    <option value="{{ $y }}" {{ $params['year'] == $y ? 'selected' : '' }}>{{ $y }}</option>
+                    <option value="{{ $y }}" {{ $params['year'] == $y ? 'selected' : '' }}>
+                        {{ $y }}
+                    </option>
                 @endforeach
             </select>
-            <button type="submit" class="btn btn-brand btn-sm px-3 rounded-pill no-loader">Filter</button>
+
+            <!-- Button -->
+            <button type="submit" class="btn btn-brand btn-sm px-3 rounded-pill no-loader">
+                Filter
+            </button>
+
         </form>
     </div>
 </div>

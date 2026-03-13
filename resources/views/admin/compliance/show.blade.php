@@ -152,21 +152,18 @@
     <div class="col-12">
         <div class="card border-0 shadow-sm border-top border-4 border-primary">
             <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold">Final Compliance Decision</h5>
+                <h5 class="mb-0 fw-bold">Compliance Review Notes</h5>
             </div>
             <div class="card-body p-4">
                 <form action="{{ route('admin.compliance.review', $log->id) }}" method="POST">
                     @csrf
                     <div class="mb-4">
                         <label class="form-label text-muted small fw-bold">Review Notes</label>
-                        <textarea name="notes" class="form-control bg-light" rows="3" placeholder="Document all findings and reasoning here before continuing..."></textarea>
+                        <textarea name="notes" class="form-control bg-light" rows="3" placeholder="Document all findings and reasoning here for record keeping..."></textarea>
                     </div>
                     <div class="d-flex justify-content-end gap-3 align-items-center">
-                        <button type="submit" name="action" value="reject" class="btn btn-outline-danger px-4 py-2 fw-bold">
-                            <i class="bi bi-x-circle me-2"></i> Reject Transaction
-                        </button>
-                        <button type="submit" name="action" value="approve" class="btn btn-success px-5 py-2 fw-bold text-white shadow">
-                            <i class="bi bi-check-circle me-2"></i> Approve & Issue Payment
+                        <button type="submit" name="action" value="review" class="btn btn-primary px-5 py-2 fw-bold text-white shadow">
+                            <i class="bi bi-check-circle me-2"></i> Record Review
                         </button>
                     </div>
                 </form>

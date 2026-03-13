@@ -56,7 +56,7 @@ class TransferController extends Controller
         try {
             $transaction = $this->transactionService->initiateTransfer($data);
             return redirect()->route('agent.transactions.show', $transaction->id)
-                ->with('success', 'Transfer initiated and sent for compliance review.');
+                ->with('success', 'Transfer completed successfully.');
         } catch (\App\Exceptions\InsufficientWalletBalanceException $e) {
             return redirect()->back()
                 ->withInput()

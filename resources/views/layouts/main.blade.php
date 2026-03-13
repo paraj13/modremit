@@ -186,6 +186,7 @@
             };
         });
     </script>
+    <script src="{{ asset('js/live-search.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

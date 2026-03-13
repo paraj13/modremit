@@ -35,7 +35,7 @@
                                     <select name="customer_id" id="customer_select" class="form-select bg-light border-0 shadow-none px-3 py-2" required>
                                         <option value="">Choose a verified customer...</option>
                                         @foreach($customers as $customer)
-                                            <option value="{{ $customer->id }}" {{ (isset($selectedCustomer) && $selectedCustomer->id == $customer->id) ? 'selected' : '' }} data-recipients='@json($customer->recipients)'>
+                                            <option value="{{ $customer->id }}" {{ (isset($selectedCustomer) && $selectedCustomer->id == $customer->id) ? 'selected' : '' }} data-recipients='@json($customer->recipients)' data-eid="{{ \Illuminate\Support\Facades\Crypt::encryptString($customer->id) }}">
                                                 {{ $customer->name }}
                                             </option>
                                         @endforeach
@@ -43,7 +43,12 @@
                                 </div>
                             </div>
                             <div class="col-md-6" id="recipient_wrapper" style="{{ isset($selectedCustomer) ? '' : 'display:none;' }}">
-                                <label class="form-label fw-bold small text-muted">RECIPIENT</label>
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <label class="form-label fw-bold small text-muted mb-0">RECIPIENT</label>
+                                    <a href="#" id="add_beneficiary_link" class="text-decoration-none text-primary small fw-bold">
+                                        <i class="bi bi-plus-circle"></i> Add New Beneficiary
+                                    </a>
+                                </div>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-person-check text-muted"></i></span>
                                     <select name="recipient_id" id="recipient_select" class="form-select bg-light border-0 shadow-none px-3 py-2" required>
@@ -151,6 +156,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const getQuoteBtn = document.getElementById('get_quote_btn');
     const chfAmountInput = document.getElementById('chf_amount');
     const submitBtn = document.getElementById('submit_btn');
+    const addBeneficiaryLink = document.getElementById('add_beneficiary_link');
+
+    function updateBeneficiaryLink() {
+        const option = customerSelect.options[customerSelect.selectedIndex];
+        const eid = option ? option.getAttribute('data-eid') : null;
+        if (eid) {
+            addBeneficiaryLink.href = `{{ url('agent/recipients/create') }}?eid=${eid}&return_to=transfer`;
+            addBeneficiaryLink.style.display = 'inline';
+        } else {
+            addBeneficiaryLink.style.display = 'none';
+        }
+    }
+
+    if (customerSelect.value) updateBeneficiaryLink();
 
     customerSelect.addEventListener('change', function() {
         const customerId = this.value;
@@ -171,6 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         recipientWrapper.style.display = 'block';
+        updateBeneficiaryLink();
     });
 
     getQuoteBtn.addEventListener('click', function() {

@@ -54,19 +54,29 @@ class AgentController extends Controller
             'name'     => 'required|string|max:255',
             'email'    => 'required|email|unique:users,email',
             'phone'    => 'nullable|string|max:20',
-            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
             'phone'    => $request->phone,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make('12345678'),
+            'kyc_status' => 'pending',
         ]);
 
         $user->assignRole('agent');
 
-        return redirect()->route('admin.agents.index')->with('success', 'Agent created successfully.');
+        try {
+            $sumsub = app(\App\Integrations\Sumsub\SumsubKycService::class);
+            $applicantId = $sumsub->createAgentApplicant($user);
+            if ($applicantId) {
+                $user->update(['sumsub_applicant_id' => $applicantId]);
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to create sumsub for agent " . $user->id, ['error' => $e->getMessage()]);
+        }
+
+        return redirect()->route('admin.agents.index')->with('success', 'Agent created successfully. Default password is 12345678.');
     }
 
     public function show(User $agent)

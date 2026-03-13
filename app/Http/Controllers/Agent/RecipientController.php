@@ -22,16 +22,22 @@ class RecipientController extends Controller
 
     public function create(Request $request)
     {
-        $customerId = $request->customer_id;
+        try {
+            $customerId = \Illuminate\Support\Facades\Crypt::decryptString($request->eid);
+        } catch (\Exception $e) {
+            abort(404);
+        }
         $customer = $this->customerService->findOwned($customerId);
         if (!$customer) abort(404);
-        return view('agent.recipients.create', compact('customer'));
+        
+        $eid = $request->eid;
+        return view('agent.recipients.create', compact('customer', 'eid'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'customer_id'   => 'required|integer',
+            'eid'           => 'required|string',
             'name'          => 'required|string|max:255',
             'bank_name'     => 'required|string|max:255',
             'account_number'=> 'required|string|max:50',
@@ -40,15 +46,30 @@ class RecipientController extends Controller
             'country'       => 'required|string|max:100',
         ]);
 
-        $this->recipientService->create($data['customer_id'], $data);
-        return redirect()->route('agent.customers.show', $data['customer_id'])->with('success', 'Recipient added.');
+        try {
+            $customerId = \Illuminate\Support\Facades\Crypt::decryptString($data['eid']);
+        } catch (\Exception $e) {
+            abort(400, 'Invalid token');
+        }
+
+        $data['customer_id'] = $customerId;
+        $this->recipientService->create($customerId, $data);
+        
+        if ($request->return_to === 'transfer') {
+            return redirect()->route('agent.transfers.create', ['customer_id' => $customerId])
+                ->with('success', 'Beneficiary added successfully.');
+        }
+
+        return redirect()->route('agent.customers.show', $customerId)->with('success', 'Recipient added.');
     }
 
     public function edit(int $id)
     {
         $recipient = $this->recipientService->find($id);
         if (!$recipient || $recipient->customer->agent_id !== auth()->id()) abort(404);
-        return view('agent.recipients.edit', compact('recipient'));
+        // Pass both recipient and customer so the unified form has all context
+        $customer = $recipient->customer;
+        return view('agent.recipients.edit', compact('recipient', 'customer'));
     }
 
     public function update(Request $request, int $id)
