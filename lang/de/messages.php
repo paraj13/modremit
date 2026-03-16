@@ -2,7 +2,7 @@
 
 return [
     'hero_title' => 'Geld weltweit senden, <p><span class="typewriter-text text-brand-dark"></span></p>',
-    'hero_typewriter_words' => 'test.,sofort.,sicher.,günstig.,zuverlässig.',
+    'hero_typewriter_words' => 'sofort.,sicher.,günstig.,zuverlässig.',
     'hero_subtitle' => 'Der schnellste und günstigste Weg, Geld an Ihre Lieben zu senden. Transparente Gebühren, Live-Kurse, Sicherheit auf Bankniveau.',
     'send_money' => 'Geld senden',
     'get_started' => 'Jetzt loslegen',
