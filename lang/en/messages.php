@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'hero_title' => 'Send Money Worldwide, Instantly.',
+    'hero_title' => 'Send Money Worldwide, <p><span class="typewriter-text text-brand-dark"></span></p>',
+    'hero_typewriter_words' => 'Instantly.,Securely.,Affordably.,Reliably.',
     'hero_subtitle' => 'The fastest, cheapest way to send money to your loved ones. Transparent fees, live rates, bank-grade security.',
     'send_money' => 'Send Money',
     'get_started' => 'Get Started',

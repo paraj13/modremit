@@ -57,8 +57,9 @@
             border-radius: 24px;
             padding: 30px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-            max-width: 520px;
+            max-width: 720px;
             margin: 40px auto 0 auto;
+            font-size: 22px;
         }
 
         .accordion-button {
@@ -93,18 +94,72 @@
         }
 
         /* Choices.js Customization */
+        .choices {
+            margin-bottom: 0 !important;
+        }
         .choices__inner {
             background: transparent !important;
             border: none !important;
-            padding: 0 !important;
-            min-height: auto !important;
+            padding: 0 10px !important;
+            min-height: 48px !important;
+            display: flex;
+            align-items: center;
         }
         .choices__list--single {
             padding: 0 !important;
+            width: 100%;
         }
         .choices__item {
             font-weight: 700;
             font-size: 1.1rem;
+            color: var(--brand-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .choices[data-type*="select-one"]::after {
+            right: 15px;
+            margin-top: -6px;
+            border-color: var(--brand-dark) transparent transparent transparent;
+        }
+        .choices__list--dropdown {
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            padding: 8px;
+            width: 300px !important;
+            right: 0;
+            left: auto;
+            word-wrap: break-word;
+        }
+        .choices__list--dropdown .choices__item--selectable {
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: var(--gray-light);
+            color: var(--brand-dark);
+        }
+        .choices__item .currency-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            white-space: normal;
+        }
+
+        .choices__item img.flag-icon, 
+        .choices__item img {
+            max-width: 24px !important;
+            min-width: 24px !important;
+            width: 24px !important;
+            height: 18px !important;
+            max-height: 18px !important;
+            object-fit: cover !important;
+            display: block !important;
+            border-radius: 2px !important;
+            flex-shrink: 0 !important;
         }
 
         /* Reviews Marquee */
@@ -185,78 +240,74 @@
             z-index: 1050;
         }
 
-        .currency-dropdown{
-            position:relative;
-            width:180px;
+        /* Modernized Choices.js for Currency Dropdowns */
+        .choices[data-type*="select-one"]::after {
+            right: 15px;
+            margin-top: -6px;
+            border-color: var(--brand-dark) transparent transparent transparent;
         }
-
-        .currency-trigger{
-            width:100%;
-            display:flex;
-            align-items:center;
-            gap:8px;
-            padding:10px 12px;
-            border-radius:12px;
-            border:1px solid #e5e7eb;
-            background:white;
-            font-weight:600;
-            cursor:pointer;
+        .choices__inner {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 10px !important;
+            min-height: 48px !important;
+            display: flex;
+            align-items: center;
         }
-
-        .flag-icon{
-            width:18px;
-            height:14px;
-            object-fit:cover;
-            border-radius:2px;
+        .choices__list--single {
+            padding: 0 !important;
+            width: 100%;
         }
-
-        .currency-name{
-            font-size:13px;
-            color:var(--text-muted);
+        .choices__item {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--brand-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-
-        .dropdown-arrow{
-            margin-left:auto;
-            font-size:10px;
-        }
-
-        .currency-menu{
-            position:absolute;
-            top:calc(100% + 8px);
-            left:0;
-            width:220px;
-            max-height: 300px;
-            overflow-y: auto;
-            background:white;
-            border-radius:16px;
-            border:1px solid rgba(0,0,0,0.05);
-            box-shadow:0 15px 40px rgba(0,0,0,0.12);
-            display:none;
-            z-index:100;
+        .choices__list--dropdown {
+            border-radius: 16px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
             padding: 8px;
+            width: 300px !important;
+            right: 0;
+            left: auto;
+            word-wrap: break-word; /* Fixes German overflowing text */
         }
-
-        .currency-item{
-            display:flex;
-            align-items:center;
-            gap:10px;
-            padding:10px 12px;
-            cursor:pointer;
+        .choices__list--dropdown .choices__item--selectable {
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
         }
-
-        .currency-item:hover{
-            background:var(--gray-light);
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: var(--gray-light);
+            color: var(--brand-dark);
         }
-
-        .currency-item.active{
-            background:var(--brand-mint);
+        .choices__item .currency-name {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            white-space: normal;
         }
-
-
 
         /* Responsive Fixes */
         @media (max-width: 991px) {
             .hero-title { font-size: 3.5rem; }
+        }
+
+        /* Typewriter Cursor */
+        .typewriter-text {
+            border-right: 4px solid var(--brand-lime);
+            padding-right: 4px;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent; }
+            50% { border-color: var(--brand-lime); }
         }
     </style>
 </head>
@@ -297,7 +348,7 @@
                             1 CHF = <span id="hero_rate_amount">{{ number_format($baseRate ?? 96.85, 2) }}</span> <span id="hero_rate_currency">INR</span> <span class="fi fi-in fi-badge me-1" id="hero_rate_flag" style="border-radius:3px;"></span>
                         </span>
                     </div>
-                    <h1 class="hero-title">{{ __('messages.hero_title') }}</h1>
+                    <h1 class="hero-title">{!! __('messages.hero_title') !!}</h1>
                     <p class="fs-5 text-dark-emphasis mb-5 pe-lg-5">
                         {{ __('messages.hero_subtitle') }}
                     </p>
@@ -306,91 +357,56 @@
                         <a href="{{ route('register') }}" class="btn btn-brand-outline px-5 py-3 fs-5 text-decoration-none">{{ __('messages.get_started') }}</a>
                     </div>
                 </div>
-            
-                
+                <div class="col-lg-5">
+                    <!-- Converter Pod -->
+                    <div class="converter-pod" id="converter">
+                        <div class="mb-4">
+                            <label class="pod-label">{{ __('messages.you_send') }}</label>
+                            <div class="input-group-modern">
+                                <input type="number" id="send_amount" class="amount-input" value="1000">
+                                <div style="width: 140px;">
+                                    <select id="from_currency" class="choices" name="from_currency">
+                                        @foreach(\App\Constants\CountryCurrency::CURRENCIES as $c)
+                                            <option value="{{ $c['code'] }}" data-name="{{ $c['name'] }}" data-flag="{{ $c['flag'] }}" {{ $c['code'] === 'CHF' ? 'selected' : '' }}>
+                                                {{ $c['code'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="position-relative my-4 ps-4 border-start border-2" style="border-color: var(--brand-lime) !important;">
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="text-muted small fw-bold"><i class="bi bi-dash"></i> <span id="fee_amount">15.00</span> <span class="from_code">CHF</span></span>
+                                <span class="text-muted small">{{ __('messages.fee') }}</span>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-between align-items-center">
+                                <span class="text-muted small fw-bold"><i class="bi bi-x"></i> <span id="fx_rate">{{ number_format($baseRate ?? 96.85, 4) }}</span></span>
+                                <span class="text-muted small">{{ __('messages.rate') }}</span>
+                            </div>
+                            <div class="position-absolute top-50 start-0 translate-middle-x bg-white p-1" style="margin-left: -1px;">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                                    <i class="bi bi-arrow-down-short text-muted"></i>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-4">
                             <label class="pod-label">{{ __('messages.recipient_gets') }}</label>
                             <div class="input-group-modern">
                                 <input type="text" id="receive_amount" class="amount-input" readonly>
-<div class="currency-dropdown" id="to_currency_dropdown">
-    <input type="hidden" name="to_currency" id="to_currency" value="INR">
-
-    <button class="currency-trigger" type="button">
-        <img src="https://flagcdn.com/in.svg" class="flag-icon">
-        <span class="currency-code">INR</span>
-        <span class="dropdown-arrow">▼</span>
-    </button>
-
-    <div class="currency-menu">
-
-        <div class="currency-item" data-code="INR" data-name="Indian Rupee">
-            <img src="https://flagcdn.com/in.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">INR</span>
-                <span class="currency-name" style="font-size: 10px;">Indian Rupee</span>
-            </div>
-        </div>
-
-        <div class="currency-item" data-code="EUR" data-name="Euro">
-            <img src="https://flagcdn.com/eu.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">EUR</span>
-                <span class="currency-name" style="font-size: 10px;">Euro</span>
-            </div>
-        </div>
-
-        <div class="currency-item" data-code="USD" data-name="United States Dollar">
-            <img src="https://flagcdn.com/us.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">USD</span>
-                <span class="currency-name" style="font-size: 10px;">United States Dollar</span>
-            </div>
-        </div>
-
-        <div class="currency-item" data-code="GBP" data-name="British Pound">
-            <img src="https://flagcdn.com/gb.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">GBP</span>
-                <span class="currency-name" style="font-size: 10px;">British Pound</span>
-            </div>
-        </div>
-
-        <div class="currency-item" data-code="CHF" data-name="Swiss Franc">
-            <img src="https://flagcdn.com/ch.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">CHF</span>
-                <span class="currency-name" style="font-size: 10px;">Swiss Franc</span>
-            </div>
-        </div>
-
-        <div class="currency-item" data-code="PHP" data-name="Philippine Peso">
-            <img src="https://flagcdn.com/ph.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">PHP</span>
-                <span class="currency-name" style="font-size: 10px;">Philippine Peso</span>
-            </div>
-        </div>
-
-        <div class="currency-item" data-code="PKR" data-name="Pakistani Rupee">
-            <img src="https://flagcdn.com/pk.svg" class="flag-icon">
-            <div class="d-flex flex-column" style="line-height: 1.1;">
-                <span class="fw-bold">PKR</span>
-                <span class="currency-name" style="font-size: 10px;">Pakistani Rupee</span>
-            </div>
-        </div>
-
-    </div>
-</div>
+                                <div style="width: 140px;">
+                                    <select id="to_currency" class="choices" name="to_currency">
+                                        @foreach(\App\Constants\CountryCurrency::CURRENCIES as $c)
+                                            <option value="{{ $c['code'] }}" data-name="{{ $c['name'] }}" data-flag="{{ $c['flag'] }}" {{ $c['code'] === 'INR' ? 'selected' : '' }}>
+                                                {{ $c['code'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
                         </div>
-
-                        <div id="loader" class="text-center d-none mb-3">
-                            <div class="spinner-border spinner-border-sm text-brand-lime" role="status"></div>
-                        </div>
-
-                        <a href="{{ route('register') }}" class="btn-brand w-100 py-3 text-center text-decoration-none d-block">
-                            {{ __('messages.send_money') }}
-                        </a>
                     </div>
                 </div>
             </div>
@@ -751,58 +767,142 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
 
-            // ─── Currency Dropdown Logic ───────────────────────────────────────────
-            // Track currently selected currencies (simple state object)
-            const currencyState = {
-                from: document.getElementById('from_currency')?.value || 'CHF',
-                to:   document.getElementById('to_currency')?.value   || 'INR',
+            // ─── Typewriter Effect ────────────────────────────────────────────────
+            const words = "{!! __('messages.hero_typewriter_words') !!}".split(',');
+            const textElement = document.querySelector('.typewriter-text');
+            
+            if (textElement && words.length > 0) {
+                let wordIndex = 0;
+                let charIndex = 0;
+                let isDeleting = false;
+                
+                function type() {
+                    const currentWord = words[wordIndex];
+                    
+                    if (isDeleting) {
+                        textElement.textContent = currentWord.substring(0, charIndex - 1);
+                        charIndex--;
+                    } else {
+                        textElement.textContent = currentWord.substring(0, charIndex + 1);
+                        charIndex++;
+                    }
+                    
+                    let typeSpeed = isDeleting ? 50 : 100;
+                    
+                    if (!isDeleting && charIndex === currentWord.length) {
+                        typeSpeed = 2000; // Pause at end of word
+                        isDeleting = true;
+                    } else if (isDeleting && charIndex === 0) {
+                        isDeleting = false;
+                        wordIndex = (wordIndex + 1) % words.length;
+                        typeSpeed = 500; // Pause before new word
+                    }
+                    
+                    setTimeout(type, typeSpeed);
+                }
+                
+                // Start effect
+                setTimeout(type, 1000);
+            }
+
+            // ─── Currency Dropdown Logic (Choices.js) ──────────────────────────────
+            
+            // Helper function to safely extract custom properties
+            function getProps(data) {
+                if (data.element && data.element.dataset) {
+                    return {
+                        name: data.element.dataset.name || data.value,
+                        flag: data.element.dataset.flag || 'xx'
+                    };
+                }
+                return null;
+            }
+
+            const choicesTemplate = function(template, data) {
+                const c = getProps(data);
+                if (!c) {
+                    return template(`<div class="choices__item choices__item--choice" data-select-text="" data-choice data-id="${data.id}" data-value="${data.value}">${data.label}</div>`);
+                }
+                
+                const flagUrl = `https://flagcdn.com/${c.flag}.svg`;
+                return template(`
+                  <div class="choices__item choices__item--choice choices__item--selectable" data-select-text="" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}">
+                    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                      <div style="width:24px; height:18px; min-width:24px; border-radius:3px; flex-shrink:0; background-image:url(${flagUrl}); background-size:cover; background-position:center; background-repeat:no-repeat; border: 1px solid rgba(0,0,0,0.1);"></div>
+                      <div style="display: flex; flex-direction: column; line-height: 1.2;">
+                          <span style="font-size: 1rem; font-weight: 700; color: var(--brand-dark);">${data.label}</span>
+                          <span style="font-size: 0.75rem; font-weight: 500; color: #6c757d;">${c.name}</span>
+                      </div>
+                    </div>
+                  </div>
+                `);
             };
 
-            document.querySelectorAll('.currency-dropdown').forEach(dropdown => {
-                const trigger = dropdown.querySelector('.currency-trigger');
-                const menu    = dropdown.querySelector('.currency-menu');
-                const input   = dropdown.querySelector('input[type="hidden"]');
+            const choicesItemTemplate = function(template, data) {
+                const c = getProps(data);
+                if (!c) {
+                    return template(`<div class="choices__item" data-item data-id="${data.id}" data-value="${data.value}">${data.label}</div>`);
+                }
+                const flagUrl = `https://flagcdn.com/${c.flag}.svg`;
+                return template(`
+                    <div class="choices__item choices__item--selectable" data-item data-id="${data.id}" data-value="${data.value}">
+                      <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+                        <div style="width:24px; height:18px; min-width:24px; border-radius:3px; flex-shrink:0; background-image:url(${flagUrl}); background-size:cover; background-position:center; background-repeat:no-repeat; border: 1px solid rgba(0,0,0,0.1);"></div>
+                        <span style="font-weight: 700; color: var(--brand-dark);">${data.label}</span>
+                      </div>
+                    </div>
+                `);
+            };
 
-                trigger.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    document.querySelectorAll('.currency-menu').forEach(m => {
-                        if (m !== menu) m.style.display = 'none';
-                    });
-                    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            // Initialize both dropdowns
+            const choicesConfig = {
+                searchEnabled: true,
+                searchPlaceholderValue: 'Search currency...',
+                itemSelectText: '',
+                shouldSort: false, // Keep predefined order
+                callbackOnCreateTemplates: function(template) {
+                    return {
+                        item: (classNames, data) => choicesItemTemplate(template, data),
+                        choice: (classNames, data) => choicesTemplate(template, data),
+                    };
+                }
+            };
+
+            const fromSelectEl = document.getElementById('from_currency');
+            const toSelectEl   = document.getElementById('to_currency');
+
+            let fromChoices = null;
+            let toChoices = null;
+
+            try {
+                if (fromSelectEl) {
+                    fromChoices = new Choices(fromSelectEl, choicesConfig);
+                }
+                if (toSelectEl) {
+                    toChoices = new Choices(toSelectEl, choicesConfig);
+                }
+            } catch (err) {
+                console.error("Choices.js Initialization Error:", err);
+            }
+
+            const currencyState = {
+                from: fromSelectEl ? fromSelectEl.value : 'CHF',
+                to:   toSelectEl ? toSelectEl.value : 'INR',
+            };
+
+            if (fromSelectEl) {
+                fromSelectEl.addEventListener('change', function(e) {
+                    currencyState.from = e.target.value;
+                    fetchQuote();
                 });
+            }
 
-                menu.querySelectorAll('.currency-item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        const flag = this.querySelector('img').src;
-                        const code = this.dataset.code;
-                        const name = this.dataset.name;
-
-                        // Update visual trigger
-                        trigger.querySelector('img').src = flag;
-                        trigger.querySelector('.currency-code').innerText = code;
-                        const nameEl = trigger.querySelector('.currency-name');
-                        if (nameEl) nameEl.innerText = name;
-
-                        // Update hidden input and state
-                        input.value = code;
-                        if (input.id === 'from_currency') currencyState.from = code;
-                        if (input.id === 'to_currency')   currencyState.to   = code;
-
-                        // Update active state in menu
-                        menu.querySelectorAll('.currency-item').forEach(i => i.classList.remove('active'));
-                        this.classList.add('active');
-
-                        menu.style.display = 'none';
-
-                        // Re-fetch with updated currencies
-                        fetchQuote();
-                    });
+            if (toSelectEl) {
+                toSelectEl.addEventListener('change', function(e) {
+                    currencyState.to = e.target.value;
+                    fetchQuote();
                 });
-            });
-
-            document.addEventListener('click', () => {
-                document.querySelectorAll('.currency-menu').forEach(m => m.style.display = 'none');
-            });
+            }
 
 
             // ─── Converter Quote Logic ─────────────────────────────────────────────
