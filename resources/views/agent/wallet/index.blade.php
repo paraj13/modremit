@@ -6,7 +6,7 @@
 <div class="row g-4">
     <!-- Wallet Balance Card -->
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="card-body p-4 bg-brand-dark text-white">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div class="bg-brand-lime bg-opacity-25 p-2 rounded-3">
@@ -17,7 +17,7 @@
                 <h6 class="text-brand-lime opacity-75 small fw-bold uppercase mb-2">AVAILABLE BALANCE</h6>
                 <h2 class="display-6 fw-bold mb-4">CHF {{ number_format($wallet->chf_balance, 2) }}</h2>
                 <div class="d-grid">
-                    <a href="{{ route('agent.wallet.topup') }}" class="btn btn-brand rounded-3 py-3 fw-bold">
+                    <a href="{{ route('agent.wallet.topup') }}" class="btn bg-brand-light rounded-3 py-3 fw-bold">
                         <i class="bi bi-plus-circle me-2"></i> Request Top-up
                     </a>
                 </div>

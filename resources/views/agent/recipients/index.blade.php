@@ -53,7 +53,7 @@
                                 </td>
                                 <td class="text-end pe-3">
                                     <div class="d-flex justify-content-end gap-2">
-                                        <a href="{{ route('agent.recipients.edit', $recipient->id) }}" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                                        <a href="{{ route('agent.recipients.edit', $recipient->id) }}" class="btn btn-outline-dark rounded-pill px-3">
                                             Edit
                                         </a>
                                         @if($recipient->customer->kyc_status === 'approved')

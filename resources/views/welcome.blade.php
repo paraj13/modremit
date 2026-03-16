@@ -306,75 +306,8 @@
                         <a href="{{ route('register') }}" class="btn btn-brand-outline px-5 py-3 fs-5 text-decoration-none">{{ __('messages.get_started') }}</a>
                     </div>
                 </div>
-                <div class="col-lg-5">
-                    <!-- Converter Pod -->
-                    <div class="converter-pod" id="converter">
-                        <div class="mb-4">
-                            <label class="pod-label">{{ __('messages.you_send') }}</label>
-                            <div class="input-group-modern">
-                                <input type="number" id="send_amount" class="amount-input" value="1000">
-                                <div class="currency-dropdown" id="from_currency_dropdown">
-                                    <input type="hidden" name="from_currency" id="from_currency" value="CHF">
-                                    <button class="currency-trigger" type="button">
-                                        <img src="https://flagcdn.com/ch.svg" class="flag-icon">
-                                        <span class="currency-code">CHF</span>
-                                        <span class="dropdown-arrow">▼</span>
-                                    </button>
-
-                                    <div class="currency-menu">
-                                        <div class="currency-item" data-code="CHF" data-name="Swiss Franc">
-                                            <img src="https://flagcdn.com/ch.svg" class="flag-icon">
-                                            <div class="d-flex flex-column" style="line-height: 1.1;">
-                                                <span class="fw-bold">CHF</span>
-                                                <span class="currency-name" style="font-size: 10px;">Swiss Franc</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="currency-item" data-code="USD" data-name="US Dollar">
-                                            <img src="https://flagcdn.com/us.svg" class="flag-icon">
-                                            <div class="d-flex flex-column" style="line-height: 1.1;">
-                                                <span class="fw-bold">USD</span>
-                                                <span class="currency-name" style="font-size: 10px;">United States Dollar</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="currency-item" data-code="EUR" data-name="Euro">
-                                            <img src="https://flagcdn.com/eu.svg" class="flag-icon">
-                                            <div class="d-flex flex-column" style="line-height: 1.1;">
-                                                <span class="fw-bold">EUR</span>
-                                                <span class="currency-name" style="font-size: 10px;">Euro</span>
-                                            </div>
-                                        </div>
-
-                                        <div class="currency-item" data-code="GBP" data-name="British Pound">
-                                            <img src="https://flagcdn.com/gb.svg" class="flag-icon">
-                                            <div class="d-flex flex-column" style="line-height: 1.1;">
-                                                <span class="fw-bold">GBP</span>
-                                                <span class="currency-name" style="font-size: 10px;">British Pound</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="position-relative my-4 ps-4 border-start border-2" style="border-color: #eee !important;">
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="text-muted small fw-bold"><i class="bi bi-dash"></i> <span id="fee_amount">15.00</span> <span class="from_code">CHF</span></span>
-                                <span class="text-muted small">{{ __('messages.fee') }}</span>
-                            </div>
-                            <div class="mb-3 d-flex justify-content-between align-items-center">
-                                <span class="text-muted small fw-bold"><i class="bi bi-x"></i> <span id="fx_rate">{{ number_format($baseRate ?? 96.85, 4) }}</span></span>
-                                <span class="text-muted small">{{ __('messages.rate') }}</span>
-                            </div>
-                            <div class="position-absolute top-50 start-0 translate-middle-x bg-white p-1" style="margin-left: -1px;">
-                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
-                                    <i class="bi bi-arrow-down-short text-muted"></i>
-                                </div>
-                            </div>
-                        </div>
-
+            
+                
                         <div class="mb-4">
                             <label class="pod-label">{{ __('messages.recipient_gets') }}</label>
                             <div class="input-group-modern">

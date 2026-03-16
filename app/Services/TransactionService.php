@@ -191,23 +191,28 @@ class TransactionService
             
             $recipient = $transaction->recipient;
             
-            $result = $wise->send([
-                'chf_amount'      => $transaction->chf_amount,
+            // Bypass the actual Wise API payment execution via user request for now
+            // $result = $wise->send([
+            //     'chf_amount'      => $transaction->chf_amount,
+            //     'target_currency' => $transaction->target_currency,
+            //     'recipient_name'  => $recipient->name,
+            //     'account_number'  => $recipient->account_number,
+            //     'iban'            => $recipient->iban,
+            //     'swift_code'      => $recipient->swift_code,
+            //     'routing_number'  => $recipient->routing_number,
+            //     'ifsc_code'       => $recipient->ifsc_code,
+            //     'upi_id'          => $recipient->upi_id,
+            //     'sort_code'       => $recipient->sort_code,
+            //     'address_line_1'  => $recipient->address_line_1,
+            //     'city'            => $recipient->city,
+            //     'postal_code'     => $recipient->postal_code,
+            //     'state'           => $recipient->state,
+            //     'country'         => $recipient->country,
+            //     'reference'       => 'TXN-' . $transaction->id,
+            // ]);
+
+            $result = \App\Integrations\Wise\WiseTransferResult::dummy([
                 'target_currency' => $transaction->target_currency,
-                'recipient_name'  => $recipient->name,
-                'account_number'  => $recipient->account_number,
-                'iban'            => $recipient->iban,
-                'swift_code'      => $recipient->swift_code,
-                'routing_number'  => $recipient->routing_number,
-                'ifsc_code'       => $recipient->ifsc_code,
-                'upi_id'          => $recipient->upi_id,
-                'sort_code'       => $recipient->sort_code,
-                'address_line_1'  => $recipient->address_line_1,
-                'city'            => $recipient->city,
-                'postal_code'     => $recipient->postal_code,
-                'state'           => $recipient->state,
-                'country'         => $recipient->country,
-                'reference'       => 'TXN-' . $transaction->id,
             ]);
 
             $this->transactions->update($transaction->id, [
@@ -253,7 +258,7 @@ class TransactionService
         }
 
         // Notify agent
-        $transaction->agent->notify(new TransactionCompleted($transaction));
+        // $transaction->agent->notify(new TransactionCompleted($transaction));
     }
 
     public function updateStatus(int $id, string $status)
