@@ -17,13 +17,15 @@ body {
     color: var(--brand-dark);
 }
 
-.bg-brand-dark {
+.bg-brand-dark,. {
     background-color: var(--brand-dark) !important;
 }
 
-.bg-brand-light {
+.bg-brand-light,.bg-brand-lime {
     background-color: var(--brand-lime) !important;
 }
+
+
 
 .bg-brand-mint{
     background-color: var(--brand-mint);
