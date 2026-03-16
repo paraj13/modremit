@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Wallet;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -89,5 +90,26 @@ class WalletService
     public function getHistory(int $agentId)
     {
         return $this->getForAgent($agentId)->transactions()->latest()->paginate(20);
+    }
+
+    public function refundForFailedTransfer(int $agentId, float $amount, \App\Models\Transaction $transaction): bool
+    {
+        return DB::transaction(function () use ($agentId, $amount, $transaction) {
+            $wallet = $this->getForAgent($agentId);
+            
+            $wallet->increment('chf_balance', $amount);
+            
+            $wallet->transactions()->create([
+                'type'         => 'refund',
+                'amount'       => $amount,
+                'description'  => 'Refund for failed TXN-' . $transaction->id,
+                'reference_type' => 'Transaction',
+                'reference_id'   => $transaction->id,
+                'status'       => 'completed',
+                'created_by'   => $agentId,
+            ]);
+
+            return true;
+        });
     }
 }

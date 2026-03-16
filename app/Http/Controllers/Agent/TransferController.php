@@ -33,13 +33,24 @@ class TransferController extends Controller
             'target_currency' => 'required|string|size:3',
         ]);
 
-        $quote = $this->fxService->fetchAndStoreQuote(
+        $fxQuote = $this->fxService->fetchAndStoreQuote(
             $request->chf_amount, 
             auth()->id(), 
             $request->target_currency
         );
 
-        return response()->json($quote);
+        return response()->json([
+            'from'          => $fxQuote->from_currency,
+            'to'            => $fxQuote->to_currency,
+            'amount'        => $fxQuote->chf_amount,
+            'rate'          => $fxQuote->rate,
+            'fee'           => $fxQuote->fee,
+            'send_amount'   => $fxQuote->send_amount,
+            'target_amount' => $fxQuote->target_amount,
+            'id'            => $fxQuote->id,
+            'quote_id'      => $fxQuote->quote_id,
+            'last_updated'  => $fxQuote->created_at->toDateTimeString()
+        ]);
     }
 
     public function store(Request $request)

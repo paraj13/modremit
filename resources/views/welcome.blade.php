@@ -907,7 +907,7 @@
                     } else {
                         // Update receive amount
                         if (receiveInput) {
-                            receiveInput.value = parseFloat(data.result).toLocaleString(undefined, {
+                            receiveInput.value = parseFloat(data.target_amount).toLocaleString(undefined, {
                                 minimumFractionDigits: 2, maximumFractionDigits: 2
                             });
                         }

@@ -83,16 +83,48 @@
                 </div>
                 <h4 class="fw-bold mb-1">{{ strtoupper($transaction->status) }}</h4>
                 <div class="text-muted small mb-4">{{ $transaction->created_at->format('M d, Y - H:i A') }}</div>
-                
-                @if($transaction->payment_ref)
-                    <div class="p-3 bg-light rounded-3 text-start mb-0">
-                        <small class="text-muted d-block fw-bold mb-1">Revolut Reference</small>
-                        <span class="font-monospace fw-bold small text-break">{{ $transaction->payment_ref }}</span>
-                    </div>
-                @endif
             </div>
         </div>
         
+        @if($transaction->wise_transfer_id || $transaction->wise_response)
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white py-3 border-bottom-0">
+                <h6 class="mb-0 fw-bold border-start border-3 border-brand-dark ps-2">Wise Transfer Details</h6>
+            </div>
+            <div class="card-body p-4 pt-0">
+                @if($transaction->wise_transfer_id)
+                <div class="mb-3">
+                    <label class="text-muted small fw-bold text-uppercase d-block mb-1">Transfer ID</label>
+                    <div class="font-monospace fw-bold">{{ $transaction->wise_transfer_id }}</div>
+                </div>
+                @endif
+                
+                @if($transaction->wise_status)
+                <div class="mb-3">
+                    <label class="text-muted small fw-bold text-uppercase d-block mb-1">Wise Status</label>
+                    <span class="badge bg-{{ $transaction->wise_status == 'completed' ? 'success' : ($transaction->wise_status == 'failed' ? 'danger' : 'info') }} rounded-pill px-3">
+                        {{ strtoupper($transaction->wise_status) }}
+                    </span>
+                </div>
+                @endif
+                
+                @if($transaction->wise_response)
+                <div>
+                    <label class="text-muted small fw-bold text-uppercase d-block mb-2">API Response</label>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#wiseResponse" aria-expanded="false" aria-controls="wiseResponse">
+                        <i class="bi bi-code-slash me-1"></i> View Raw JSON
+                    </button>
+                    <div class="collapse" id="wiseResponse">
+                        <div class="bg-dark text-light p-3 rounded-3 mt-2 small overflow-auto" style="max-height: 300px;">
+                            <pre class="mb-0"><code class="language-json">{{ json_encode($transaction->wise_response, JSON_PRETTY_PRINT) }}</code></pre>
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+        @endif
+
         <div class="d-grid">
             <a href="{{ route('admin.transactions.index') }}" class="btn btn-light py-3 rounded-pill fw-bold text-muted border text-decoration-none">
                 <i class="bi bi-arrow-left me-2"></i> Back to History

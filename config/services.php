@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'wise' => [
+        'api_key'    => env('WISE_API_KEY'),
+        'profile_id' => env('WISE_PROFILE_ID'),
+        'sandbox'    => env('WISE_SANDBOX', true),
+    ],
+
 ];

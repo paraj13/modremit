@@ -29,18 +29,17 @@ class PublicController extends Controller
         ]);
 
         $fxQuote = $this->fxService->fetchAndStoreQuote((float) $request->amount, null, $request->to);
-
-        $quote = [
-            'from' => $fxQuote->from_currency,
-            'to' => $fxQuote->to_currency,
-            'amount' => $fxQuote->chf_amount,
-            'rate' => $fxQuote->rate,
-            'fee' => $fxQuote->fee,
-            'net_amount' => $fxQuote->send_amount,
-            'result' => $fxQuote->target_amount,
-            'last_updated' => $fxQuote->created_at->toDateTimeString()
-        ];
-
-        return response()->json($quote);
+        
+        return response()->json([
+            'from'          => $fxQuote->from_currency,
+            'to'            => $fxQuote->to_currency,
+            'amount'        => $fxQuote->chf_amount,
+            'rate'          => $fxQuote->rate,
+            'fee'           => $fxQuote->fee,
+            'send_amount'   => $fxQuote->send_amount,
+            'target_amount' => $fxQuote->target_amount,
+            'id'            => $fxQuote->id,
+            'last_updated'  => $fxQuote->created_at->toDateTimeString()
+        ]);
     }
 }

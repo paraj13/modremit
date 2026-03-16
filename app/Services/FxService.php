@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Transaction;
 use App\Models\Wallet;
 use App\Repositories\Contracts\FxQuoteRepositoryInterface;
-use App\Integrations\Revolut\RevolutFxService;
 
 class FxService
 {
@@ -14,13 +13,14 @@ class FxService
         private FxQuoteRepositoryInterface $fxQuotes
     ) {}
 
-    /** Fetch a live quote from Revolut and persist it */
+    /** Fetch a live quote and persist it */
     public function fetchAndStoreQuote(float $chfAmount, ?int $agentId = null, string $targetCurrency = 'INR'): \App\Models\FxQuote
     {
         // Use the unified FX service for consistency
         // For actual transfers, we fetch a fresh rate (cache = false)
         $fxData = $this->fxRates->getRate('CHF', $targetCurrency, false);
         $rate = $fxData['rate'];
+        $quoteId = $fxData['id'] ?? null;
 
         // Apply commission (e.g. 2%)
         $commissionRate = (float) config('remittance.commission_rate', 2);
@@ -36,7 +36,7 @@ class FxService
 
         return $this->fxQuotes->create([
             'agent_id'         => $agentId,
-            'revolut_quote_id' => null, // Unified flow uses the rate directly
+            'quote_id'         => $quoteId ?? null, // Store Wise quote ID (or LCL ID)
             'chf_amount'       => $chfAmount, // Total Paid
             'send_amount'      => $sendAmount,
             'target_amount'    => $targetAmount,

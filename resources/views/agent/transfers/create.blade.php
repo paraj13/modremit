@@ -226,8 +226,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('quote_target_amount').textContent = parseFloat(data.target_amount).toLocaleString('en-US', {maximumFractionDigits: 2});
             document.getElementById('quote_send_amount').textContent = parseFloat(data.send_amount).toLocaleString('en-US', {minimumFractionDigits: 2});
             document.getElementById('quote_fee').textContent = parseFloat(data.fee).toLocaleString('en-US', {minimumFractionDigits: 2});
-            document.getElementById('quote_total').textContent = parseFloat(data.chf_amount).toLocaleString('en-US', {minimumFractionDigits: 2});
-            document.getElementById('quote_id').textContent = data.revolut_quote_id ? data.revolut_quote_id.substring(0, 8) : 'LCL-001';
+            document.getElementById('quote_total').textContent = parseFloat(data.amount).toLocaleString('en-US', {minimumFractionDigits: 2});
+            document.getElementById('quote_id').textContent = data.quote_id ? String(data.quote_id).substring(0, 12) : 'QT-' + data.id;
             
             // Populate hidden quote_id and amount for the form
             let quoteIdInput = document.getElementById('quote_id_input');

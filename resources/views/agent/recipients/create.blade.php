@@ -46,67 +46,119 @@
                             @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
+                        {{-- Bank Details Section --}}
+                        <div class="col-12 mt-4">
+                            <h5 class="fw-bold mb-3 text-brand-dark border-bottom pb-2">Bank Details</h5>
+                        </div>
+
                         {{-- Bank Name --}}
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">BANK NAME</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-bank text-muted"></i></span>
                                 <input type="text" name="bank_name" class="form-control bg-light border-0 shadow-none @error('bank_name') is-invalid @enderror"
-                                    value="{{ old('bank_name', $recipient->bank_name ?? '') }}" placeholder="State Bank of India" required>
+                                    value="{{ old('bank_name', $recipient->bank_name ?? '') }}" placeholder="e.g. Chase, HDFC, Barclays" required>
                             </div>
                             @error('bank_name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Account Number --}}
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small text-muted">ACCOUNT NUMBER</label>
+                            <label class="form-label fw-bold small text-muted">ACCOUNT NUMBER / IBAN</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-credit-card-2-front text-muted"></i></span>
                                 <input type="text" name="account_number" class="form-control bg-light border-0 shadow-none @error('account_number') is-invalid @enderror"
-                                    value="{{ old('account_number', $recipient->account_number ?? '') }}" placeholder="00000000000" required>
+                                    value="{{ old('account_number', $recipient->account_number ?? '') }}" placeholder="Standard acc no or full IBAN" required>
                             </div>
                             @error('account_number') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
+                        {{-- IBAN (Separate field if needed) --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">IBAN <span class="opacity-50">(Optional)</span></label>
+                            <input type="text" name="iban" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('iban', $recipient->iban ?? '') }}" placeholder="For EUR/GBP">
+                        </div>
+
+                        {{-- SWIFT/BIC --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">SWIFT / BIC <span class="opacity-50">(Optional)</span></label>
+                            <input type="text" name="swift_code" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('swift_code', $recipient->swift_code ?? '') }}" placeholder="BANKXXXX">
+                        </div>
+
+                        {{-- Routing Number / ABA --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">ROUTING # / ABA <span class="opacity-50">(Optional)</span></label>
+                            <input type="text" name="routing_number" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('routing_number', $recipient->routing_number ?? '') }}" placeholder="For USD">
+                        </div>
+
                         {{-- IFSC Code --}}
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold small text-muted">IFSC CODE <span class="opacity-50">(optional)</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-hash text-muted"></i></span>
-                                <input type="text" name="ifsc_code" class="form-control bg-light border-0 shadow-none @error('ifsc_code') is-invalid @enderror"
-                                    value="{{ old('ifsc_code', $recipient->ifsc_code ?? '') }}" placeholder="SBIN0001234">
-                            </div>
-                            @error('ifsc_code') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">IFSC CODE <span class="opacity-50">(Optional)</span></label>
+                            <input type="text" name="ifsc_code" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('ifsc_code', $recipient->ifsc_code ?? '') }}" placeholder="For INR">
+                        </div>
+
+                        {{-- Sort Code --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">SORT CODE <span class="opacity-50">(Optional)</span></label>
+                            <input type="text" name="sort_code" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('sort_code', $recipient->sort_code ?? '') }}" placeholder="For GBP (e.g. 102030)">
                         </div>
 
                         {{-- UPI ID --}}
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">UPI ID <span class="opacity-50">(Optional)</span></label>
+                            <input type="text" name="upi_id" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('upi_id', $recipient->upi_id ?? '') }}" placeholder="username@upi">
+                        </div>
+
+                        {{-- Address Details Section --}}
+                        <div class="col-12 mt-4">
+                            <h5 class="fw-bold mb-3 text-brand-dark border-bottom pb-2">Recipient Address <span class="small fw-normal text-muted">(Required for USD, PHP, TRY)</span></h5>
+                        </div>
+
                         <div class="col-md-6">
-                            <label class="form-label fw-bold small text-muted">UPI ID <span class="opacity-50">(optional)</span></label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-qr-code text-muted"></i></span>
-                                <input type="text" name="upi_id" class="form-control bg-light border-0 shadow-none @error('upi_id') is-invalid @enderror"
-                                    value="{{ old('upi_id', $recipient->upi_id ?? '') }}" placeholder="username@upi">
-                            </div>
-                            @error('upi_id') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                            <label class="form-label fw-bold small text-muted">ADDRESS LINE 1</label>
+                            <input type="text" name="address_line_1" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('address_line_1', $recipient->address_line_1 ?? '') }}" placeholder="Street address">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">CITY</label>
+                            <input type="text" name="city" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('city', $recipient->city ?? '') }}" placeholder="City">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">POSTAL / ZIP CODE</label>
+                            <input type="text" name="postal_code" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('postal_code', $recipient->postal_code ?? '') }}" placeholder="Zip code">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold small text-muted">STATE / PROVINCE</label>
+                            <input type="text" name="state" class="form-control bg-light border-0 shadow-none"
+                                value="{{ old('state', $recipient->state ?? '') }}" placeholder="State code/name">
                         </div>
 
                         {{-- Destination Country --}}
-                        <div class="col-12">
+                        <div class="col-md-4">
                             <label class="form-label fw-bold small text-muted">DESTINATION COUNTRY</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-0"><i class="bi bi-globe text-muted"></i></span>
-                                <select name="country" class="form-select bg-light border-0 shadow-none @error('country') is-invalid @enderror" required>
-                                    <option value="">Select country...</option>
-                                    @foreach(\App\Constants\CountryCurrency::COUNTRIES as $c)
-                                        <option value="{{ $c['name'] }}"
-                                            {{ old('country', $recipient->country ?? 'India') === $c['name'] ? 'selected' : '' }}>
-                                            {{ $c['name'] }} ({{ $c['currency'] }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <select name="country" class="form-select bg-light border-0 shadow-none" required>
+                                <option value="">Select country...</option>
+                                @foreach(\App\Constants\CountryCurrency::COUNTRIES as $c)
+                                    <option value="{{ $c['name'] }}"
+                                        {{ old('country', $recipient->country ?? 'India') === $c['name'] ? 'selected' : '' }}>
+                                        {{ $c['name'] }} ({{ $c['currency'] }})
+                                    </option>
+                                @endforeach
+                            </select>
                             @error('country') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
+                    </div>
                     </div>
 
                     <div class="d-flex gap-3 mt-5 pt-3 border-top justify-content-end">

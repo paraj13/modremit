@@ -83,7 +83,7 @@
                 
                 @if($transaction->payment_ref)
                     <div class="mt-4 p-3 bg-light rounded text-start">
-                        <small class="text-muted d-block">Revolut Reference</small>
+                        <small class="text-muted d-block">Wise Reference</small>
                         <span class="font-monospace fw-bold">{{ $transaction->payment_ref }}</span>
                     </div>
                 @endif

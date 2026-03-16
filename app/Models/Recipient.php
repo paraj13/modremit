@@ -14,6 +14,7 @@ class Recipient extends Model
         'customer_id', 'name', 'bank_name', 'account_number',
         'iban', 'swift_code', 'routing_number', 'sort_code',
         'ifsc_code', 'upi_id', 'country', 'is_active',
+        'address_line_1', 'city', 'postal_code', 'state',
     ];
 
     protected $casts = [

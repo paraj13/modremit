@@ -6,8 +6,7 @@ use App\Models\Transaction;
 use App\Notifications\TransactionCompleted;
 use App\Notifications\TransactionFailed;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
-use App\Integrations\Revolut\RevolutFxService;
-use App\Integrations\Revolut\RevolutPaymentService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -16,8 +15,6 @@ class TransactionService
     public function __construct(
         private TransactionRepositoryInterface $transactions,
         private FxService $fxService,
-        private RevolutFxService $revolutFx,
-        private RevolutPaymentService $revolutPayment,
         private ComplianceService $compliance,
         private WalletService $wallet
     ) {}
@@ -110,7 +107,7 @@ class TransactionService
             // Deduct from wallet immediately
             $this->wallet->debitForTransfer($agentId, $chfAmount, $transaction);
 
-            // Step 3: Execute actual payment via Revolut (which updates status tracking & handles commission)
+            // Step 3: Execute actual payment via Wise
             $this->executePayment($transaction->id);
             
             // Refresh transaction after execution to get latest status
@@ -153,7 +150,7 @@ class TransactionService
             // Update status to processing
             $this->updateStatus($transaction->id, 'processing');
 
-            // Trigger actual Revolut Payment
+            // Trigger actual Wise Payment
             return $this->executePayment($transaction->id);
         });
     }
@@ -179,7 +176,7 @@ class TransactionService
     }
 
     /**
-     * Executes the actual payment via Revolut AFTER compliance approval.
+     * Executes the actual payment via Wise AFTER compliance approval.
      */
     public function executePayment(int $transactionId): bool
     {
@@ -189,44 +186,74 @@ class TransactionService
         }
 
         try {
+            /** @var \App\Integrations\Wise\WiseTransferService $wise */
+            $wise = app(\App\Integrations\Wise\WiseTransferService::class);
+            
             $recipient = $transaction->recipient;
-            $paymentRef = $this->revolutPayment->sendPayment([
-                'amount'          => $transaction->target_amount,
-                'currency'        => $transaction->target_currency,
+            
+            $result = $wise->send([
+                'chf_amount'      => $transaction->chf_amount,
+                'target_currency' => $transaction->target_currency,
                 'recipient_name'  => $recipient->name,
                 'account_number'  => $recipient->account_number,
                 'iban'            => $recipient->iban,
                 'swift_code'      => $recipient->swift_code,
                 'routing_number'  => $recipient->routing_number,
-                'sort_code'       => $recipient->sort_code,
                 'ifsc_code'       => $recipient->ifsc_code,
                 'upi_id'          => $recipient->upi_id,
+                'sort_code'       => $recipient->sort_code,
+                'address_line_1'  => $recipient->address_line_1,
+                'city'            => $recipient->city,
+                'postal_code'     => $recipient->postal_code,
+                'state'           => $recipient->state,
+                'country'         => $recipient->country,
                 'reference'       => 'TXN-' . $transaction->id,
             ]);
 
             $this->transactions->update($transaction->id, [
-                'status'       => 'completed',
-                'payment_ref'  => $paymentRef,
+                'status'           => $result->status === 'completed' ? 'completed' : 'processing',
+                'wise_transfer_id' => $result->transferId,
+                'wise_quote_id'    => $result->quoteId,
+                'wise_status'      => $result->status,
+                'wise_response'    => $result->rawResponse,
+                'payment_ref'      => $result->transferId, // Generic ref for backward compat
             ]);
 
-            // Credit commission to agent wallet
-            if ($transaction->agent_commission > 0) {
-                $this->wallet->creditCommission($transaction->agent_id, $transaction->agent_commission, $transaction);
+            // If it completed immediately, handle commission and notification
+            if ($result->status === 'completed') {
+                $this->handleCompletion($transaction->fresh());
             }
-
-            // Notify agent
-            $transaction->agent->notify(new TransactionCompleted($transaction->fresh()));
 
             return true;
         } catch (\Exception $e) {
-            $this->transactions->update($transaction->id, [
-                'status' => 'failed',
-                'notes'  => $e->getMessage(),
+            Log::error('Wise Payment Execution Failed', [
+                'transaction_id' => $transactionId,
+                'error'          => $e->getMessage()
             ]);
+
+            $this->transactions->update($transaction->id, [
+                'status'         => 'failed',
+                'failure_reason' => $e->getMessage(),
+                'wise_response'  => ['error' => $e->getMessage()],
+            ]);
+
+            // REFUND Wallet on failure
+            $this->wallet->refundForFailedTransfer($transaction->agent_id, (float)$transaction->chf_amount, $transaction);
 
             $transaction->agent->notify(new TransactionFailed($transaction->fresh()));
             return false;
         }
+    }
+
+    private function handleCompletion(Transaction $transaction): void
+    {
+        // Credit commission to agent wallet
+        if ($transaction->agent_commission > 0) {
+            $this->wallet->creditCommission($transaction->agent_id, $transaction->agent_commission, $transaction);
+        }
+
+        // Notify agent
+        $transaction->agent->notify(new TransactionCompleted($transaction));
     }
 
     public function updateStatus(int $id, string $status)

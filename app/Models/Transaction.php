@@ -13,7 +13,8 @@ class Transaction extends Model
     protected $fillable = [
         'agent_id', 'customer_id', 'recipient_id', 'fx_quote_id',
         'target_currency', 'chf_amount', 'target_amount', 'send_amount', 'commission', 'agent_commission', 'admin_commission', 'rate',
-        'payment_ref', 'revolut_payment_id',
+        'payment_ref',
+        'wise_transfer_id', 'wise_quote_id', 'wise_status', 'wise_response',
         'status', 'flagged', 'notes', 'failure_reason', 'metadata',
     ];
 
@@ -27,6 +28,7 @@ class Transaction extends Model
         'rate'             => 'decimal:6',
         'flagged'          => 'boolean',
         'metadata'         => 'array',
+        'wise_response'    => 'array',
     ];
 
     const STATUS_PENDING    = 'pending';

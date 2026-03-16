@@ -44,6 +44,14 @@ class RecipientController extends Controller
             'ifsc_code'     => 'nullable|string|max:20',
             'upi_id'        => 'nullable|string|max:100',
             'country'       => 'required|string|max:100',
+            'address_line_1'=> 'nullable|string|max:255',
+            'city'          => 'nullable|string|max:100',
+            'postal_code'   => 'nullable|string|max:20',
+            'state'         => 'nullable|string|max:100',
+            'iban'          => 'nullable|string|max:50',
+            'swift_code'    => 'nullable|string|max:20',
+            'routing_number'=> 'nullable|string|max:20',
+            'sort_code'     => 'nullable|string|max:20',
         ]);
 
         try {
@@ -80,6 +88,14 @@ class RecipientController extends Controller
             'account_number'=> 'required|string|max:50',
             'ifsc_code'     => 'nullable|string|max:20',
             'upi_id'        => 'nullable|string|max:100',
+            'address_line_1'=> 'nullable|string|max:255',
+            'city'          => 'nullable|string|max:100',
+            'postal_code'   => 'nullable|string|max:20',
+            'state'         => 'nullable|string|max:100',
+            'iban'          => 'nullable|string|max:50',
+            'swift_code'    => 'nullable|string|max:20',
+            'routing_number'=> 'nullable|string|max:20',
+            'sort_code'     => 'nullable|string|max:20',
         ]);
 
         $this->recipientService->update($id, $data);
