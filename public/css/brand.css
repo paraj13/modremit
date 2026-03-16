@@ -17,7 +17,7 @@ body {
     color: var(--brand-dark);
 }
 
-.bg-brand-dark,. {
+.bg-brand-dark {
     background-color: var(--brand-dark) !important;
 }
 

@@ -18,7 +18,7 @@
                     <th>Status</th>
                     <th>Date</th>
                     <th width="120px" class="text-end">Action</th>
-                </tr>
+                </tr> 
             </thead>
             <tbody>
                 @forelse($transactions as $index => $transaction)

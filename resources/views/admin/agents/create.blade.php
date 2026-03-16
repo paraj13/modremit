@@ -13,7 +13,6 @@
             <div class="card-body p-5">
                 <form action="{{ route('admin.agents.store') }}" method="POST">
                     @csrf
-
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">FULL NAME</label>
