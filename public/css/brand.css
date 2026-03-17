@@ -1,14 +1,14 @@
 :root {
-    --brand-lime: rgba(159, 232, 112, 1);
-    --brand-dark: #25330F;
-    --brand-mint: #D3FF8A;
-    --white-home: #d8ffc7;
-    --white: #ffffff;
-    --gray-light:  rgb(248, 255, 244);
-    --text-muted: #64748B;
-    --brand-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.3);
+    --brand-lime: #ffde42;                  /* bright yellow main color */
+    --brand-dark: #142472;                  /* strong blue contrast */
+    --brand-mint: #fff9e6;                  /* light yellow / highlight */
+    --white-home: #cae6ff5c;                  /* page background */
+    --white: #ffffff;                        /* pure white */
+    --gray-light: #f2f4ff;                   /* very light blue-gray */
+    --text-muted: #6b7280;                   /* muted text color */
+    --brand-shadow: 0 10px 40px rgba(0, 0, 0, 0.04); /* shadow same as before */
+    --glass-bg: rgba(255, 255, 255, 0.7);   /* glass effect */
+    --glass-border: rgba(255, 255, 255, 0.3); /* glass border stays */
 }
 
 body {
