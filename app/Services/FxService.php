@@ -23,7 +23,7 @@ class FxService
         $quoteId = $fxData['id'] ?? null;
 
         // Apply commission (e.g. 2%)
-        $commissionRate = (float) config('remittance.commission_rate', 2);
+        $commissionRate = (float) config('remittance.commission_rate', 1);
         $totalCommission = round($chfAmount * ($commissionRate / 100), 2);
         
         // Split commission (Default 60% to agent, 40% to admin)
