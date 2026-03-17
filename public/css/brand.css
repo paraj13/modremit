@@ -76,6 +76,22 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Validation Styles */
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    color: #dc3545;
+    font-weight: 600;
+}
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+.is-valid {
+    border-color: #10b981 !important; /* Greenish/Mint for valid */
+}
+
 .btn-brand-outline:hover {
     background-color: var(--brand-dark);
     color: var(--brand-lime);

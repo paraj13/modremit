@@ -442,10 +442,10 @@
                 <div class="star-rating">
                     @for($i=0; $i<$review['rating']; $i++) <i class="bi bi-star-fill"></i> @endfor
                 </div>
-                <p class="mb-3 small">"{{ $review['text'] }}"</p>
+                <p class="mb-3 text-light small">"{{ $review['text'] }}"</p>
                 <div class="d-flex align-items-center">
                     <span class="fi fi-{{ $review['country'] }} me-2 rounded-circle border"></span>
-                    <span class="small fw-bold">— {{ $review['name'] }}</span>
+                    <span class="small fw-bold text-light"> {{ $review['name'] }}</span>
                 </div>
             </div>
             @endforeach
@@ -720,28 +720,28 @@
     <footer class="bg-brand-dark text-white pt-5 pb-4">
         <div class="container">
             <div class="row g-5">
-                <div class="col-lg-4">
+                <div class="col-lg-6">
 
-<a class="navbar-brand d-flex align-items-center {{ $class ?? '' }}" href="{{ url('/') }}">
-    
-    <div class="bg-brand-light text-brand-dark rounded-3 d-flex align-items-center justify-content-center me-3"
-        style="width: 48px; height: 48px;">
-        <i class="bi bi-send-fill" style="font-size: 1.4rem;"></i>
-    </div>
+                    <a class="navbar-brand d-flex align-items-center {{ $class ?? '' }}" href="{{ url('/') }}">
+                        
+                        <div class="bg-brand-light text-brand-dark rounded-3 d-flex align-items-center justify-content-center me-3"
+                            style="width: 48px; height: 48px;">
+                            <i class="bi bi-send-fill" style="font-size: 1.4rem;"></i>
+                        </div>
 
-    <span class="fw-bold text-light" style="font-size: 1.5rem; letter-spacing: -0.5px;">
-        MOD<span class="text-brand-dark bg-brand-light px-2 ms-1 rounded">REMIT</span>
-    </span>
+                        <span class="fw-bold text-light" style="font-size: 1.5rem; letter-spacing: -0.5px;">
+                            MOD<span class="text-brand-dark bg-brand-light px-2 ms-1 rounded">REMIT</span>
+                        </span>
 
-</a>
-                    <p class="opacity-50 small mb-4 pe-lg-5">
+                    </a>
+                    <p class="opacity-50 small mt-2 mb-4 pe-lg-5">
                         {{ __('messages.footer_desc') }}
                     </p>
                     <div class="d-flex gap-3 fs-4 text-brand-lime">
                         <i class="bi bi-facebook"></i><i class="bi bi-twitter-x"></i><i class="bi bi-linkedin"></i>
                     </div>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-3">
                     <h6 class="fw-bold mb-4">{{ __('messages.company') }}</h6>
                     <ul class="list-unstyled opacity-50 small">
                         <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.about_us') }}</a></li>
@@ -749,7 +749,7 @@
                         <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.privacy_policy') }}</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-3">
                     <h6 class="fw-bold mb-4">{{ __('messages.support') }}</h6>
                     <ul class="list-unstyled opacity-50 small">
                         <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.help_center') }}</a></li>
@@ -757,13 +757,7 @@
                         <li class="mb-2"><a href="#" class="text-white text-decoration-none">{{ __('messages.security') }}</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4">
-                    <h6 class="fw-bold mb-4">{{ __('messages.stay_updated') }}</h6>
-                    <div class="input-group mb-3 premium-subscribe">
-                        <input type="text" class="form-control bg-brand border-secondary text-white py-3 ps-4" placeholder="{{ __('messages.email_placeholder') }}" style="border-radius: 12px 0 0 12px;">
-                        <button class="btn brand-lime px-4 fw-bold" type="button" style="border-radius: 0 12px 12px 0;">{{ __('messages.subscribe') }}</button>
-                    </div>
-                </div>
+
             </div>
             <hr class="my-5 opacity-10">
             <div class="text-center opacity-50 small">
@@ -887,16 +881,28 @@
             let fromChoices = null;
             let toChoices = null;
 
-            try {
-                if (fromSelectEl) {
-                    fromChoices = new Choices(fromSelectEl, choicesConfig);
+            // Use a safer initialization block
+            function initChoices() {
+                if (typeof Choices === 'undefined') {
+                    console.error("Choices.js library not loaded. Retrying in 500ms...");
+                    setTimeout(initChoices, 500);
+                    return;
                 }
-                if (toSelectEl) {
-                    toChoices = new Choices(toSelectEl, choicesConfig);
+
+                try {
+                    if (fromSelectEl) {
+                        fromChoices = new Choices(fromSelectEl, choicesConfig);
+                    }
+                    if (toSelectEl) {
+                        toChoices = new Choices(toSelectEl, choicesConfig);
+                    }
+                    console.log("Choices.js initialized successfully");
+                } catch (err) {
+                    console.error("Choices.js Initialization Error:", err);
                 }
-            } catch (err) {
-                console.error("Choices.js Initialization Error:", err);
             }
+
+            initChoices();
 
             const currencyState = {
                 from: fromSelectEl ? fromSelectEl.value : 'CHF',
@@ -906,14 +912,16 @@
             if (fromSelectEl) {
                 fromSelectEl.addEventListener('change', function(e) {
                     currencyState.from = e.target.value;
-                    fetchQuote();
+                    // When changing 'from' currency, recalculate based on current 'send' amount
+                    fetchQuote('send');
                 });
             }
 
             if (toSelectEl) {
                 toSelectEl.addEventListener('change', function(e) {
                     currencyState.to = e.target.value;
-                    fetchQuote();
+                    // When changing 'to' currency, recalculate based on current 'send' amount
+                    fetchQuote('send');
                 });
             }
 
@@ -925,8 +933,15 @@
             const rateDisplay  = document.getElementById('fx_rate');
             const loader       = document.getElementById('loader');
 
-            async function fetchQuote() {
-                const amount = parseFloat(sendInput.value) || 0;
+            // Track which field was last edited to maintain two-way binding
+            let lastEditedField = 'send'; 
+
+            async function fetchQuote(triggerField = null) {
+                if (triggerField) lastEditedField = triggerField;
+
+                const amountVal = lastEditedField === 'send' ? sendInput.value : receiveInput.value;
+                const amount = parseFloat(amountVal.replace(/,/g, '')) || 0;
+                
                 if (amount < 1) return;
 
                 if (loader) loader.classList.remove('d-none');
@@ -941,7 +956,8 @@
                         body: JSON.stringify({
                             amount: amount,
                             from:   currencyState.from,
-                            to:     currencyState.to
+                            to:     currencyState.to,
+                            amount_type: lastEditedField === 'send' ? 'send' : 'receive'
                         })
                     });
 
@@ -949,14 +965,22 @@
                     const data = await res.json();
 
                     if (data.error) {
-                        if (receiveInput) receiveInput.value = data.error;
+                        // Handle error
+                        console.warn('Quote error:', data.error);
                     } else {
-                        // Update receive amount
-                        if (receiveInput) {
-                            receiveInput.value = parseFloat(data.target_amount).toLocaleString(undefined, {
-                                minimumFractionDigits: 2, maximumFractionDigits: 2
-                            });
+                        // Update the OTHER field
+                        if (lastEditedField === 'send') {
+                            if (receiveInput) {
+                                receiveInput.value = parseFloat(data.target_amount).toLocaleString(undefined, {
+                                    minimumFractionDigits: 2, maximumFractionDigits: 2
+                                });
+                            }
+                        } else {
+                            if (sendInput) {
+                                sendInput.value = parseFloat(data.amount).toFixed(2);
+                            }
                         }
+
                         // Update fee and rate displays
                         if (feeDisplay) feeDisplay.innerText = parseFloat(data.fee || 0).toFixed(2);
                         if (rateDisplay) {
@@ -967,7 +991,6 @@
                     }
                 } catch (err) {
                     console.error('FX Quote Error:', err);
-                    if (receiveInput) receiveInput.value = 'Error fetching rate';
                 } finally {
                     if (loader) loader.classList.add('d-none');
                 }
@@ -979,14 +1002,17 @@
                 return (...args) => { clearTimeout(timer); timer = setTimeout(() => fn(...args), ms); };
             }
 
-            // Trigger on amount change
+            // Trigger on amount change (Two-way)
             if (sendInput) {
-                sendInput.addEventListener('change', fetchQuote);
-                sendInput.addEventListener('input',  debounce(fetchQuote, 600));
+                sendInput.addEventListener('input', debounce(() => fetchQuote('send'), 600));
+            }
+            if (receiveInput) {
+                receiveInput.removeAttribute('readonly'); // Enable editing
+                receiveInput.addEventListener('input', debounce(() => fetchQuote('receive'), 600));
             }
 
             // Initial load
-            fetchQuote();
+            fetchQuote('send');
 
 
             // ─── Hero Badge Cycling ────────────────────────────────────────────────

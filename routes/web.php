@@ -26,6 +26,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/transactions/{id}', [Admin\TransactionController::class, 'show'])->name('transactions.show');
     Route::get('/customers', [Admin\CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{id}', [Admin\CustomerController::class, 'show'])->name('customers.show');
+    Route::post('/customers/{id}/refresh-kyc', [Admin\CustomerController::class, 'refreshKyc'])->name('customers.refresh-kyc');
+    Route::delete('/customers/{id}', [Admin\CustomerController::class, 'destroy'])->name('customers.destroy');
     Route::get('/recipients', [Admin\RecipientController::class, 'index'])->name('recipients.index');
     Route::get('/recipients/{id}', [Admin\RecipientController::class, 'show'])->name('recipients.show');
     Route::post('agents/{agent}/toggle', [Admin\AgentController::class, 'toggleStatus'])->name('agents.toggle');

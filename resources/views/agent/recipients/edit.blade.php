@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="card-body p-5">
-                <form action="{{ isset($recipient) ? route('agent.recipients.update', $recipient->id) : route('agent.recipients.store') }}" method="POST">
+                <form action="{{ isset($recipient) ? route('agent.recipients.update', $recipient->id) : route('agent.recipients.store') }}" method="POST" id="recipientEditForm">
                     @csrf
                     @if(isset($recipient)) @method('PUT') @endif
 
@@ -40,10 +40,10 @@
                             <label class="form-label fw-bold small text-muted">RECIPIENT FULL NAME</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-person-fill text-muted"></i></span>
-                                <input type="text" name="name" class="form-control bg-light border-0 shadow-none @error('name') is-invalid @enderror"
-                                    value="{{ old('name', $recipient->name ?? '') }}" placeholder="Receiver's full name" required>
+                                <input type="text" name="name" id="name" class="form-control bg-light border-0 shadow-none @error('name') is-invalid @enderror"
+                                    value="{{ old('name', $recipient->name ?? '') }}" placeholder="Receiver's full name">
                             </div>
-                            @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                            @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Bank Details Section --}}
@@ -56,10 +56,10 @@
                             <label class="form-label fw-bold small text-muted">BANK NAME</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-bank text-muted"></i></span>
-                                <input type="text" name="bank_name" class="form-control bg-light border-0 shadow-none @error('bank_name') is-invalid @enderror"
-                                    value="{{ old('bank_name', $recipient->bank_name ?? '') }}" placeholder="e.g. Chase, HDFC, Barclays" required>
+                                <input type="text" name="bank_name" id="bank_name" class="form-control bg-light border-0 shadow-none @error('bank_name') is-invalid @enderror"
+                                    value="{{ old('bank_name', $recipient->bank_name ?? '') }}" placeholder="e.g. Chase, HDFC, Barclays">
                             </div>
-                            @error('bank_name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                            @error('bank_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Account Number --}}
@@ -67,10 +67,10 @@
                             <label class="form-label fw-bold small text-muted">ACCOUNT NUMBER / IBAN</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-credit-card-2-front text-muted"></i></span>
-                                <input type="text" name="account_number" class="form-control bg-light border-0 shadow-none @error('account_number') is-invalid @enderror"
-                                    value="{{ old('account_number', $recipient->account_number ?? '') }}" placeholder="Standard acc no or full IBAN" required>
+                                <input type="text" name="account_number" id="account_number" class="form-control bg-light border-0 shadow-none @error('account_number') is-invalid @enderror"
+                                    value="{{ old('account_number', $recipient->account_number ?? '') }}" placeholder="Standard acc no or full IBAN">
                             </div>
-                            @error('account_number') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                            @error('account_number') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- IBAN (Separate field if needed) --}}
@@ -147,7 +147,7 @@
                         {{-- Destination Country --}}
                         <div class="col-md-4">
                             <label class="form-label fw-bold small text-muted">DESTINATION COUNTRY</label>
-                            <select name="country" class="form-select bg-light border-0 shadow-none" required>
+                            <select name="country" id="country" class="form-select bg-light border-0 shadow-none">
                                 <option value="">Select country...</option>
                                 @foreach(\App\Constants\CountryCurrency::COUNTRIES as $c)
                                     <option value="{{ $c['name'] }}"
@@ -156,7 +156,7 @@
                                     </option>
                                 @endforeach
                             </select>
-                            @error('country') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
+                            @error('country') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     </div>
@@ -182,6 +182,58 @@
 
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if ($.validator) {
+        $("#recipientEditForm").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                },
+                bank_name: {
+                    required: true
+                },
+                account_number: {
+                    required: true,
+                    minlength: 5
+                },
+                country: {
+                    required: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "Please enter the recipient's full name"
+                },
+                bank_name: {
+                    required: "Bank name is required"
+                },
+                account_number: {
+                    required: "Account number or IBAN is required"
+                },
+                country: {
+                    required: "Please select destination country"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.closest('.input-group'));
+            },
+            submitHandler: function(form) {
+                showLoader($(form).find('button[type="submit"]')[0]);
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+@endpush
             </div>
         </div>
     </div>

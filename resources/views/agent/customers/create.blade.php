@@ -11,15 +11,15 @@
                 <p class="text-muted small mb-0 uppercase fw-bold" style="letter-spacing: 1px;">Register a new sender on the platform</p>
             </div>
             <div class="card-body p-5 pt-2">
-                <form action="{{ route('agent.customers.store') }}" method="POST">
+                <form action="{{ route('agent.customers.store') }}" method="POST" id="customerCreateForm">
                     @csrf
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-brand-dark">FULL LEGAL NAME</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light border-0"><i class="bi bi-person text-brand-dark"></i></span>
-                            <input type="text" name="name" class="form-control form-control-premium @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="John Doe" required>
+                            <input type="text" name="name" id="name" class="form-control form-control-premium @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="John Doe">
                         </div>
-                        @error('name') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                        @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="row">
@@ -27,17 +27,17 @@
                             <label class="form-label fw-bold small text-brand-dark">EMAIL ADDRESS</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-envelope text-brand-dark"></i></span>
-                                <input type="email" name="email" class="form-control form-control-premium @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="john@example.com" required>
+                                <input type="email" name="email" id="email" class="form-control form-control-premium @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="john@example.com">
                             </div>
-                            @error('email') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                         <div class="col-md-6 mb-4">
                             <label class="form-label fw-bold small text-brand-dark">PHONE NUMBER</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-phone text-brand-dark"></i></span>
-                                <input type="text" name="phone" class="form-control form-control-premium @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+41 7x xxx xx xx" required>
+                                <input type="text" name="phone" id="phone" class="form-control form-control-premium @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+41 7x xxx xx xx">
                             </div>
-                            @error('phone') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
+                            @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
                     </div>
                     
@@ -60,6 +60,55 @@
                         <a href="{{ route('agent.customers.index') }}" class="btn btn-light rounded-3 py-2 text-muted small fw-bold text-uppercase">Cancel and go back</a>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if ($.validator) {
+        $("#customerCreateForm").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone: {
+                    required: true,
+                    phoneFormat: true
+                }
+            },
+            messages: {
+                name: {
+                    required: "Please enter the customer's full legal name",
+                    minlength: "Name must be at least 3 characters"
+                },
+                email: {
+                    required: "Email address is required",
+                    email: "Please enter a valid email address"
+                },
+                phone: {
+                    required: "Phone number is required"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.closest('.input-group'));
+            },
+            submitHandler: function(form) {
+                showLoader($(form).find('button[type="submit"]')[0]);
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+@endpush
             </div>
         </div>
     </div>

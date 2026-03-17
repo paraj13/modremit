@@ -21,21 +21,19 @@
                     </div>
                 </div>
 
-                <form action="{{ route('admin.wallets.credit', $agent->id) }}" method="POST">
+                <form action="{{ route('admin.wallets.credit', $agent->id) }}" method="POST" id="creditForm">
                     @csrf
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-muted">CREDIT AMOUNT (CHF)</label>
                         <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
                             <span class="input-group-text bg-light border-0 px-4 fw-bold text-brand-dark">CHF</span>
-                            <input type="number" name="amount" class="form-control bg-light border-0 shadow-none ps-0" placeholder="0.00" min="0.01" step="0.01" required autofocus>
+                            <input type="number" name="amount" id="amount" class="form-control bg-light border-0 shadow-none ps-0" placeholder="0.00" step="0.01" autofocus>
                         </div>
-                        @error('amount') <div class="text-danger x-small mt-1">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-muted">DESCRIPTION / REFERENCE</label>
-                        <input type="text" name="description" class="form-control rounded-3 border bg-light p-3" placeholder="e.g. Bank Deposit Verified" required>
-                        @error('description') <div class="text-danger x-small mt-1">{{ $message }}</div> @enderror
+                        <input type="text" name="description" id="description" class="form-control rounded-3 border bg-light p-3" placeholder="e.g. Bank Deposit Verified">
                     </div>
 
                     <div class="d-grid gap-2">
@@ -45,6 +43,46 @@
                         <a href="{{ route('admin.wallets.index') }}" class="btn btn-light btn-lg rounded-3 py-3 text-muted fw-bold">Cancel</a>
                     </div>
                 </form>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if ($.validator) {
+        $("#creditForm").validate({
+            rules: {
+                amount: {
+                    required: true,
+                    number: true,
+                    min: 0.01
+                },
+                description: {
+                    required: true,
+                    minlength: 3
+                }
+            },
+            messages: {
+                amount: {
+                    required: "Please enter the amount to credit",
+                    min: "Amount must be at least 0.01 CHF"
+                },
+                description: "Description is required for internal records"
+            },
+            errorPlacement: function(error, element) {
+                if (element.closest('.input-group').length) {
+                    error.insertAfter(element.closest('.input-group'));
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                showLoader($(form).find('button[type="submit"]')[0]);
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+@endpush
             </div>
         </div>
     </div>

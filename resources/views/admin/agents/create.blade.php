@@ -11,34 +11,31 @@
                 <p class="text-brand-lime small mb-0 opacity-75 mt-1">Fill in the details below to register a new platform agent. A default password will be assigned automatically.</p>
             </div>
             <div class="card-body p-5">
-                <form action="{{ route('admin.agents.store') }}" method="POST">
+                <form action="{{ route('admin.agents.store') }}" method="POST" id="agentCreateForm">
                     @csrf
                     <div class="row g-4">
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">FULL NAME</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-person text-muted"></i></span>
-                                <input type="text" name="name" class="form-control bg-light border-0 shadow-none @error('name') is-invalid @enderror" placeholder="Agent's full name" required>
+                                <input type="text" name="name" id="name" class="form-control bg-light border-0 shadow-none @error('name') is-invalid @enderror" placeholder="Agent's full name">
                             </div>
-                            @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">EMAIL ADDRESS</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-envelope text-muted"></i></span>
-                                <input type="email" name="email" class="form-control bg-light border-0 shadow-none @error('email') is-invalid @enderror" placeholder="agent@example.com" required>
+                                <input type="email" name="email" id="email" class="form-control bg-light border-0 shadow-none @error('email') is-invalid @enderror" placeholder="agent@example.com">
                             </div>
-                            @error('email') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">PHONE NUMBER</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-telephone text-muted"></i></span>
-                                <input type="text" name="phone" class="form-control bg-light border-0 shadow-none @error('phone') is-invalid @enderror" placeholder="+41 XX XXX XX XX">
+                                <input type="text" name="phone" id="phone" class="form-control bg-light border-0 shadow-none @error('phone') is-invalid @enderror" placeholder="+41 XX XXX XX XX">
                             </div>
-                            @error('phone') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
 
                         <div class="col-md-6">
@@ -58,6 +55,37 @@
                         </button>
                     </div>
                 </form>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if ($.validator) {
+        $("#agentCreateForm").validate({
+            rules: {
+                name: { required: true, minlength: 2 },
+                email: { required: true, email: true },
+                phone: { required: true, phoneFormat: true }
+            },
+            messages: {
+                name: "Full name is required",
+                email: {
+                    required: "Email address is required",
+                    email: "Please enter a valid email"
+                },
+                phone: "Valid phone number is required"
+            },
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.closest('.input-group'));
+            },
+            submitHandler: function(form) {
+                showLoader($(form).find('button[type="submit"]')[0]);
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+@endpush
             </div>
         </div>
     </div>

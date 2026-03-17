@@ -23,12 +23,21 @@ class PublicController extends Controller
     public function getQuote(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:1',
-            'from'   => 'required|string|size:3',
-            'to'     => 'required|string|size:3',
+            'amount'      => 'required|numeric|min:1',
+            'from'        => 'required|string|size:3',
+            'to'          => 'required|string|size:3',
+            'amount_type' => 'nullable|string|in:send,receive',
         ]);
 
-        $fxQuote = $this->fxService->fetchAndStoreQuote((float) $request->amount, null, $request->to);
+        $type = $request->amount_type ?? 'send';
+
+        $fxQuote = $this->fxService->fetchAndStoreQuote(
+            (float) $request->amount, 
+            null, 
+            $request->to,
+            $request->from,
+            $type
+        );
         
         return response()->json([
             'from'          => $fxQuote->from_currency,

@@ -21,13 +21,13 @@
                     </div>
                 </div>
 
-                <form action="{{ route('agent.wallet.checkout') }}" method="POST">
+                <form action="{{ route('agent.wallet.checkout') }}" method="POST" id="topupForm">
                     @csrf
                     <div class="mb-4">
                         <label class="form-label fw-bold small text-muted">TARGET AMOUNT (CHF)</label>
                         <div class="input-group input-group-lg bg-light rounded-3 overflow-hidden border">
                             <span class="input-group-text bg-light border-0 px-4 fw-bold text-brand-dark">CHF</span>
-                            <input type="number" name="amount" class="form-control bg-light border-0 shadow-none ps-0" placeholder="0.00" min="10" step="0.01" required>
+                            <input type="number" name="amount" id="amount" class="form-control bg-light border-0 shadow-none ps-0" placeholder="0.00" step="0.01">
                         </div>
                     </div>
 
@@ -49,6 +49,40 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    if ($.validator) {
+        $("#topupForm").validate({
+            rules: {
+                amount: {
+                    required: true,
+                    number: true,
+                    min: 10
+                }
+            },
+            messages: {
+                amount: {
+                    required: "Please enter the amount you wish to top up",
+                    number: "Please enter a valid amount",
+                    min: "Minimum top-up amount is 10 CHF"
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.insertAfter(element.closest('.input-group'));
+            },
+            submitHandler: function(form) {
+                showLoader($(form).find('button[type="submit"]')[0]);
+                form.submit();
+            }
+        });
+    }
+});
+</script>
+@endpush
             </div>
         </div>
 

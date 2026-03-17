@@ -44,6 +44,21 @@
                 </div>
 
                 <div class="d-grid gap-2">
+                    <form action="{{ route('admin.customers.refresh-kyc', $customer->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-brand-outline btn-sm w-100 py-2">
+                             <i class="bi bi-arrow-clockwise me-1"></i> Sync KYC
+                        </button>
+                    </form>
+                    
+                    <form action="{{ route('admin.customers.destroy', $customer->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer? This action cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm w-100 py-2">
+                            <i class="bi bi-trash me-1"></i> Delete Profile
+                        </button>
+                    </form>
+
                     <a href="{{ route('admin.customers.index') }}" class="btn btn-brand-outline btn-sm py-2">
                          <i class="bi bi-arrow-left me-1"></i> Back to List
                     </a>

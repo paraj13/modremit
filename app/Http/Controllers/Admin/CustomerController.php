@@ -9,9 +9,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
 {
+    public function __construct(private \App\Services\CustomerService $customerService) {}
+
     public function index(Request $request)
     {
-        $customers = Customer::with(['agent'])
+        $customers = \App\Models\Customer::with(['agent'])
             ->withCount('recipients')
             ->latest()
             ->paginate(10);
@@ -21,7 +23,20 @@ class CustomerController extends Controller
 
     public function show(int $id)
     {
-        $customer = Customer::with(['agent', 'recipients', 'transactions'])->findOrFail($id);
+        $customer = \App\Models\Customer::with(['agent', 'recipients', 'transactions'])->findOrFail($id);
         return view('admin.customers.show', compact('customer'));
+    }
+
+    public function refreshKyc(int $id)
+    {
+        $status = $this->customerService->refreshKycStatus($id);
+        return back()->with('success', 'KYC Status: ' . ucfirst($status ?? 'pending'));
+    }
+
+    public function destroy(int $id)
+    {
+        $customer = \App\Models\Customer::findOrFail($id);
+        $customer->delete();
+        return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully.');
     }
 }

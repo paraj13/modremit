@@ -32,7 +32,7 @@
                                 <label class="form-label fw-bold small text-muted">SENDER (CUSTOMER)</label>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-person text-muted"></i></span>
-                                    <select name="customer_id" id="customer_select" class="form-select bg-light border-0 shadow-none px-3 py-2" required>
+                                    <select name="customer_id" id="customer_select" class="form-select bg-light border-0 shadow-none px-3 py-2">
                                         <option value="">Choose a verified customer...</option>
                                         @foreach($customers as $customer)
                                             <option value="{{ $customer->id }}" {{ (isset($selectedCustomer) && $selectedCustomer->id == $customer->id) ? 'selected' : '' }} data-recipients='@json($customer->recipients)' data-eid="{{ \Illuminate\Support\Facades\Crypt::encryptString($customer->id) }}">
@@ -41,6 +41,7 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div id="customer_select-error-container"></div>
                             </div>
                             <div class="col-md-6" id="recipient_wrapper" style="{{ isset($selectedCustomer) ? '' : 'display:none;' }}">
                                 <div class="d-flex justify-content-between align-items-center mb-1">
@@ -51,7 +52,7 @@
                                 </div>
                                 <div class="input-group">
                                     <span class="input-group-text bg-light border-0"><i class="bi bi-person-check text-muted"></i></span>
-                                    <select name="recipient_id" id="recipient_select" class="form-select bg-light border-0 shadow-none px-3 py-2" required>
+                                    <select name="recipient_id" id="recipient_select" class="form-select bg-light border-0 shadow-none px-3 py-2">
                                         <option value="">Select recipient...</option>
                                         @if(isset($selectedCustomer))
                                             @foreach($selectedCustomer->recipients as $recipient)
@@ -60,6 +61,7 @@
                                         @endif
                                     </select>
                                 </div>
+                                <div id="recipient_select-error-container"></div>
                             </div>
                         </div>
                     </div>
@@ -75,7 +77,7 @@
                                 <label class="form-label fw-bold small text-muted">SEND AMOUNT</label>
                                 <div class="input-group input-group-lg bg-white rounded-3 shadow-none border overflow-hidden">
                                     <span class="input-group-text bg-white border-0 px-4 fw-bold text-brand-dark">CHF</span>
-                                    <input type="number" name="chf_amount" id="chf_amount" class="form-control border-0 shadow-none ps-0" step="0.01" min="10" placeholder="0.00" required>
+                                    <input type="number" name="chf_amount" id="chf_amount" class="form-control border-0 shadow-none ps-0" step="0.01" placeholder="0.00">
                                     <select name="target_currency" id="target_currency" class="form-select border-0 bg-light fw-bold" style="max-width: 120px;">
                                         <option value="INR" selected>INR</option>
                                         <option value="EUR">EUR</option>
@@ -86,6 +88,7 @@
                                     </select>
                                     <button type="button" id="get_quote_btn" class="btn btn-brand rounded-0 px-4">Get Live Quote</button>
                                 </div>
+                                <div id="chf_amount-error-container"></div>
                             </div>
                             <div class="col-md-5">
                                 <div id="quote_display" class="p-4 bg-white border border-brand-lime rounded-4 shadow-sm" style="display: none;">
@@ -157,6 +160,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const chfAmountInput = document.getElementById('chf_amount');
     const submitBtn = document.getElementById('submit_btn');
     const addBeneficiaryLink = document.getElementById('add_beneficiary_link');
+    const transferForm = $("#transferForm");
+
+    // Initialize jQuery validation
+    if ($.validator) {
+        transferForm.validate({
+            rules: {
+                customer_id: { required: true },
+                recipient_id: { required: true },
+                chf_amount: { 
+                    required: true, 
+                    number: true, 
+                    min: 10 
+                }
+            },
+            messages: {
+                customer_id: "Please select a sender",
+                recipient_id: "Please select a recipient",
+                chf_amount: {
+                    required: "Please enter a send amount",
+                    min: "Minimum transfer amount is 10 CHF"
+                }
+            },
+            errorPlacement: function(error, element) {
+                const id = element.attr('id');
+                const container = $(`#${id}-error-container`);
+                if (container.length) {
+                    error.appendTo(container);
+                } else {
+                    error.insertAfter(element.closest('.input-group'));
+                }
+            },
+            submitHandler: function(form) {
+                showLoader($(form).find('button[type="submit"]')[0]);
+                form.submit();
+            }
+        });
+    }
 
     function updateBeneficiaryLink() {
         const option = customerSelect.options[customerSelect.selectedIndex];
@@ -196,17 +236,10 @@ document.addEventListener('DOMContentLoaded', function() {
     getQuoteBtn.addEventListener('click', function() {
         const amount = chfAmountInput.value;
         const targetCurrency = document.getElementById('target_currency').value;
+        const customerId = customerSelect.value;
         
-        if (!amount || amount < 10) {
-            Swal.fire({
-                toast: true,
-                position: 'top-end',
-                icon: 'warning',
-                title: 'Please enter a valid amount (Min 10 CHF)',
-                showConfirmButton: false,
-                timer: 4000,
-                customClass: { popup: 'rounded-4 shadow-sm border-0' }
-            });
+        if (!customerId || !amount || amount < 10) {
+            transferForm.valid(); // Trigger validation UI
             return;
         }
 

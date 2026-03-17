@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agent Registration | Modremit</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ asset('vendor/css/inter.css') }}" rel="stylesheet">
+<link href="{{ asset('vendor/css/bootstrap.min.css') }}" rel="stylesheet">
+<link href="{{ asset('vendor/css/bootstrap-icons.css') }}" rel="stylesheet">
 <link href="{{ asset('css/brand.css') }}" rel="stylesheet">
 
 <style>
@@ -67,7 +68,9 @@ body{
 
 <div class="register-card">
 
-<a href="/" class="brand-logo">MODREMIT</a>
+<div class="mb-4 d-flex justify-content-center">
+    <x-logo />
+</div>
 
 <h4 class="fw-bold mb-2 text-center">Create Agent Account</h4>
 <p class="text-muted small text-center mb-4">
@@ -92,7 +95,7 @@ Join our global network and start sending money worldwide.
 </script>
 @endif
 
-<form action="{{ route('register') }}" method="POST">
+<form action="{{ route('register') }}" method="POST" id="registerForm">
 @csrf
 
 <div class="row g-3">
@@ -102,8 +105,7 @@ Join our global network and start sending money worldwide.
 <input type="text" name="name"
 class="form-control form-control-premium"
 placeholder="John Doe"
-value="{{ old('name') }}"
-required>
+value="{{ old('name') }}">
 </div>
 
 <div class="col-md-6">
@@ -111,8 +113,7 @@ required>
 <input type="email" name="email"
 class="form-control form-control-premium"
 placeholder="john@example.com"
-value="{{ old('email') }}"
-required>
+value="{{ old('email') }}">
 </div>
 
 <div class="col-md-6">
@@ -120,8 +121,7 @@ required>
 <input type="text" name="phone"
 class="form-control form-control-premium"
 placeholder="+41 71 123 45 67"
-value="{{ old('phone') }}"
-required>
+value="{{ old('phone') }}">
 </div>
 
 <div class="col-md-6">
@@ -137,16 +137,14 @@ required>
 
 <div class="col-md-6">
 <label class="form-label small fw-bold">Password</label>
-<input type="password" name="password"
-class="form-control form-control-premium"
-required>
+<input type="password" name="password" id="password"
+class="form-control form-control-premium">
 </div>
 
 <div class="col-md-6">
 <label class="form-label small fw-bold">Confirm Password</label>
 <input type="password" name="password_confirmation"
-class="form-control form-control-premium"
-required>
+class="form-control form-control-premium">
 </div>
 
 </div>
@@ -169,6 +167,62 @@ Login here
 
 </div>
 
+<script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
+<script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        if ($.validator) {
+            // Custom phone rule
+            $.validator.addMethod("phoneFormat", function(value, element) {
+                return this.optional(element) || /^\+?[0-9\s\-()]{7,20}$/.test(value);
+            }, "Please enter a valid phone number.");
+
+            $("#registerForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        minlength: 3
+                    },
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    phone: {
+                        required: true,
+                        phoneFormat: true
+                    },
+                    country: {
+                        required: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 6
+                    },
+                    password_confirmation: {
+                        required: true,
+                        equalTo: "#password"
+                    }
+                },
+                errorElement: 'span',
+                errorClass: 'invalid-feedback',
+                highlight: function(element) {
+                    $(element).addClass('is-invalid').removeClass('is-valid');
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('is-invalid').addClass('is-valid');
+                },
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);
+                },
+                submitHandler: function(form) {
+                    const btn = $(form).find('button[type="submit"]');
+                    btn.addClass('btn-loading');
+                    form.submit();
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

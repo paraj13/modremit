@@ -14,36 +14,56 @@ class FxService
     ) {}
 
     /** Fetch a live quote and persist it */
-    public function fetchAndStoreQuote(float $chfAmount, ?int $agentId = null, string $targetCurrency = 'INR'): \App\Models\FxQuote
-    {
+    public function fetchAndStoreQuote(
+        float $amount, 
+        ?int $agentId = null, 
+        string $targetCurrency = 'INR', 
+        string $fromCurrency = 'CHF',
+        string $calculationType = 'send' // 'send' or 'receive'
+    ): \App\Models\FxQuote {
         // Use the unified FX service for consistency
-        // For actual transfers, we fetch a fresh rate (cache = false)
-        $fxData = $this->fxRates->getRate('CHF', $targetCurrency, false);
-        $rate = $fxData['rate'];
+        $fxData = $this->fxRates->getRate($fromCurrency, $targetCurrency, false);
+        $rate = (float) $fxData['rate'];
         $quoteId = $fxData['id'] ?? null;
 
-        // Apply commission (e.g. 2%)
         $commissionRate = (float) config('remittance.commission_rate', 1);
-        $totalCommission = round($chfAmount * ($commissionRate / 100), 2);
         
+        if ($calculationType === 'receive') {
+            // We want the recipient to get exactly $amount in target currency
+            // targetAmount = (chfAmount - commission) * rate
+            // chfAmount - commission = targetAmount / rate
+            // chfAmount * (1 - commissionRate/100) = targetAmount / rate
+            // chfAmount = (targetAmount / rate) / (1 - commissionRate/100)
+            
+            $netAmount = $amount / $rate;
+            $chfAmount = $netAmount / (1 - ($commissionRate / 100));
+            $totalCommission = $chfAmount - $netAmount;
+            
+            $sendAmount = $netAmount;
+            $targetAmount = $amount;
+        } else {
+            // Standard: User pays $amount in source currency
+            $chfAmount = $amount;
+            $totalCommission = round($chfAmount * ($commissionRate / 100), 2);
+            $sendAmount = $chfAmount - $totalCommission;
+            $targetAmount = round($sendAmount * $rate, 2);
+        }
+
         // Split commission (Default 60% to agent, 40% to admin)
         $agentSplit = (float) config('remittance.agent_commission_split', 60);
         $agentCommission = round($totalCommission * ($agentSplit / 100), 2);
         $adminCommission = $totalCommission - $agentCommission;
 
-        $sendAmount = $chfAmount - $totalCommission;
-        $targetAmount = round($sendAmount * $rate, 2);
-
         return $this->fxQuotes->create([
             'agent_id'         => $agentId,
-            'quote_id'         => $quoteId ?? null, // Store Wise quote ID (or LCL ID)
-            'chf_amount'       => $chfAmount, // Total Paid
-            'send_amount'      => $sendAmount,
-            'target_amount'    => $targetAmount,
-            'from_currency'    => 'CHF',
+            'quote_id'         => $quoteId ?? null,
+            'chf_amount'       => round($chfAmount, 2),
+            'send_amount'      => round($sendAmount, 2),
+            'target_amount'    => round($targetAmount, 2),
+            'from_currency'    => $fromCurrency,
             'to_currency'      => $targetCurrency,
             'rate'             => $rate,
-            'fee'              => $totalCommission,
+            'fee'              => round($totalCommission, 2),
             'agent_commission' => $agentCommission,
             'admin_commission' => $adminCommission,
             'expires_at'       => now()->addMinutes(5),

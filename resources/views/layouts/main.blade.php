@@ -178,8 +178,38 @@
 
     <script src="{{ asset('vendor/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/additional-methods.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Global jQuery Validation Defaults
+            if (jQuery.validator) {
+                jQuery.validator.setDefaults({
+                    errorElement: 'span',
+                    errorClass: 'invalid-feedback',
+                    highlight: function(element, errorClass, validClass) {
+                        $(element).addClass('is-invalid').removeClass('is-valid');
+                    },
+                    unhighlight: function(element, errorClass, validClass) {
+                        $(element).removeClass('is-invalid').addClass('is-valid');
+                    },
+                    errorPlacement: function(error, element) {
+                        if (element.parent('.input-group').length) {
+                            error.insertAfter(element.parent());
+                        } else if (element.hasClass('choices__input')) {
+                           error.insertAfter(element.closest('.choices'));
+                        } else {
+                            error.insertAfter(element);
+                        }
+                    }
+                });
+
+                // Custom method for Phone
+                jQuery.validator.addMethod("phoneFormat", function(value, element) {
+                    return this.optional(element) || /^\+?[0-9\s\-()]{7,20}$/.test(value);
+                }, "Please enter a valid phone number.");
+            }
+
             // Global Form Loader
             const forms = document.querySelectorAll('form');
             forms.forEach(form => {

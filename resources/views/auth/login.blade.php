@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Modremit</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ asset('vendor/css/inter.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/bootstrap-icons.css') }}" rel="stylesheet">
     <link href="{{ asset('css/brand.css') }}" rel="stylesheet">
     <style>
         body {
@@ -42,7 +42,9 @@
 </head>
 <body>
     <div class="login-card">
-        <a href="/" class="brand-logo">MODREMIT</a>
+        <div class="mb-4 d-flex justify-content-center">
+            <x-logo />
+        </div>
         <h4 class="fw-bold mb-2">Welcome Back</h4>
         <p class="text-muted small mb-4">Please enter your credentials to access your dashboard.</p>
 
@@ -81,13 +83,13 @@
             </script>
         @endif
 
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('login') }}" method="POST" id="loginForm">
             @csrf
             <div class="mb-3">
                 <label class="form-label small fw-bold">Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-0"><i class="bi bi-envelope"></i></span>
-                    <input type="email" name="email" class="form-control form-control-premium" placeholder="name@company.com" value="{{ old('email') }}" required autofocus>
+                    <input type="email" name="email" class="form-control form-control-premium" placeholder="name@company.com" value="{{ old('email') }}" autofocus>
                 </div>
             </div>
             <div class="mb-4">
@@ -97,7 +99,7 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" class="form-control form-control-premium" placeholder="••••••••" required>
+                    <input type="password" name="password" class="form-control form-control-premium" placeholder="••••••••">
                 </div>
             </div>
 
@@ -116,6 +118,52 @@
         </form>
     </div>
     
+    <script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            if ($.validator) {
+                $("#loginForm").validate({
+                    rules: {
+                        email: {
+                            required: true,
+                            email: true
+                        },
+                        password: {
+                            required: true,
+                            minlength: 6
+                        }
+                    },
+                    messages: {
+                        email: {
+                            required: "Please enter your email address",
+                            email: "Please enter a valid email address"
+                        },
+                        password: {
+                            required: "Please enter your password",
+                            minlength: "Password must be at least 6 characters"
+                        }
+                    },
+                    errorElement: 'span',
+                    errorClass: 'invalid-feedback',
+                    highlight: function(element) {
+                        $(element).addClass('is-invalid').removeClass('is-valid');
+                    },
+                    unhighlight: function(element) {
+                        $(element).removeClass('is-invalid').addClass('is-valid');
+                    },
+                    errorPlacement: function(error, element) {
+                        error.insertAfter(element.closest('.input-group'));
+                    },
+                    submitHandler: function(form) {
+                        const btn = $(form).find('button[type="submit"]');
+                        btn.addClass('btn-loading');
+                        form.submit();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
