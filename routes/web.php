@@ -31,6 +31,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/recipients', [Admin\RecipientController::class, 'index'])->name('recipients.index');
     Route::get('/recipients/{id}', [Admin\RecipientController::class, 'show'])->name('recipients.show');
     Route::post('agents/{agent}/toggle', [Admin\AgentController::class, 'toggleStatus'])->name('agents.toggle');
+    Route::post('agents/{agent}/refresh-kyc', [Admin\AgentController::class, 'refreshKyc'])->name('agents.refresh-kyc');
 
     Route::get('/compliance', [Admin\ComplianceController::class, 'index'])->name('compliance.index');
     Route::get('/compliance/{id}', [Admin\ComplianceController::class, 'show'])->name('compliance.show');

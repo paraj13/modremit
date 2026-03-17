@@ -12,23 +12,30 @@ class SumsubKycService
     public function createApplicant(Customer $customer): ?string
     {
         if (config('integrations.sumsub.app_token') === 'dummy_sumsub_app_token') {
-            print("Dummy mode enabled, returning dummy applicant ID");
             return 'dummy_applicant_' . $customer->id . '_' . uniqid();
         }
 
         $level = config('integrations.sumsub.level_name', 'id-and-liveness');
+        $externalId = 'customer_' . $customer->id;
 
-        $response = $this->client->post("resources/applicants?levelName={$level}", [
-            'externalUserId' => 'customer_' . $customer->id,
-            'email'          => $customer->email,
-            'phone'          => $customer->phone,
-            'fixedInfo'      => [
-                'firstName' => explode(' ', $customer->name)[0] ?? $customer->name,
-                'lastName'  => explode(' ', $customer->name, 2)[1] ?? '',
-            ],
-        ]);
-
-        return $response['id'] ?? null;
+        try {
+            $response = $this->client->post("resources/applicants?levelName={$level}", [
+                'externalUserId' => $externalId,
+                'email'          => $customer->email,
+                'phone'          => $customer->phone,
+                'fixedInfo'      => [
+                    'firstName' => explode(' ', $customer->name)[0] ?? $customer->name,
+                    'lastName'  => explode(' ', $customer->name, 2)[1] ?? '',
+                ],
+            ]);
+            return $response['id'] ?? null;
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 409) {
+                logger()->info("Sumsub applicant already exists for {$externalId}, fetching existing ID.");
+                return $this->getApplicantIdByExternalId($externalId);
+            }
+            throw $e;
+        }
     }
 
     /** Create an applicant in Sumsub for an Agent */
@@ -39,18 +46,39 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'id-and-liveness');
+        $externalId = 'agent_' . $agent->id;
 
-        $response = $this->client->post("resources/applicants?levelName={$level}", [
-            'externalUserId' => 'agent_' . $agent->id,
-            'email'          => $agent->email,
-            'phone'          => $agent->phone ?? '',
-            'fixedInfo'      => [
-                'firstName' => explode(' ', $agent->name)[0] ?? $agent->name,
-                'lastName'  => explode(' ', $agent->name, 2)[1] ?? '',
-            ],
-        ]);
+        try {
+            $response = $this->client->post("resources/applicants?levelName={$level}", [
+                'externalUserId' => $externalId,
+                'email'          => $agent->email,
+                'phone'          => $agent->phone ?? '',
+                'fixedInfo'      => [
+                    'firstName' => explode(' ', $agent->name)[0] ?? $agent->name,
+                    'lastName'  => explode(' ', $agent->name, 2)[1] ?? '',
+                ],
+            ]);
+            return $response['id'] ?? null;
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 409) {
+                logger()->info("Sumsub agent applicant already exists for {$externalId}, fetching existing ID.");
+                return $this->getApplicantIdByExternalId($externalId);
+            }
+            throw $e;
+        }
+    }
 
-        return $response['id'] ?? null;
+    /** Helper to find applicant ID by externalUserId */
+    public function getApplicantIdByExternalId(string $externalId): ?string
+    {
+        try {
+            // Sumsub endpoint to get applicant data by externalUserId
+            $response = $this->client->get("resources/applicants/-;externalUserId={$externalId}/one");
+            return $response['id'] ?? null;
+        } catch (\Exception $e) {
+            logger()->error("Failed to fetch existing Sumsub applicant", ['externalId' => $externalId, 'error' => $e->getMessage()]);
+            return null;
+        }
     }
 
     /** Generate a hosted WebSDK verification link for an applicant */

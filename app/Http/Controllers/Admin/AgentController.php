@@ -116,6 +116,35 @@ class AgentController extends Controller
         return redirect()->route('admin.agents.index')->with('success', 'Agent updated.');
     }
 
+    public function refreshKyc(User $agent)
+    {
+        try {
+            $sumsub = app(\App\Integrations\Sumsub\SumsubKycService::class);
+            
+            // If missing applicant ID, try to discover it by externalUserId
+            if (!$agent->sumsub_applicant_id) {
+                $externalId = 'agent_' . $agent->id;
+                $discoveredId = $sumsub->getApplicantIdByExternalId($externalId);
+                if ($discoveredId) {
+                    $agent->update(['sumsub_applicant_id' => $discoveredId]);
+                    $agent->refresh();
+                    logger()->info("Recovered missing Sumsub ID for agent during sync", ['agent_id' => $agent->id, 'applicant_id' => $discoveredId]);
+                } else {
+                    return back()->with('warning', 'No Sumsub applicant found for this agent.');
+                }
+            }
+
+            $status = $sumsub->getStatus($agent->sumsub_applicant_id);
+            if ($status) {
+                $agent->update(['kyc_status' => $status]);
+            }
+            return back()->with('success', 'KYC Status synced: ' . ucfirst($status ?? 'pending'));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to sync KYC for agent " . $agent->id, ['error' => $e->getMessage()]);
+            return back()->with('error', 'Failed to sync KYC status.');
+        }
+    }
+
     public function toggleStatus(User $agent)
     {
         $agent->update(['is_active' => !$agent->is_active]);

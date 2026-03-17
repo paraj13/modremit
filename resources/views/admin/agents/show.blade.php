@@ -201,6 +201,12 @@
                     <a href="{{ route('admin.agents.edit', $agent->id) }}" class="btn btn-brand btn-lg rounded-3 py-3 fw-bold">
                         <i class="bi bi-pencil-square me-2"></i> Edit Account
                     </a>
+                    <form action="{{ route('admin.agents.refresh-kyc', $agent->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-brand-outline btn-lg rounded-3 py-3 fw-bold w-100 mb-2">
+                             <i class="bi bi-arrow-clockwise me-2"></i> Sync KYC Status
+                        </button>
+                    </form>
                     <a href="{{ route('admin.wallets.credit.form', $agent->id) }}" class="btn btn-outline-dark btn-lg rounded-3 py-3 fw-bold mb-2">
                         <i class="bi bi-wallet2 me-2"></i> Manual Credit
                     </a>

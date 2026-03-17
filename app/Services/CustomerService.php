@@ -82,8 +82,21 @@ class CustomerService
     public function refreshKycStatus(int $id)
     {
         $customer = $this->customers->findById($id);
-        if (!$customer || !$customer->sumsub_applicant_id) {
+        if (!$customer) {
             return null;
+        }
+
+        // If missing applicant ID, try to discover it by externalUserId
+        if (!$customer->sumsub_applicant_id) {
+            $externalId = 'customer_' . $customer->id;
+            $discoveredId = $this->kyc->getApplicantIdByExternalId($externalId);
+            if ($discoveredId) {
+                $this->customers->update($id, ['sumsub_applicant_id' => $discoveredId]);
+                $customer->refresh();
+                logger()->info("Recovered missing Sumsub ID during sync", ['customer_id' => $id, 'applicant_id' => $discoveredId]);
+            } else {
+                return null;
+            }
         }
 
         try {
