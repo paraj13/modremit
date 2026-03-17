@@ -79,4 +79,24 @@ class SumsubClient
             throw $e;
         }
     }
+
+    public function patch(string $path, array $data = []): array
+    {
+        try {
+            $body     = !empty($data) ? json_encode($data) : '';
+            $options  = [
+                'headers' => $this->buildHeaders('PATCH', '/' . ltrim($path, '/'), $body),
+            ];
+
+            if ($body !== '') {
+                $options['body'] = $body;
+            }
+
+            $response = $this->http->patch($path, $options);
+            return json_decode($response->getBody()->getContents(), true) ?? [];
+        } catch (RequestException $e) {
+            logger()->error('Sumsub patch error', ['path' => $path, 'message' => $e->getMessage()]);
+            throw $e;
+        }
+    }
 }

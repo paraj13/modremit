@@ -90,15 +90,54 @@ class SumsubKycService
 
         $level = config('integrations.sumsub.level_name', 'basic-kyc');
         $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
-        $externalUserId = $customer ? 'customer_' . $customer->id : 'unknown';
+        if (!$customer) {
+            $user = \App\Models\User::where('sumsub_applicant_id', $applicantId)->first();
+            $externalUserId = $user ? 'agent_' . $user->id : 'unknown';
+        } else {
+            $externalUserId = 'customer_' . $customer->id;
+        }
 
+        try {
+            return $this->requestWebSdkLink($level, $externalUserId);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 404) {
+                $errorBody = json_decode($e->getResponse()->getBody()->getContents(), true);
+                if (($errorBody['description'] ?? '') === 'Applicant is deactivated') {
+                    logger()->info("Applicant {$applicantId} is deactivated, attempting reactivation.");
+                    if ($this->activateApplicant($applicantId)) {
+                        return $this->requestWebSdkLink($level, $externalUserId);
+                    }
+                }
+            }
+            throw $e;
+        }
+    }
+
+    /** Private helper to perform the actual link request */
+    private function requestWebSdkLink(string $level, string $userId): ?string
+    {
         $response = $this->client->post("resources/sdkIntegrations/levels/-/websdkLink", [
             'levelName' => $level,
-            'userId'    => $externalUserId,
+            'userId'    => $userId,
             'ttlInSecs' => 86400, // 24 hours
         ]);
 
         return $response['url'] ?? null;
+    }
+
+    /** Helper to reactivate a deactivated applicant */
+    public function activateApplicant(string $applicantId): bool
+    {
+        try {
+            // Try to activate via presence endpoint
+            $this->client->patch("resources/applicants/{$applicantId}/presence", [
+                'status' => 'active'
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            logger()->error("Failed to activate Sumsub applicant", ['applicantId' => $applicantId, 'error' => $e->getMessage()]);
+            return false;
+        }
     }
 
     /** Get the KYC verification status for an applicant */
