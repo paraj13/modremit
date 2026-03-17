@@ -75,13 +75,21 @@ Join our global network and start sending money worldwide.
 </p>
 
 @if ($errors->any())
-<div class="alert alert-danger small">
-<ul class="mb-0">
-@foreach ($errors->all() as $error)
-<li>{{ $error }}</li>
-@endforeach
-</ul>
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'warning',
+            title: 'Validation Error',
+            html: '{!! implode("<br>", $errors->all()) !!}',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            customClass: { popup: 'rounded-4 shadow-sm border-0' }
+        });
+    });
+</script>
 @endif
 
 <form action="{{ route('register') }}" method="POST">
@@ -161,5 +169,6 @@ Login here
 
 </div>
 
+<script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
 </body>
 </html>

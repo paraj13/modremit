@@ -7,14 +7,14 @@
     <title>Modremit - Global Money Transfers | Fast, Secure & Transparent</title>
     
     <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/css/inter.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/flag-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/brand.css') }}" rel="stylesheet">
     
     <!-- Choices.js for Searchable Select -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <link rel="stylesheet" href="{{ asset('vendor/css/choices.min.css') }}" />
 
     <style>
         body {
@@ -721,7 +721,19 @@
         <div class="container">
             <div class="row g-5">
                 <div class="col-lg-4">
-                    <h3 class="fw-bold text-brand-lime mb-4">MODREMIT</h3>
+
+<a class="navbar-brand d-flex align-items-center {{ $class ?? '' }}" href="{{ url('/') }}">
+    
+    <div class="bg-brand-light text-brand-dark rounded-3 d-flex align-items-center justify-content-center me-3"
+        style="width: 48px; height: 48px;">
+        <i class="bi bi-send-fill" style="font-size: 1.4rem;"></i>
+    </div>
+
+    <span class="fw-bold text-light" style="font-size: 1.5rem; letter-spacing: -0.5px;">
+        MOD<span class="text-brand-dark bg-brand-light px-2 ms-1 rounded">REMIT</span>
+    </span>
+
+</a>
                     <p class="opacity-50 small mb-4 pe-lg-5">
                         {{ __('messages.footer_desc') }}
                     </p>
@@ -748,8 +760,8 @@
                 <div class="col-lg-4">
                     <h6 class="fw-bold mb-4">{{ __('messages.stay_updated') }}</h6>
                     <div class="input-group mb-3 premium-subscribe">
-                        <input type="text" class="form-control bg-transparent border-secondary text-white py-3 ps-4" placeholder="{{ __('messages.email_placeholder') }}" style="border-radius: 12px 0 0 12px;">
-                        <button class="btn btn-brand px-4 fw-bold" type="button" style="border-radius: 0 12px 12px 0;">{{ __('messages.subscribe') }}</button>
+                        <input type="text" class="form-control bg-brand border-secondary text-white py-3 ps-4" placeholder="{{ __('messages.email_placeholder') }}" style="border-radius: 12px 0 0 12px;">
+                        <button class="btn brand-lime px-4 fw-bold" type="button" style="border-radius: 0 12px 12px 0;">{{ __('messages.subscribe') }}</button>
                     </div>
                 </div>
             </div>
@@ -761,8 +773,9 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/choices.min.js') }}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -828,7 +841,7 @@
                 return template(`
                   <div class="choices__item choices__item--choice choices__item--selectable" data-select-text="" data-choice ${data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable'} data-id="${data.id}" data-value="${data.value}">
                     <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
-                      <div style="width:24px; height:18px; min-width:24px; border-radius:3px; flex-shrink:0; background-image:url(${flagUrl}); background-size:cover; background-position:center; background-repeat:no-repeat; border: 1px solid rgba(0,0,0,0.1);"></div>
+                      <span class="fi fi-${c.flag} fi-badge" style="font-size: 1.25rem; border-radius: 3px; flex-shrink: 0; box-shadow: 0 0 1px rgba(0,0,0,0.5);"></span>
                       <div style="display: flex; flex-direction: column; line-height: 1.2;">
                           <span style="font-size: 1rem; font-weight: 700; color: var(--brand-dark);">${data.label}</span>
                           <span style="font-size: 0.75rem; font-weight: 500; color: #6c757d;">${c.name}</span>
@@ -847,7 +860,7 @@
                 return template(`
                     <div class="choices__item choices__item--selectable" data-item data-id="${data.id}" data-value="${data.value}">
                       <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
-                        <div style="width:24px; height:18px; min-width:24px; border-radius:3px; flex-shrink:0; background-image:url(${flagUrl}); background-size:cover; background-position:center; background-repeat:no-repeat; border: 1px solid rgba(0,0,0,0.1);"></div>
+                        <span class="fi fi-${c.flag} fi-badge" style="font-size: 1.25rem; border-radius: 3px; flex-shrink: 0; box-shadow: 0 0 1px rgba(0,0,0,0.5);"></span>
                         <span style="font-weight: 700; color: var(--brand-dark);">${data.label}</span>
                       </div>
                     </div>

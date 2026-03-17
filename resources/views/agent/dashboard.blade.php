@@ -225,7 +225,7 @@
                     borderRadius: 4
                 },
             },
-            colors: ['#D3FF8A', '#25330F'],
+            colors: ['#ffde42', '#142472'],
             dataLabels: { enabled: false },
             stroke: { show: true, width: 2, colors: ['transparent'] },
             xaxis: {

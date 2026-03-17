@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Modremit')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.0.0/css/flag-icons.min.css" rel="stylesheet">
+    <link href="{{ asset('vendor/css/inter.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendor/css/flag-icons.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/brand.css') }}" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <link href="{{ asset('vendor/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet">
+    <script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/dataTables.bootstrap5.min.js') }}"></script>
     <style>
         :root {
             --sidebar-width: 280px;
@@ -100,39 +100,55 @@
 
     <div id="content">
         @if(session('success'))
-            <div class="alert alert-success border-0 shadow-sm alert-dismissible fade show mb-4" role="alert" style="border-radius: 16px;">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-check-circle-fill me-3 fs-4"></i>
-                    <div>{{ session('success') }}</div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: "{!! session('success') !!}",
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        customClass: { popup: 'rounded-4 shadow-sm border-0' }
+                    });
+                });
+            </script>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger border-0 shadow-sm alert-dismissible fade show mb-4" role="alert" style="border-radius: 16px;">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
-                    <div>{{ session('error') }}</div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: "{!! session('error') !!}",
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        customClass: { popup: 'rounded-4 shadow-sm border-0' }
+                    });
+                });
+            </script>
         @endif
 
         @if($errors->any())
-            <div class="alert alert-danger border-0 shadow-sm alert-dismissible fade show mb-4" role="alert" style="border-radius: 16px;">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
-                    <div>
-                        <ul class="mb-0 ps-3">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        html: '{!! implode("<br>", $errors->all()) !!}',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        customClass: { popup: 'rounded-4 shadow-sm border-0' }
+                    });
+                });
+            </script>
         @endif
 
 
@@ -160,7 +176,8 @@
         @yield('content')
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('vendor/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Global Form Loader
@@ -184,6 +201,35 @@
                     btn.classList.add('btn-loading-dark');
                 }
             };
+            
+            // Global Custom Confirm dialogs (Replace default alerts)
+            document.querySelectorAll('form').forEach(form => {
+                const onsubmitStr = form.getAttribute('onsubmit');
+                if (onsubmitStr && onsubmitStr.includes('return confirm')) {
+                    // Extract the message
+                    const msgMatch = onsubmitStr.match(/confirm\(['"](.*?)['"]\)/);
+                    const msg = msgMatch ? msgMatch[1] : 'Are you sure?';
+                    
+                    form.removeAttribute('onsubmit');
+                    form.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: msg,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#142472',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, proceed',
+                            customClass: { popup: 'rounded-4 border-0 shadow' }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    });
+                }
+            });
         });
     </script>
     <script src="{{ asset('js/live-search.js') }}"></script>

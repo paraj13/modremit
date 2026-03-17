@@ -201,9 +201,16 @@
                     <a href="{{ route('admin.agents.edit', $agent->id) }}" class="btn btn-brand btn-lg rounded-3 py-3 fw-bold">
                         <i class="bi bi-pencil-square me-2"></i> Edit Account
                     </a>
-                    <a href="{{ route('admin.wallets.credit.form', $agent->id) }}" class="btn btn-outline-dark btn-lg rounded-3 py-3 fw-bold">
+                    <a href="{{ route('admin.wallets.credit.form', $agent->id) }}" class="btn btn-outline-dark btn-lg rounded-3 py-3 fw-bold mb-2">
                         <i class="bi bi-wallet2 me-2"></i> Manual Credit
                     </a>
+                    <form action="{{ route('admin.agents.destroy', $agent->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this agent? This action cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-lg rounded-3 py-3 fw-bold w-100">
+                            <i class="bi bi-trash me-2"></i> Delete Agent
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

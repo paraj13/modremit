@@ -213,7 +213,7 @@
                     borderRadius: 4
                 },
             },
-            colors: ['#D3FF8A', '#25330F'],
+            colors: ['#ffde42', '#142472'],
             dataLabels: { enabled: false },
             stroke: { show: true, width: 2, colors: ['transparent'] },
             labels: chartData.labels,
@@ -221,12 +221,12 @@
             yaxis: [
                 {
                     title: { text: 'Volume (CHF)' },
-                    labels: { style: { colors: '#25330F' } }
+                    labels: { style: { colors: '#142472' } }
                 },
                 {
                     opposite: true,
                     title: { text: 'Commission (CHF)' },
-                    labels: { style: { colors: '#25330F' } }
+                    labels: { style: { colors: '#142472' } }
                 }
             ],
             tooltip: { shared: true, intersect: false }

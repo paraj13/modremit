@@ -90,7 +90,18 @@ class CustomerService
             $status = $this->kyc->getStatus($customer->sumsub_applicant_id);
             if ($status) {
                 $this->customers->update($id, ['kyc_status' => $status]);
+                $customer->refresh();
             }
+
+            // Resend verification email if still pending
+            if ($customer->kyc_status === 'pending') {
+                $verificationLink = $this->kyc->generateWebSdkLink($customer->sumsub_applicant_id);
+                if ($verificationLink) {
+                    Mail::to($customer->email)->send(new VerifyKycMail($customer, $verificationLink));
+                    logger()->info('Verification email automatically resent on KYC sync', ['customer_id' => $customer->id]);
+                }
+            }
+
             return $status;
         } catch (\Exception $e) {
             logger()->warning('Sumsub status check failed', ['error' => $e->getMessage()]);

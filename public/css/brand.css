@@ -66,6 +66,16 @@ body {
     transition: all 0.3s ease;
 }
 
+.btn-danger {
+    background-color: transparent;
+    color: var(--brand-dark);
+    border: 2px solid var(--brand-dark);
+    border-radius: 50px;
+    padding: 10px 28px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
 .btn-brand-outline:hover {
     background-color: var(--brand-dark);
     color: var(--brand-lime);

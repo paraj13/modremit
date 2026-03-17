@@ -45,6 +45,14 @@
                     <a href="{{ route('agent.customers.edit', $customer->id) }}" class="btn btn-brand btn-sm py-2">
                          <i class="bi bi-pencil-square me-1"></i> Edit Profile
                     </a>
+                    
+                    <form action="{{ route('agent.customers.destroy', $customer->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this customer? This action cannot be undone.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm w-100 py-2">
+                            <i class="bi bi-trash me-1"></i> Delete Profile
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -84,7 +92,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="btn-group">
-                                    <a href="{{ route('agent.recipients.edit', $recipient->id) }}" class="btn btn-sm btn-outline-dark border rounded-pill px-3 me-2">Edit</a>
+                                    <a href="{{ route('agent.recipients.edit', $recipient->id) }}" class="btn btn-sm btn-outline-dark border rounded-pill pt-2 px-3 me-2">Edit</a>
                                     @if($customer->kyc_status === 'approved')
                                         <a href="{{ route('agent.transfers.create', ['customer_id' => $customer->id, 'recipient_id' => $recipient->id, 'eid' => \Illuminate\Support\Facades\Crypt::encryptString($customer->id), 'return_to' => request('return_to')]) }}" class="btn btn-sm btn-brand rounded-pill px-3">
                                              <i class="bi bi-send-fill me-1"></i> Send

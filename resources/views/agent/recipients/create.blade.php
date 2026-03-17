@@ -161,13 +161,15 @@
                     </div>
                     </div>
 
-                    <div class="d-flex gap-3 mt-5 pt-3 border-top justify-content-end">
+                    <div class="d-flex flex-wrap justify-content-end align-items-center mt-5 pt-3 border-top gap-2">
                         @if(isset($recipient))
-                            <a href="{{ route('agent.customers.show', $recipient->customer_id) }}" class="btn btn-light px-5 py-2 rounded-pill">Cancel</a>
+                            <a href="{{ route('agent.customers.show', $recipient->customer_id) }}" 
+                            class="btn btn-light px-4 py-2 rounded-pill me-2">Cancel</a>
                         @else
-                            <a href="{{ route('agent.customers.show', $customer->id) }}" class="btn btn-light px-5 py-2 rounded-pill">Cancel</a>
+                            <a href="{{ route('agent.customers.show', $customer->id) }}" 
+                            class="btn btn-light px-4 py-2 rounded-pill me-2">Cancel</a>
                         @endif
-                        <button type="submit" class="btn btn-brand px-5 py-2 rounded-pill fw-bold">
+                        <button type="submit" class="btn btn-brand px-4 py-2 rounded-pill fw-bold">
                             <i class="bi {{ isset($recipient) ? 'bi-check-circle-fill' : 'bi-plus-circle-fill' }} me-2"></i>
                             {{ isset($recipient) ? 'Update Beneficiary' : 'Save Beneficiary' }}
                         </button>

@@ -121,4 +121,10 @@ class AgentController extends Controller
         $agent->update(['is_active' => !$agent->is_active]);
         return back()->with('success', 'Agent status updated.');
     }
+
+    public function destroy(User $agent)
+    {
+        $agent->delete();
+        return redirect()->route('admin.agents.index')->with('success', 'Agent deleted successfully.');
+    }
 }

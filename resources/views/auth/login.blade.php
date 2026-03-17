@@ -47,19 +47,38 @@
         <p class="text-muted small mb-4">Please enter your credentials to access your dashboard.</p>
 
         @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: "{!! session('success') !!}",
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        customClass: { popup: 'rounded-4 shadow-sm border-0' }
+                    });
+                });
+            </script>
         @endif
 
         @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        html: '{!! implode("<br>", $errors->all()) !!}',
+                        showConfirmButton: false,
+                        timer: 5000,
+                        timerProgressBar: true,
+                        customClass: { popup: 'rounded-4 shadow-sm border-0' }
+                    });
+                });
+            </script>
         @endif
 
         <form action="{{ route('login') }}" method="POST">
@@ -96,5 +115,7 @@
             </div>
         </form>
     </div>
+    
+    <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
 </body>
 </html>

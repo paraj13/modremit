@@ -71,4 +71,13 @@ class CustomerController extends Controller
         $status = $this->customerService->refreshKycStatus($id);
         return back()->with('success', 'KYC Status: ' . ucfirst($status ?? 'pending'));
     }
+
+    public function destroy(int $id)
+    {
+        $customer = $this->customerService->findOwned($id);
+        if (!$customer) abort(404);
+        
+        $customer->delete();
+        return redirect()->route('agent.customers.index')->with('success', 'Customer deleted successfully.');
+    }
 }

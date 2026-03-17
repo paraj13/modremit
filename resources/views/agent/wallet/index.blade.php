@@ -9,10 +9,11 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="card-body p-4 bg-brand-dark text-white">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="bg-brand-lime bg-opacity-25 p-2 rounded-3">
-                        <i class="bi bi-wallet2 text-brand-lime fs-4"></i>
-                    </div>
-                    <span class="badge bg-brand-lime text-brand-dark rounded-pill px-3">Active Wallet</span>
+                <div class="bg-brand-light text-brand-dark rounded-3 d-flex align-items-center justify-content-center me-3"
+                    style="width: 48px; height: 48px;">
+                    <i class="bi bi-send-fill" style="font-size: 1.4rem;"></i>
+                </div>
+                    <span class="badge bg-brand-lime text-brand-dark rounded-pill px-3 py-2 d-inline-flex align-items-center">Active Wallet</span>
                 </div>
                 <h6 class="text-brand-lime opacity-75 small fw-bold uppercase mb-2">AVAILABLE BALANCE</h6>
                 <h2 class="display-6 fw-bold mb-4">CHF {{ number_format($wallet->chf_balance, 2) }}</h2>

@@ -198,7 +198,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const targetCurrency = document.getElementById('target_currency').value;
         
         if (!amount || amount < 10) {
-            alert('Please enter a valid amount (Min 10 CHF)');
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Please enter a valid amount (Min 10 CHF)',
+                showConfirmButton: false,
+                timer: 4000,
+                customClass: { popup: 'rounded-4 shadow-sm border-0' }
+            });
             return;
         }
 
@@ -244,7 +252,15 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = false;
         })
         .catch(error => {
-            alert('Failed to fetch quote. Please try again.');
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Failed to fetch quote. Please try again.',
+                showConfirmButton: false,
+                timer: 4000,
+                customClass: { popup: 'rounded-4 shadow-sm border-0' }
+            });
         })
         .finally(() => {
             getQuoteBtn.classList.remove('btn-loading');
