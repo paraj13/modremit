@@ -218,6 +218,9 @@ Login here
                 submitHandler: function(form) {
                     const btn = $(form).find('button[type="submit"]');
                     btn.addClass('btn-loading');
+                    if (btn.hasClass('btn-light') || btn.hasClass('btn-brand-mint')) {
+                        btn.addClass('btn-loading-dark');
+                    }
                     form.submit();
                 }
             });

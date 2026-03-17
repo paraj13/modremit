@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Modremit</title>
+    <title>Forgot Password | Modremit</title>
     <link href="{{ asset('vendor/css/inter.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/css/bootstrap-icons.css') }}" rel="stylesheet">
@@ -24,20 +24,6 @@
             max-width: 450px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.1);
         }
-        .brand-logo {
-            font-weight: 800;
-            font-size: 1.8rem;
-            letter-spacing: -1px;
-            color: var(--brand-dark);
-            text-align: center;
-            margin-bottom: 30px;
-            display: block;
-            text-decoration: none;
-        }
-        .alert {
-            border-radius: 12px;
-            font-size: 0.9rem;
-        }
     </style>
 </head>
 <body>
@@ -45,8 +31,8 @@
         <div class="mb-4 d-flex justify-content-center">
             <x-logo />
         </div>
-        <h4 class="fw-bold mb-2">Welcome Back</h4>
-        <p class="text-muted small mb-4">Please enter your credentials to access your dashboard.</p>
+        <h4 class="fw-bold mb-2">Forgot Password?</h4>
+        <p class="text-muted small mb-4">No worries! Enter your email and we'll send you a link to reset your password.</p>
 
         @if(session('success'))
             <script>
@@ -83,37 +69,20 @@
             </script>
         @endif
 
-        <form action="{{ route('login') }}" method="POST" id="loginForm">
+        <form action="{{ route('password.email') }}" method="POST" id="forgotPasswordForm">
             @csrf
-            <div class="mb-3">
+            <div class="mb-4">
                 <label class="form-label small fw-bold">Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-0"><i class="bi bi-envelope"></i></span>
-                    <input type="email" name="email" class="form-control form-control-premium" placeholder="name@company.com" value="{{ old('email') }}" autofocus>
-                </div>
-            </div>
-            <div class="mb-4">
-                <div class="d-flex justify-content-between">
-                    <label class="form-label small fw-bold">Password</label>
-                    <a href="{{ route('password.request') }}" class="small text-decoration-none text-muted">Forgot?</a>
-                </div>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" class="form-control form-control-premium" placeholder="••••••••">
+                    <input type="email" name="email" class="form-control form-control-premium" placeholder="name@company.com" required autofocus>
                 </div>
             </div>
 
-            <div class="mb-4 d-flex justify-content-between align-items-center">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                    <label class="form-check-label small text-muted" for="remember">Remember me</label>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-brand w-100 py-3 fs-6">Sign In</button>
+            <button type="submit" class="btn btn-brand w-100 py-3 fs-6">Send Reset Link</button>
             
             <div class="text-center mt-4 pt-2">
-                <p class="small text-muted mb-0">Don't have an agent account? <a href="{{ route('register') }}" class="text-brand-dark fw-bold text-decoration-none">Apply now</a></p>
+                <p class="small text-muted mb-0">Remembered your password? <a href="{{ route('login') }}" class="text-brand-dark fw-bold text-decoration-none">Back to Login</a></p>
             </div>
         </form>
     </div>
@@ -124,25 +93,14 @@
     <script>
         $(document).ready(function() {
             if ($.validator) {
-                $("#loginForm").validate({
+                $("#forgotPasswordForm").validate({
                     rules: {
-                        email: {
-                            required: true,
-                            email: true
-                        },
-                        password: {
-                            required: true,
-                            minlength: 6
-                        }
+                        email: { required: true, email: true }
                     },
                     messages: {
                         email: {
                             required: "Please enter your email address",
                             email: "Please enter a valid email address"
-                        },
-                        password: {
-                            required: "Please enter your password",
-                            minlength: "Password must be at least 6 characters"
                         }
                     },
                     errorElement: 'span',
@@ -159,9 +117,6 @@
                     submitHandler: function(form) {
                         const btn = $(form).find('button[type="submit"]');
                         btn.addClass('btn-loading');
-                        if (btn.hasClass('btn-light') || btn.hasClass('btn-brand-mint')) {
-                            btn.addClass('btn-loading-dark');
-                        }
                         form.submit();
                     }
                 });

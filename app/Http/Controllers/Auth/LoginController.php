@@ -10,6 +10,12 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
+        if (Auth::check()) {
+            if (Auth::user()->hasRole('admin')) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->route('agent.dashboard');
+        }
         return view('auth.login');
     }
 

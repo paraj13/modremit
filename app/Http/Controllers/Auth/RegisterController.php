@@ -9,10 +9,18 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 
+use Illuminate\Support\Facades\Auth;
+
 class RegisterController extends Controller
 {
     public function showRegistrationForm()
     {
+        if (Auth::check()) {
+            if (Auth::user()->hasRole('admin')) {
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->route('agent.dashboard');
+        }
         return view('auth.register');
     }
 

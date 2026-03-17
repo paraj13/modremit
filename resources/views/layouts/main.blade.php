@@ -108,6 +108,8 @@
                         icon: 'success',
                         title: "{!! session('success') !!}",
                         showConfirmButton: false,
+                        showCloseButton: true,
+                        closeButtonHtml: '&times;',
                         timer: 5000,
                         timerProgressBar: true,
                         customClass: { popup: 'rounded-4 shadow-sm border-0' }
@@ -125,6 +127,8 @@
                         icon: 'error',
                         title: "{!! session('error') !!}",
                         showConfirmButton: false,
+                        showCloseButton: true,
+                        closeButtonHtml: '&times;',
                         timer: 5000,
                         timerProgressBar: true,
                         customClass: { popup: 'rounded-4 shadow-sm border-0' }
@@ -210,39 +214,35 @@
                 }, "Please enter a valid phone number.");
             }
 
-            // Global Form Loader
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                form.addEventListener('submit', function(e) {
-                    const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
-                    if (submitBtn && !submitBtn.classList.contains('no-loader')) {
-                        submitBtn.classList.add('btn-loading');
-                        if (submitBtn.classList.contains('btn-light') || submitBtn.classList.contains('btn-brand-mint')) {
-                            submitBtn.classList.add('btn-loading-dark');
-                        }
-                    }
-                });
-            });
-
             // Manual button loader utility
             window.showLoader = function(btn) {
+                if (!btn) return;
                 btn.classList.add('btn-loading');
                 if (btn.classList.contains('btn-light') || btn.classList.contains('btn-brand-mint')) {
                     btn.classList.add('btn-loading-dark');
                 }
             };
-            
-            // Global Custom Confirm dialogs (Replace default alerts)
+
+            window.removeLoader = function(btn) {
+                if (!btn) return;
+                btn.classList.remove('btn-loading');
+                btn.classList.remove('btn-loading-dark');
+            };
+
+            // Enhanced Global Form Handler
             document.querySelectorAll('form').forEach(form => {
                 const onsubmitStr = form.getAttribute('onsubmit');
+                
+                // Case A: Form has "return confirm"
                 if (onsubmitStr && onsubmitStr.includes('return confirm')) {
-                    // Extract the message
                     const msgMatch = onsubmitStr.match(/confirm\(['"](.*?)['"]\)/);
                     const msg = msgMatch ? msgMatch[1] : 'Are you sure?';
                     
                     form.removeAttribute('onsubmit');
                     form.addEventListener('submit', function(e) {
                         e.preventDefault();
+                        const btn = e.submitter || form.querySelector('button[type="submit"]');
+                        
                         Swal.fire({
                             title: 'Are you sure?',
                             text: msg,
@@ -254,9 +254,26 @@
                             customClass: { popup: 'rounded-4 border-0 shadow' }
                         }).then((result) => {
                             if (result.isConfirmed) {
+                                showLoader(btn);
                                 form.submit();
+                            } else {
+                                removeLoader(btn);
                             }
                         });
+                    });
+                } 
+                // Case B: Regular Form (including jQuery validated ones)
+                else {
+                    form.addEventListener('submit', function(e) {
+                        // Check jQuery validation if present
+                        if (window.jQuery && $(form).data('validator') && !$(form).valid()) {
+                            return;
+                        }
+
+                        const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
+                        if (submitBtn && !submitBtn.classList.contains('no-loader')) {
+                            showLoader(submitBtn);
+                        }
                     });
                 }
             });
