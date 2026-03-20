@@ -47,8 +47,8 @@
                             <td class="text-center pe-3">
                                 <div class="d-flex justify-content-center gap-2">
                                     <a href="{{ route('customer.transfers.create', ['recipient_id' => $r->id]) }}" class="btn btn-sm btn-brand rounded-pill px-3 shadow-sm">Send</a>
-                                    <a href="{{ route('customer.recipients.edit', $r->id) }}" class="btn btn-sm btn-outline-dark rounded-pill px-3">Edit</a>
-                                    <a href="{{ route('customer.recipients.show', $r->id) }}" class="btn btn-sm btn-light rounded-pill px-3">View</a>
+                                    <a href="{{ route('customer.recipients.edit', $r->id) }}" class="btn btn-sm btn-brand rounded-pill px-3 shadow-sm">Edit</a>
+                                    <a href="{{ route('customer.recipients.show', $r->id) }}" class="btn btn-sm btn-brand rounded-pill px-3 shadow-sm">View</a>
                                 </div>
                             </td>
                         </tr>
