@@ -14,7 +14,7 @@
         <table class="table table-hover align-middle table-premium" id="recipientsTable">
             <thead>
                 <tr>
-                    <th width="50px">No</th>
+                    <th width="50px">Status</th>
                     <th>Recipient</th>
                     <th>Customer</th>
                     <th>Managing Agent</th>
@@ -25,7 +25,11 @@
             <tbody>
                 @forelse($recipients as $index => $recipient)
                 <tr>
-                    <td>{{ $recipients->firstItem() + $index }}</td>
+                    <td>
+                        <span class="status-pill status-{{ $recipient->status ?? 'approved' }} px-3">
+                            {{ strtoupper($recipient->status ?? 'ACTIVE') }}
+                        </span>
+                    </td>
                     <td class="fw-bold">{{ $recipient->name }}</td>
                     <td>{{ $recipient->customer->name ?? 'N/A' }}</td>
                     <td><span class="badge bg-light text-brand-dark border">{{ $recipient->customer->agent->name ?? 'N/A' }}</span></td>

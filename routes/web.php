@@ -93,3 +93,42 @@ Route::post('/forgot-password', [App\Http\Controllers\Auth\ForgotPasswordControl
 Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
+// Customer Portal Routes
+Route::prefix('customer')->name('customer.')->group(function () {
+    // Auth (guest)
+    Route::get('/login', [App\Http\Controllers\Customer\Auth\LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [App\Http\Controllers\Customer\Auth\LoginController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\Customer\Auth\LoginController::class, 'logout'])->name('logout');
+    Route::get('/register', [App\Http\Controllers\Customer\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [App\Http\Controllers\Customer\Auth\RegisterController::class, 'register']);
+
+    // Password Reset
+    Route::get('/password/reset', [App\Http\Controllers\Customer\Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('/password/email', [App\Http\Controllers\Customer\Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/password/reset/{token}', [App\Http\Controllers\Customer\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/password/reset', [App\Http\Controllers\Customer\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
+
+    // KYC Required page (only requires customer auth)
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('/kyc-required', [App\Http\Controllers\Customer\KycController::class, 'required'])->name('kyc.required');
+    });
+
+    // KYC-gated routes (requires auth + KYC approved)
+    Route::middleware(['auth:customer', 'customer.kyc'])->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Customer\DashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/transfers/create', [App\Http\Controllers\Customer\TransferController::class, 'create'])->name('transfers.create');
+        Route::post('/transfers/quote', [App\Http\Controllers\Customer\TransferController::class, 'getQuote'])->name('transfers.quote');
+        Route::post('/transfers', [App\Http\Controllers\Customer\TransferController::class, 'store'])->name('transfers.store');
+
+        Route::get('/transactions', [App\Http\Controllers\Customer\TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/{id}', [App\Http\Controllers\Customer\TransactionController::class, 'show'])->name('transactions.show');
+
+        Route::get('/recipients', [App\Http\Controllers\Customer\RecipientController::class, 'index'])->name('recipients.index');
+        Route::get('/recipients/create', [App\Http\Controllers\Customer\RecipientController::class, 'create'])->name('recipients.create');
+        Route::get('/recipients/{id}', [App\Http\Controllers\Customer\RecipientController::class, 'show'])->name('recipients.show');
+        Route::post('/recipients', [App\Http\Controllers\Customer\RecipientController::class, 'store'])->name('recipients.store');
+    });
+});
+
+

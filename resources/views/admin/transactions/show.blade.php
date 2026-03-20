@@ -68,21 +68,9 @@
 
     <div class="col-md-4">
         <div class="card border-0 shadow-sm rounded-4 mb-4">
-            <div class="card-body p-4 text-center">
-                <label class="text-muted small fw-bold text-uppercase d-block mb-4">Status Monitoring</label>
-                @php
-                    $statusConfig = match($transaction->status) {
-                        'completed' => ['icon' => 'bi-check-circle-fill', 'color' => 'var(--brand-mint)', 'text' => 'text-brand-dark'],
-                        'failed' => ['icon' => 'bi-x-circle-fill', 'color' => '#dc3545', 'text' => 'text-white'],
-                        'processing' => ['icon' => 'bi-arrow-repeat spin', 'color' => '#0dcaf0', 'text' => 'text-white'],
-                        default => ['icon' => 'bi-clock-history', 'color' => '#ffc107', 'text' => 'text-dark']
-                    };
-                @endphp
-                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px; background-color: {{ $statusConfig['color'] }}; color: {{ $statusConfig['color'] == 'var(--brand-mint)' ? 'var(--brand-dark)' : 'white' }};">
-                    <i class="bi {{ $statusConfig['icon'] }}" style="font-size: 2.5rem;"></i>
-                </div>
-                <h4 class="fw-bold mb-1">{{ strtoupper($transaction->status) }}</h4>
-                <div class="text-muted small mb-4">{{ $transaction->created_at->format('M d, Y - H:i A') }}</div>
+            <div class="card-body p-4">
+                <label class="text-muted small fw-bold text-uppercase d-block mb-4 text-center">Transfer Progress</label>
+                <x-transaction-timeline :transaction="$transaction" />
             </div>
         </div>
         

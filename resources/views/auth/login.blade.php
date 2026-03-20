@@ -121,52 +121,6 @@
     <script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            if ($.validator) {
-                $("#loginForm").validate({
-                    rules: {
-                        email: {
-                            required: true,
-                            email: true
-                        },
-                        password: {
-                            required: true,
-                            minlength: 6
-                        }
-                    },
-                    messages: {
-                        email: {
-                            required: "Please enter your email address",
-                            email: "Please enter a valid email address"
-                        },
-                        password: {
-                            required: "Please enter your password",
-                            minlength: "Password must be at least 6 characters"
-                        }
-                    },
-                    errorElement: 'span',
-                    errorClass: 'invalid-feedback',
-                    highlight: function(element) {
-                        $(element).addClass('is-invalid').removeClass('is-valid');
-                    },
-                    unhighlight: function(element) {
-                        $(element).removeClass('is-invalid').addClass('is-valid');
-                    },
-                    errorPlacement: function(error, element) {
-                        error.insertAfter(element.closest('.input-group'));
-                    },
-                    submitHandler: function(form) {
-                        const btn = $(form).find('button[type="submit"]');
-                        btn.addClass('btn-loading');
-                        if (btn.hasClass('btn-light') || btn.hasClass('btn-brand-mint')) {
-                            btn.addClass('btn-loading-dark');
-                        }
-                        form.submit();
-                    }
-                });
-            }
-        });
-    </script>
+    <script src="{{ asset('js/app-global.js') }}"></script>
 </body>
 </html>

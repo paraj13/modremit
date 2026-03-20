@@ -31,15 +31,7 @@
                         <div class="small text-muted">Send: {{ number_format($transaction->send_amount, 2) }} | Comm: {{ number_format($transaction->commission, 2) }}</div>
                     </td>
                     <td>
-                        @php
-                            $badgeClass = match($transaction->status) {
-                                'completed'  => 'bg-brand-mint text-brand-dark',
-                                'processing' => 'bg-info text-white',
-                                'failed'     => 'bg-danger text-white',
-                                default      => 'bg-warning text-dark',
-                            };
-                        @endphp
-                        <span class="badge {{ $badgeClass }} px-3">
+                        <span class="status-pill status-{{ $transaction->status }}">
                             {{ strtoupper($transaction->status) }}
                         </span>
                     </td>

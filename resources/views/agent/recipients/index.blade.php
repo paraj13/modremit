@@ -20,7 +20,8 @@
                 <table class="table table-hover align-middle table-premium">
                     <thead>
                         <tr>
-                            <th class="ps-3">Beneficiary Name</th>
+                            <th class="ps-3">Status</th>
+                            <th>Beneficiary Name</th>
                             <th>Bank / UPI Details</th>
                             <th>Sender (Customer)</th>
                             <th class="text-center">Country</th>
@@ -31,6 +32,11 @@
                         @forelse($recipients as $recipient)
                             <tr>
                                 <td class="ps-3">
+                                    <span class="status-pill status-{{ $recipient->status ?? 'approved' }} px-3">
+                                        {{ strtoupper($recipient->status ?? 'ACTIVE') }}
+                                    </span>
+                                </td>
+                                <td>
                                     <div class="fw-bold text-brand-dark">{{ $recipient->name }}</div>
                                     <div class="small text-muted">{{ $recipient->email ?? 'No email provided' }}</div>
                                 </td>

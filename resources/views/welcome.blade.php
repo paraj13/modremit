@@ -324,6 +324,7 @@
                         <li class="nav-item"><a class="nav-link" href="#how-it-works">{{ __('messages.how_it_works') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#features">{{ __('messages.features') }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="#countries">{{ __('messages.countries') }}</a></li>
+                        <li class="nav-item"><a class="nav-link text-muted opacity-75" href="{{ route('login') }}"><i class="bi bi-person-badge me-1"></i> {{ __('messages.agent_portal') }}</a></li>
                     </ul>
                     <div class="d-flex align-items-center">
                         <div class="lang-switcher d-flex me-4">
@@ -331,8 +332,8 @@
                             <span class="text-muted">|</span>
                             <a href="{{ route('lang.switch', 'de') }}" class="nav-link px-2 {{ app()->getLocale() == 'de' ? 'active' : '' }}">DE</a>
                         </div>
-                        <a href="{{ route('login') }}" class="nav-link me-3">{{ __('messages.login') }}</a>
-                        <a href="{{ route('register') }}" class="btn-brand text-decoration-none">{{ __('messages.register') }}</a>
+                        <a href="{{ route('customer.login') }}" class="nav-link me-3">{{ __('messages.login') }}</a>
+                        <a href="{{ route('customer.register') }}" class="btn-brand text-decoration-none">{{ __('messages.register') }}</a>
                     </div>
                 </div>
             </div>
@@ -354,7 +355,7 @@
                     </p>
                     <div class="d-flex gap-3 mb-5">
                         <a href="#converter" class="btn-brand px-5 py-3 fs-5 text-decoration-none">{{ __('messages.send_money') }}</a>
-                        <a href="{{ route('register') }}" class="btn btn-brand-outline px-5 py-3 fs-5 text-decoration-none">{{ __('messages.get_started') }}</a>
+                        <a href="{{ route('customer.register') }}" class="btn btn-brand-outline px-5 py-3 fs-5 text-decoration-none">{{ __('messages.get_started') }}</a>
                     </div>
                 </div>
                 <div class="col-lg-5">

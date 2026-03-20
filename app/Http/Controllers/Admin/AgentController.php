@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AgentWelcomeMail;
 
 class AgentController extends Controller
 {
@@ -65,6 +67,13 @@ class AgentController extends Controller
         ]);
 
         $user->assignRole('agent');
+
+        // Send Welcome Mail
+        try {
+            Mail::to($user->email)->send(new AgentWelcomeMail($user, '12345678'));
+        } catch (\Exception $e) {
+            \Log::error("Failed to send welcome mail to agent " . $user->id, ['error' => $e->getMessage()]);
+        }
 
         try {
             $sumsub = app(\App\Integrations\Sumsub\SumsubKycService::class);

@@ -6,9 +6,11 @@ use App\Models\Transaction;
 use App\Notifications\TransactionCompleted;
 use App\Notifications\TransactionFailed;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
+use App\Mail\TransactionNotificationMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionService
 {
@@ -102,6 +104,7 @@ class TransactionService
                 'rate'             => $quote->rate,
                 'status'           => 'processing',
                 'notes'            => $data['notes'] ?? null,
+                'initiated_by'     => 'agent',
             ]);
 
             // Deduct from wallet immediately
@@ -119,6 +122,80 @@ class TransactionService
             // If not flagged for a specific reason, create a generic compliance log for review
             if (!$transaction->flagged) {
                 $this->compliance->flagTransaction($transaction, "Routine compliance record.");
+            }
+
+            // Send notification to recipient if email exists
+            if ($transaction->recipient && $transaction->recipient->email) {
+                try {
+                    Mail::to($transaction->recipient->email)->send(new TransactionNotificationMail($transaction));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send transaction notification to recipient", ['error' => $e->getMessage()]);
+                }
+            }
+
+            return $transaction;
+        });
+    }
+
+    /**
+     * Customer self-initiated transfer.
+     * 100% commission goes to platform (admin). Agent gets 0%.
+     */
+    public function initiateCustomerTransfer(array $data): Transaction
+    {
+        $customerId = $data['customer_id'];
+        $chfAmount  = (float) $data['chf_amount'];
+
+        // Resolve FX quote
+        $quote = null;
+        if (!empty($data['quote_id'])) {
+            $quote = $this->fxService->findById($data['quote_id']);
+            if (!$quote ||
+                $quote->expires_at->isPast() ||
+                $quote->to_currency !== ($data['target_currency'] ?? 'INR') ||
+                abs($quote->chf_amount - $chfAmount) > 0.01)
+            {
+                $quote = null;
+            }
+        }
+
+        if (!$quote) {
+            $quote = $this->fxService->fetchAndStoreQuote($chfAmount, null, $data['target_currency'] ?? 'INR');
+        }
+
+        return DB::transaction(function() use ($customerId, $chfAmount, $quote, $data) {
+            $totalFee = (float) $quote->fee;
+
+            $transaction = $this->transactions->create([
+                'agent_id'         => null,       // no agent for customer-direct transfers
+                'customer_id'      => $customerId,
+                'recipient_id'     => $data['recipient_id'],
+                'fx_quote_id'      => $quote->id,
+                'target_currency'  => $quote->to_currency,
+                'chf_amount'       => $chfAmount,
+                'send_amount'      => $quote->send_amount,
+                'target_amount'    => $quote->target_amount,
+                'commission'       => $totalFee,
+                'agent_commission' => 0,           // 0% to agent
+                'admin_commission' => $totalFee,   // 100% to platform
+                'rate'             => $quote->rate,
+                'status'           => 'processing',
+                'initiated_by'     => 'customer',
+                'notes'            => $data['notes'] ?? null,
+            ]);
+
+            // Note: No wallet deduction for customer transfers (they pay via card/other method)
+            $this->executePayment($transaction->id);
+            $transaction = $transaction->fresh();
+            $this->compliance->checkAndFlag($transaction);
+
+            // Send notification to recipient if email exists
+            if ($transaction->recipient && $transaction->recipient->email) {
+                try {
+                    Mail::to($transaction->recipient->email)->send(new TransactionNotificationMail($transaction));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send transaction notification to recipient", ['error' => $e->getMessage()]);
+                }
             }
 
             return $transaction;
@@ -242,10 +319,14 @@ class TransactionService
                 'wise_response'  => ['error' => $e->getMessage()],
             ]);
 
-            // REFUND Wallet on failure
-            $this->wallet->refundForFailedTransfer($transaction->agent_id, (float)$transaction->chf_amount, $transaction);
-
-            $transaction->agent->notify(new TransactionFailed($transaction->fresh()));
+            // REFUND Wallet on failure (only if it was an agent transfer)
+            if ($transaction->initiated_by === 'agent' && $transaction->agent_id) {
+                $this->wallet->refundForFailedTransfer($transaction->agent_id, (float)$transaction->chf_amount, $transaction);
+                
+                if ($transaction->agent) {
+                    $transaction->agent->notify(new TransactionFailed($transaction->fresh()));
+                }
+            }
             return false;
         }
     }
@@ -253,7 +334,7 @@ class TransactionService
     private function handleCompletion(Transaction $transaction): void
     {
         // Credit commission to agent wallet
-        if ($transaction->agent_commission > 0) {
+        if ($transaction->agent_commission > 0 && $transaction->agent_id) {
             $this->wallet->creditCommission($transaction->agent_id, $transaction->agent_commission, $transaction);
         }
 

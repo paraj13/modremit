@@ -170,62 +170,6 @@ Login here
 <script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
 <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        if ($.validator) {
-            // Custom phone rule
-            $.validator.addMethod("phoneFormat", function(value, element) {
-                return this.optional(element) || /^\+?[0-9\s\-()]{7,20}$/.test(value);
-            }, "Please enter a valid phone number.");
-
-            $("#registerForm").validate({
-                rules: {
-                    name: {
-                        required: true,
-                        minlength: 3
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    phone: {
-                        required: true,
-                        phoneFormat: true
-                    },
-                    country: {
-                        required: true
-                    },
-                    password: {
-                        required: true,
-                        minlength: 6
-                    },
-                    password_confirmation: {
-                        required: true,
-                        equalTo: "#password"
-                    }
-                },
-                errorElement: 'span',
-                errorClass: 'invalid-feedback',
-                highlight: function(element) {
-                    $(element).addClass('is-invalid').removeClass('is-valid');
-                },
-                unhighlight: function(element) {
-                    $(element).removeClass('is-invalid').addClass('is-valid');
-                },
-                errorPlacement: function(error, element) {
-                    error.insertAfter(element);
-                },
-                submitHandler: function(form) {
-                    const btn = $(form).find('button[type="submit"]');
-                    btn.addClass('btn-loading');
-                    if (btn.hasClass('btn-light') || btn.hasClass('btn-brand-mint')) {
-                        btn.addClass('btn-loading-dark');
-                    }
-                    form.submit();
-                }
-            });
-        }
-    });
-</script>
+<script src="{{ asset('js/app-global.js') }}"></script>
 </body>
 </html>

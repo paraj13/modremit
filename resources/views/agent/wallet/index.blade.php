@@ -82,15 +82,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @php 
-                                        $typeClass = [
-                                            'deposit' => 'bg-success-subtle text-success',
-                                            'transfer' => 'bg-info-subtle text-info',
-                                            'withdrawal' => 'bg-danger-subtle text-danger',
-                                            'commission' => 'bg-brand-lime bg-opacity-25 text-brand-dark',
-                                        ][$txn->type] ?? 'bg-light text-muted';
-                                    @endphp
-                                    <span class="badge {{ $typeClass }} rounded-pill px-3 py-2 small fw-bold">
+                                    <span class="status-pill status-{{ $txn->type === 'commission' ? 'commission' : ($txn->type === 'transfer' ? 'transfer' : 'approved') }}">
                                         {{ ucfirst($txn->type) }}
                                     </span>
                                 </td>
@@ -98,9 +90,7 @@
                                     {{ $txn->amount > 0 ? '+' : '' }}{{ number_format($txn->amount, 2) }} {{ $txn->currency }}
                                 </td>
                                 <td class="px-4 text-center">
-                                    <span class="badge bg-{{ $txn->status === 'completed' ? 'success' : ($txn->status === 'pending' ? 'warning' : 'danger') }} rounded-pill p-1">
-                                        <i class="bi bi-{{ $txn->status === 'completed' ? 'check-circle-fill' : ($txn->status === 'pending' ? 'clock-fill' : 'x-circle-fill') }}"></i>
-                                    </span>
+                                    <span class="status-pill status-{{ $txn->status }}">{{ strtoupper($txn->status) }}</span>
                                 </td>
                             </tr>
                             @empty

@@ -35,13 +35,46 @@
         <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
             <h6 class="text-muted small fw-bold uppercase mb-2">Agent Status</h6>
             <h3 class="fw-bold mb-0">
-                <span class="badge {{ $agent->is_active ? 'bg-success' : 'bg-danger' }} rounded-pill px-3 py-2">
+                <span class="status-pill status-{{ $agent->is_active ? 'approved' : 'rejected' }}">
                     {{ $agent->is_active ? 'ACTIVE' : 'INACTIVE' }}
                 </span>
             </h3>
             <div class="mt-auto pt-3">
                 <i class="bi bi-person-check fs-4 text-muted"></i>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- Commission Breakdown for this Agent --}}
+@php
+    $agentTotalCommission = $agent->transactions()->sum('agent_commission');
+    $agentTxCount         = $agent->transactions()->count();
+    $platformFromAgent    = $agent->transactions()->sum('admin_commission');
+@endphp
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <h6 class="fw-bold text-brand-dark mb-0"><i class="bi bi-bar-chart-line-fill me-2"></i> Commission Summary for {{ $agent->name }}</h6>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4" style="border-left: 4px solid #142472 !important;">
+            <h6 class="text-muted small fw-bold text-uppercase mb-1">Agent Earnings (60%)</h6>
+            <h3 class="fw-bold text-primary mb-0">CHF {{ number_format($agentTotalCommission, 2) }}</h3>
+            <p class="small text-muted mt-1 mb-0">Total earned from all transfers</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4" style="border-left: 4px solid #28a745 !important;">
+            <h6 class="text-muted small fw-bold text-uppercase mb-1">Platform Earnings (40%)</h6>
+            <h3 class="fw-bold text-success mb-0">CHF {{ number_format($platformFromAgent, 2) }}</h3>
+            <p class="small text-muted mt-1 mb-0">Platform's share from this agent's transfers</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm p-4">
+            <h6 class="text-muted small fw-bold text-uppercase mb-1">Total Transfers</h6>
+            <h3 class="fw-bold mb-0">{{ $agentTxCount }}</h3>
+            <p class="small text-muted mt-1 mb-0">All time transactions processed</p>
         </div>
     </div>
 </div>
@@ -57,14 +90,7 @@
         <div class="card border-0 shadow-sm rounded-4">
             <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
                 <h5 class="fw-bold mb-0 text-brand-dark"><i class="bi bi-person-vcard text-muted me-2"></i> Agent KYC Documents</h5>
-                @php
-                    $badgeClass = match($agent->kyc_status ?? 'pending') {
-                        'approved' => 'bg-brand-mint text-brand-dark',
-                        'rejected' => 'bg-danger text-white',
-                        default    => 'bg-warning text-dark'
-                    };
-                @endphp
-                <span class="badge {{ $badgeClass }} px-3 py-2 rounded-pill shadow-sm">
+                <span class="status-pill status-{{ $agent->kyc_status ?? 'pending' }} shadow-sm">
                     {{ strtoupper($agent->kyc_status ?? 'PENDING') }}
                 </span>
             </div>
@@ -135,7 +161,7 @@
                                 <tr>
                                     <td class="px-4 py-3 small">{{ $txn->created_at->format('M d, Y H:i') }}</td>
                                     <td>
-                                        <span class="badge rounded-pill px-3 py-2 small fw-bold {{ $txn->type === 'deposit' ? 'bg-success-subtle text-success' : 'bg-info-subtle text-info' }}">
+                                        <span class="status-pill status-{{ $txn->type === 'deposit' ? 'approved' : 'transfer' }}">
                                             {{ ucfirst($txn->type) }}
                                         </span>
                                     </td>

@@ -37,15 +37,7 @@
                         <small class="text-muted">{{ $customer->phone ?? 'N/A' }}</small>
                     </td>
                     <td>
-                        @php
-                            $badgeClass = match($customer->kyc_status) {
-                                'approved' => 'bg-brand-mint text-brand-dark',
-                                'rejected' => 'bg-danger text-white',
-                                'pending'  => 'bg-warning text-dark',
-                                default    => 'bg-secondary',
-                            };
-                        @endphp
-                        <span class="badge {{ $badgeClass }} px-3">
+                        <span class="status-pill status-{{ $customer->kyc_status }} px-3">
                             {{ strtoupper($customer->kyc_status) }}
                         </span>
                     </td>

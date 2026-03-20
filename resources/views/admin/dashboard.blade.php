@@ -53,54 +53,98 @@
 
 <div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="card card-premium p-4 border-0 shadow-sm h-100">
+        <div class="card card-stat-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
-                <div class="bg-primary bg-opacity-10 p-2 rounded-3 text-primary me-3">
+                <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-bank fs-5"></i>
                 </div>
-                <h6 class="text-muted mb-0 small fw-bold">PLATFORM VOLUME</h6>
+                <h6 class="text-muted mb-0 small fw-bold text-uppercase">Platform Volume</h6>
             </div>
             <h3 class="fw-bold mb-0">CHF {{ number_format($stats['total_chf'], 0) }}</h3>
             <p class="text-muted small mt-2 mb-0">Total volume this period</p>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-premium p-4 border-0 shadow-sm h-100">
+        <div class="card card-stat-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
-                <div class="bg-success bg-opacity-10 p-2 rounded-3 text-success me-3">
+                <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-graph-up-arrow fs-5"></i>
                 </div>
-                <h6 class="text-muted mb-0 small fw-bold">PLATFORM EARNINGS</h6>
+                <h6 class="text-muted mb-0 small fw-bold text-uppercase">Platform Earnings</h6>
             </div>
-            <h3 class="fw-bold mb-0 text-success">CHF {{ number_format($stats['admin_commissions'], 2) }}</h3>
+            <h3 class="fw-bold mb-0">CHF {{ number_format($stats['admin_commissions'], 2) }}</h3>
             <p class="text-muted small mt-2 mb-0">Net platform profit</p>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-premium p-4 border-0 shadow-sm h-100">
+        <div class="card card-stat-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
-                <div class="bg-info bg-opacity-10 p-2 rounded-3 text-info me-3">
+                <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-people fs-5"></i>
                 </div>
-                <h6 class="text-muted mb-0 small fw-bold">AGENT COMMISSIONS</h6>
+                <h6 class="text-muted mb-0 small fw-bold text-uppercase">Total Customers</h6>
             </div>
-            <h3 class="fw-bold mb-0 text-primary">CHF {{ number_format($stats['agent_commissions'], 2) }}</h3>
-            <p class="text-muted small mt-2 mb-0">Total paid to agents</p>
+            <h3 class="fw-bold mb-0">{{ number_format($totalCustomers) }}</h3>
+            <p class="text-muted small mt-2 mb-0">Registered user base</p>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-premium p-4 border-0 shadow-sm h-100">
+        <div class="card card-stat-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
-                <div class="bg-dark bg-opacity-10 p-2 rounded-3 text-dark me-3">
+                <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-arrow-left-right fs-5"></i>
                 </div>
-                <h6 class="text-muted mb-0 small fw-bold">TOTAL TRANSFERS</h6>
+                <h6 class="text-muted mb-0 small fw-bold text-uppercase">Total Transfers</h6>
             </div>
             <h3 class="fw-bold mb-0">{{ $stats['total'] }}</h3>
             <p class="text-muted small mt-2 mb-0">Successful transactions</p>
         </div>
     </div>
 </div>
+
+{{-- Commission Breakdown Cards --}}
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <h6 class="fw-bold text-brand-dark mb-3"><i class="bi bi-bar-chart-line-fill me-2 text-brand-dark"></i> Commission Breakdown</h6>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-premium p-4 h-100" style="border-left: 4px solid var(--brand-dark) !important;">
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3 text-primary">
+                    <i class="bi bi-person-workspace fs-5"></i>
+                </div>
+                <h6 class="text-muted mb-0 small fw-bold">TOTAL AGENT EARNINGS (60%)</h6>
+            </div>
+            <h3 class="fw-bold mb-0 text-brand-dark">CHF {{ number_format($stats['agent_commissions'] ?? 0, 2) }}</h3>
+            <p class="text-muted small mt-2 mb-0">Sum of agent_commission</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-premium p-4 h-100" style="border-left: 4px solid var(--brand-lime) !important;">
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3 text-success">
+                    <i class="bi bi-building fs-5"></i>
+                </div>
+                <h6 class="text-muted mb-0 small fw-bold">PLATFORM FROM AGENT (40%)</h6>
+            </div>
+            <h3 class="fw-bold mb-0 text-success">CHF {{ number_format($stats['platform_from_agent'] ?? 0, 2) }}</h3>
+            <p class="text-muted small mt-2 mb-0">Platform 40% share</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-premium p-4 h-100" style="border-left: 4px solid var(--brand-yellow) !important;">
+            <div class="d-flex align-items-center mb-2">
+                <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3 text-warning">
+                    <i class="bi bi-people-fill fs-5"></i>
+                </div>
+                <h6 class="text-muted mb-0 small fw-bold">PLATFORM DIRECT (100%)</h6>
+            </div>
+            <h3 class="fw-bold mb-0 text-warning">CHF {{ number_format($stats['platform_from_customer'] ?? 0, 2) }}</h3>
+            <p class="text-muted small mt-2 mb-0">100% platform earnings</p>
+        </div>
+    </div>
+</div>
+
 
 <!-- Charts Section -->
 <div class="row g-4 mb-4">
@@ -154,10 +198,15 @@
                         @forelse($recentTransactions as $tx)
                             <tr>
                                 <td>
-                                    <div class="fw-bold">{{ $tx->agent->name }}</div>
-                                    <div class="small text-muted">{{ $tx->agent->email }}</div>
+                                    @if($tx->agent)
+                                        <div class="fw-bold">{{ $tx->agent->name }}</div>
+                                        <div class="small text-muted">{{ $tx->agent->email }}</div>
+                                    @else
+                                        <div class="fw-bold text-primary">Direct Customer</div>
+                                        <div class="small text-muted">No Agent involved</div>
+                                    @endif
                                 </td>
-                                <td>{{ $tx->customer->name }}</td>
+                                <td>{{ $tx->customer->name ?? 'N/A' }}</td>
                                 <td class="text-end fw-bold text-brand-dark">{{ number_format($tx->send_amount, 2) }} CHF</td>
                                 <td class="text-end">
                                     <div class="fw-bold text-success">{{ number_format($tx->commission, 2) }} CHF</div>
@@ -165,7 +214,7 @@
                                 </td>
                                 <td class="text-end fw-bold text-primary">{{ number_format($tx->chf_amount, 2) }} CHF</td>
                                 <td class="text-center">
-                                    <span class="badge bg-{{ $tx->status_badge }} px-3 rounded-pill">{{ ucfirst($tx->status) }}</span>
+                                    <span class="status-pill status-{{ $tx->status }}">{{ ucfirst($tx->status) }}</span>
                                 </td>
                                 <td class="small text-muted">{{ $tx->created_at->format('M d, H:i') }}</td>
                             </tr>
