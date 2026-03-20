@@ -44,12 +44,12 @@
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-geo-alt text-muted"></i></span>
                                 <select name="country" class="form-select bg-light border-0 px-3 py-2 @error('country') is-invalid @enderror">
-                                    <option value="India" {{ old('country') == 'India' ? 'selected' : '' }}>India</option>
-                                    <option value="Pakistan" {{ old('country') == 'Pakistan' ? 'selected' : '' }}>Pakistan</option>
-                                    <option value="Philippines" {{ old('country') == 'Philippines' ? 'selected' : '' }}>Philippines</option>
-                                    <option value="United Kingdom" {{ old('country') == 'United Kingdom' ? 'selected' : '' }}>United Kingdom</option>
-                                    <option value="United States" {{ old('country') == 'United States' ? 'selected' : '' }}>United States</option>
-                                    <option value="Germany" {{ old('country') == 'Germany' ? 'selected' : '' }}>Germany</option>
+                                    <option value="">Select country...</option>
+                                    @foreach(\App\Constants\CountryCurrency::COUNTRIES as $c)
+                                        <option value="{{ $c['name'] }}" {{ old('country') == $c['name'] ? 'selected' : '' }}>
+                                            {{ $c['name'] }}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 @error('country') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
