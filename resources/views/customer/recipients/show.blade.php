@@ -26,7 +26,7 @@
                     <div class="col-md-6">
                         <label class="text-muted small fw-bold mb-1 d-block">COUNTRY</label>
                         <h5 class="fw-bold text-brand-dark">
-                            <span class="fi fi-{{ strtolower($recipient->country_code ?? 'un') }} me-1"></span>
+                            <span class="fi fi-{{ strtolower(\App\Constants\CountryCurrency::getFlagByCountry($recipient->country)) }} me-1"></span>
                             {{ $recipient->country }}
                         </h5>
                     </div>
@@ -57,6 +57,58 @@
                         <i class="bi bi-send-fill me-1"></i> Send Money Now
                     </a>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Transaction History for this Recipient --}}
+    <div class="col-lg-12">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+            <div class="card-header bg-white py-3 px-4 border-0">
+                <h6 class="fw-bold text-brand-dark mb-0">Transaction History with {{ $recipient->name }}</h6>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-premium mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="border-0 px-4 py-3 small fw-bold text-muted">DATE</th>
+                            <th class="border-0 py-3 small fw-bold text-muted">SENT AMOUNT</th>
+                            <th class="border-0 py-3 small fw-bold text-muted">RECEIVED AMOUNT</th>
+                            <th class="border-0 py-3 small fw-bold text-muted text-center">STATUS</th>
+                            <th class="border-0 py-3 small fw-bold text-muted text-center pe-4">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recipient->transactions as $t)
+                        <tr>
+                            <td class="px-4 py-3">
+                                <span class="small fw-bold text-brand-dark d-block">#{{ $t->id }}</span>
+                                <span class="x-small text-muted">{{ $t->created_at->format('M d, Y') }}</span>
+                            </td>
+                            <td>
+                                <span class="small fw-bold">{{ number_format($t->chf_amount, 2) }} CHF</span>
+                            </td>
+                            <td>
+                                <span class="small fw-bold text-success">{{ number_format($t->target_amount, 2) }} {{ $t->target_currency }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-{{ $t->status === 'completed' ? 'success' : ($t->status === 'pending' ? 'warning' : 'info') }} rounded-pill px-3 x-small">
+                                    {{ strtoupper($t->status) }}
+                                </span>
+                            </td>
+                            <td class="text-center pe-3">
+                                <a href="{{ route('customer.transactions.show', $t->id) }}" class="btn btn-sm btn-brand rounded-pill px-3 shadow-sm">Details</a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="text-center py-4">
+                                <p class="text-muted small mb-0">No transaction history found for this recipient.</p>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
