@@ -28,10 +28,18 @@ class RecipientController extends Controller
         return view('customer.recipients.show', compact('recipient'));
     }
 
+    public function edit($id)
+    {
+        $customer = Auth::guard('customer')->user();
+        $recipient = $customer->recipients()->findOrFail($id);
+        return view('customer.recipients.edit', compact('recipient'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
             'name'           => 'required|string|max:255',
+            'email'          => 'nullable|email|max:255',
             'bank_name'      => 'required|string|max:255',
             'account_number' => 'required|string|max:50',
             'ifsc_code'      => 'nullable|string|max:20',
@@ -51,5 +59,32 @@ class RecipientController extends Controller
 
         return redirect()->route('customer.recipients.index')
             ->with('success', 'Recipient added successfully.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $customer = Auth::guard('customer')->user();
+        $recipient = $customer->recipients()->findOrFail($id);
+
+        $data = $request->validate([
+            'name'           => 'required|string|max:255',
+            'email'          => 'nullable|email|max:255',
+            'bank_name'      => 'required|string|max:255',
+            'account_number' => 'required|string|max:50',
+            'ifsc_code'      => 'nullable|string|max:20',
+            'upi_id'         => 'nullable|string|max:100',
+            'country'        => 'required|string|max:100',
+            'address_line_1' => 'nullable|string|max:255',
+            'city'           => 'nullable|string|max:100',
+            'postal_code'    => 'nullable|string|max:20',
+            'state'          => 'nullable|string|max:100',
+            'iban'           => 'nullable|string|max:50',
+            'swift_code'     => 'nullable|string|max:20',
+        ]);
+
+        $recipient->update($data);
+
+        return redirect()->route('customer.recipients.index')
+            ->with('success', 'Recipient updated successfully.');
     }
 }
