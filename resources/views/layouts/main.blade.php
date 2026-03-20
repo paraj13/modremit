@@ -78,6 +78,16 @@
     </style>
 </head>
 <body>
+    <!-- Mobile Top Nav -->
+    <div class="d-lg-none bg-brand-dark px-3 py-3 d-flex align-items-center justify-content-between sticky-top shadow-sm">
+        <a href="{{ url('/') }}" class="text-decoration-none">
+            <span class="fw-bold text-white small">MOD<span class="bg-brand-lime text-brand-dark px-2 ms-1 rounded">REMIT</span></span>
+        </a>
+        <button class="btn btn-link text-white p-0" id="sidebarToggle">
+            <i class="bi bi-list fs-2"></i>
+        </button>
+    </div>
+
     <div id="sidebar">
         <div class="px-4 py-3">
         <x-logo-light />

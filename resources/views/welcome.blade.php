@@ -295,7 +295,21 @@
 
         /* Responsive Fixes */
         @media (max-width: 991px) {
-            .hero-title { font-size: 3.5rem; }
+            .hero-title { 
+                font-size: clamp(2.5rem, 8vw, 3.5rem) !important; 
+                letter-spacing: -1.5px !important;
+                line-height: 1.1;
+            }
+            .hero { padding-bottom: 60px; }
+            .converter-pod { margin-top: 30px; }
+        }
+
+        @media (max-width: 575px) {
+            .hero-title { font-size: 2.2rem !important; }
+            .converter-pod { padding: 20px !important; }
+            .amount-input { font-size: 1.25rem !important; }
+            .pod-label { font-size: 0.7rem; }
+            .section-title { font-size: 1.8rem; }
         }
 
         /* Typewriter Cursor */
