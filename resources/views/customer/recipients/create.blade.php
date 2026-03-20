@@ -21,12 +21,21 @@
                 <form action="{{ route('customer.recipients.store') }}" method="POST" id="recipientForm">
                     @csrf
                     <div class="row g-4">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">FULL NAME (As per bank record)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-person text-muted"></i></span>
                                 <input type="text" name="name" class="form-control bg-light border-0 px-3 py-2 @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="John Doe">
                                 @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">EMAIL ADDRESS (Optional)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-envelope text-muted"></i></span>
+                                <input type="email" name="email" class="form-control bg-light border-0 px-3 py-2 @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="For notifications">
+                                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
                         </div>
 

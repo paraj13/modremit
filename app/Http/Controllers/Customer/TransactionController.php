@@ -20,4 +20,11 @@ class TransactionController extends Controller
         $transaction = $customer->transactions()->with('recipient')->findOrFail($id);
         return view('customer.transactions.show', compact('transaction'));
     }
+
+    public function receipt(int $id)
+    {
+        $customer = Auth::guard('customer')->user();
+        $transaction = $customer->transactions()->with('recipient')->findOrFail($id);
+        return view('customer.transactions.receipt', compact('transaction'));
+    }
 }

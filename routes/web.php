@@ -26,6 +26,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/transactions/{id}', [Admin\TransactionController::class, 'show'])->name('transactions.show');
     Route::get('/customers', [Admin\CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/{id}', [Admin\CustomerController::class, 'show'])->name('customers.show');
+    Route::get('/customers/{id}/edit', [Admin\CustomerController::class, 'edit'])->name('customers.edit');
+    Route::put('/customers/{id}', [Admin\CustomerController::class, 'update'])->name('customers.update');
     Route::post('/customers/{id}/refresh-kyc', [Admin\CustomerController::class, 'refreshKyc'])->name('customers.refresh-kyc');
     Route::delete('/customers/{id}', [Admin\CustomerController::class, 'destroy'])->name('customers.destroy');
     Route::get('/recipients', [Admin\RecipientController::class, 'index'])->name('recipients.index');
@@ -123,11 +125,14 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
         Route::get('/transactions', [App\Http\Controllers\Customer\TransactionController::class, 'index'])->name('transactions.index');
         Route::get('/transactions/{id}', [App\Http\Controllers\Customer\TransactionController::class, 'show'])->name('transactions.show');
+        Route::get('/transactions/{id}/receipt', [App\Http\Controllers\Customer\TransactionController::class, 'receipt'])->name('transactions.receipt');
 
         Route::get('/recipients', [App\Http\Controllers\Customer\RecipientController::class, 'index'])->name('recipients.index');
         Route::get('/recipients/create', [App\Http\Controllers\Customer\RecipientController::class, 'create'])->name('recipients.create');
         Route::get('/recipients/{id}', [App\Http\Controllers\Customer\RecipientController::class, 'show'])->name('recipients.show');
+        Route::get('/recipients/{id}/edit', [App\Http\Controllers\Customer\RecipientController::class, 'edit'])->name('recipients.edit');
         Route::post('/recipients', [App\Http\Controllers\Customer\RecipientController::class, 'store'])->name('recipients.store');
+        Route::put('/recipients/{id}', [App\Http\Controllers\Customer\RecipientController::class, 'update'])->name('recipients.update');
     });
 });
 

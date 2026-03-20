@@ -58,10 +58,17 @@ class CountryCurrency
     }
 
     /**
-     * Get currency codes for a dropdown.
+     * Get flag by country name.
      */
-    public static function currencyCodes(): array
+    public static function getFlagByCountry(?string $name): string
     {
-        return array_column(self::CURRENCIES, 'code');
+        if (!$name) return 'un';
+        
+        foreach (self::COUNTRIES as $c) {
+            if ($c['name'] === $name) {
+                return $c['flag'];
+            }
+        }
+        return 'un';
     }
 }
