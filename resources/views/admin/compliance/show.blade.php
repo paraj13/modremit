@@ -103,9 +103,9 @@
                     <div class="col-md-4 text-center">
                         <div class="text-muted small fw-bold mb-3 text-uppercase">ID Document (Front)</div>
                         @if($kycData['doc_front'])
-                            <img src="{{ $kycData['doc_front'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" style="max-height: 250px; object-fit: contain;" alt="Doc Front">
+                            <img src="{{ $kycData['doc_front'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" alt="Doc Front">
                         @else
-                            <div class="bg-white border rounded py-5 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 200px;">
+                            <div class="bg-white border rounded py-5 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-90">
                                 <i class="bi bi-file-earmark-image fs-1 text-light-emphasis mb-2"></i>
                                 Not available
                             </div>
@@ -114,9 +114,9 @@
                     <div class="col-md-4 text-center">
                         <div class="text-muted small fw-bold mb-3 text-uppercase">ID Document (Back)</div>
                         @if($kycData['doc_back'])
-                            <img src="{{ $kycData['doc_back'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" style="max-height: 250px; object-fit: contain;" alt="Doc Back">
+                            <img src="{{ $kycData['doc_back'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" alt="Doc Back">
                         @else
-                            <div class="bg-white border rounded py-5 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 200px;">
+                            <div class="bg-white border rounded py-5 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-90">
                                 <i class="bi bi-file-earmark-image fs-1 text-light-emphasis mb-2"></i>
                                 Not available
                             </div>
@@ -125,9 +125,9 @@
                     <div class="col-md-4 text-center">
                         <div class="text-muted small fw-bold mb-3 text-uppercase">Selfie Match</div>
                         @if($kycData['selfie'])
-                            <img src="{{ $kycData['selfie'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" style="max-height: 250px; object-fit: contain;" alt="Selfie">
+                            <img src="{{ $kycData['selfie'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" alt="Selfie">
                         @else
-                            <div class="bg-white border rounded py-5 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 200px;">
+                            <div class="bg-white border rounded py-5 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-90">
                                 <i class="bi bi-person-bounding-box fs-1 text-light-emphasis mb-2"></i>
                                 Not available
                             </div>

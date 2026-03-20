@@ -8,6 +8,7 @@ use App\Mail\VerifyKycMail;
 use App\Mail\CustomerWelcomeMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerService
 {
@@ -39,6 +40,8 @@ class CustomerService
     public function create(array $data)
     {
         $data['agent_id'] = Auth::id();
+        $data['password'] = Hash::make('12345678');
+        $data['kyc_status'] = 'pending';
         $customer = $this->customers->create($data);
         print("Customer created: " . $customer->id);
 
