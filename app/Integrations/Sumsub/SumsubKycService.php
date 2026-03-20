@@ -3,6 +3,7 @@
 namespace App\Integrations\Sumsub;
 
 use App\Models\Customer;
+use Illuminate\Support\Str;
 
 class SumsubKycService
 {
@@ -16,7 +17,7 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'id-and-liveness');
-        $externalId = 'customer_' . $customer->id;
+        $externalId = $this->getExternalId($customer);
 
         try {
             $response = $this->client->post("resources/applicants?levelName={$level}", [
@@ -46,7 +47,7 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'id-and-liveness');
-        $externalId = 'agent_' . $agent->id;
+        $externalId = $this->getExternalId($agent);
 
         try {
             $response = $this->client->post("resources/applicants?levelName={$level}", [
@@ -93,9 +94,9 @@ class SumsubKycService
         $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
         if (!$customer) {
             $user = \App\Models\User::where('sumsub_applicant_id', $applicantId)->first();
-            $externalUserId = $user ? 'agent_' . $user->id : 'unknown';
+            $externalUserId = $user ? $this->getExternalId($user) : 'unknown';
         } else {
-            $externalUserId = 'customer_' . $customer->id;
+            $externalUserId = $this->getExternalId($customer);
         }
 
         try {
@@ -279,5 +280,13 @@ class SumsubKycService
                 logger()->error("Failed to send KYC status email to agent", ['error' => $e->getMessage()]);
             }
         }
+    }
+
+    /** Helper to generate a unique external ID including name to avoid env collisions */
+    private function getExternalId($model): string
+    {
+        $type = ($model instanceof Customer) ? 'customer' : 'agent';
+        $nameSlug = Str::slug($model->name);
+        return "{$type}_{$model->id}_{$nameSlug}";
     }
 }

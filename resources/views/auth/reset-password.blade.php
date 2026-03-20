@@ -87,47 +87,14 @@
     <script src="{{ asset('vendor/js/jquery.min.js') }}"></script>
     <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('js/app-global.js') }}"></script>
     <script>
-        $(document).ready(function() {
-            if ($.validator) {
-                $("#resetPasswordForm").validate({
-                    rules: {
-                        email: { required: true, email: true },
-                        password: { required: true, minlength: 8 },
-                        password_confirmation: { required: true, equalTo: "#password" }
-                    },
-                    messages: {
-                        email: {
-                            required: "Email is required",
-                            email: "Please enter a valid email address"
-                        },
-                        password: {
-                            required: "Please enter a new password",
-                            minlength: "Password must be at least 8 characters"
-                        },
-                        password_confirmation: {
-                            required: "Please confirm your new password",
-                            equalTo: "Passwords do not match"
-                        }
-                    },
-                    errorElement: 'span',
-                    errorClass: 'invalid-feedback',
-                    highlight: function(element) {
-                        $(element).addClass('is-invalid').removeClass('is-valid');
-                    },
-                    unhighlight: function(element) {
-                        $(element).removeClass('is-invalid').addClass('is-valid');
-                    },
-                    errorPlacement: function(error, element) {
-                        error.insertAfter(element.closest('.input-group'));
-                    },
-                    submitHandler: function(form) {
-                        const btn = $(form).find('button[type="submit"]');
-                        btn.addClass('btn-loading');
-                        form.submit();
-                    }
-                });
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+            window.initGlobalValidation('resetPasswordForm', {
+                email: { required: true, email: true },
+                password: { required: true, minlength: 8 },
+                password_confirmation: { required: true, equalTo: "#password" }
+            });
         });
     </script>
 </body>

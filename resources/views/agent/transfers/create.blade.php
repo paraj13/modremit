@@ -163,40 +163,30 @@ document.addEventListener('DOMContentLoaded', function() {
     const transferForm = $("#transferForm");
 
     // Initialize jQuery validation
-    if ($.validator) {
-        transferForm.validate({
-            rules: {
-                customer_id: { required: true },
-                recipient_id: { required: true },
-                chf_amount: { 
-                    required: true, 
-                    number: true, 
-                    min: 10 
-                }
-            },
-            messages: {
-                customer_id: "Please select a sender",
-                recipient_id: "Please select a recipient",
-                chf_amount: {
-                    required: "Please enter a send amount",
-                    min: "Minimum transfer amount is 10 CHF"
-                }
-            },
-            errorPlacement: function(error, element) {
-                const id = element.attr('id');
-                const container = $(`#${id}-error-container`);
-                if (container.length) {
-                    error.appendTo(container);
-                } else {
-                    error.insertAfter(element.closest('.input-group'));
-                }
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('transferForm', {
+        customer_id: { required: true },
+        recipient_id: { required: true },
+        chf_amount: { 
+            required: true, 
+            number: true, 
+            min: 10 
+        }
+    }, {
+        customer_id: "Please select a sender",
+        recipient_id: "Please select a recipient",
+        chf_amount: {
+            required: "Please enter a send amount",
+            min: "Minimum transfer amount is 10 CHF"
+        }
+    }, function(error, element) {
+        const id = element.attr('id');
+        const container = $(`#${id}-error-container`);
+        if (container.length) {
+            error.appendTo(container);
+        } else {
+            error.insertAfter(element.closest('.input-group'));
+        }
+    });
 
     function updateBeneficiaryLink() {
         const option = customerSelect.options[customerSelect.selectedIndex];

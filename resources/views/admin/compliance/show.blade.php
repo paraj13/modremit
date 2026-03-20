@@ -147,7 +147,7 @@
                 <h5 class="mb-0 fw-bold">Compliance Review Notes</h5>
             </div>
             <div class="card-body p-4">
-                <form action="{{ route('admin.compliance.review', $log->id) }}" method="POST">
+                <form action="{{ route('admin.compliance.review', $log->id) }}" method="POST" id="complianceReviewForm">
                     @csrf
                     <div class="mb-4">
                         <label class="form-label text-muted small fw-bold">Review Notes</label>
@@ -163,4 +163,21 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+$(document).ready(function() {
+    window.initGlobalValidation('complianceReviewForm', {
+        notes: {
+            required: true,
+            minlength: 10
+        }
+    }, {
+        notes: {
+            required: "Please enter review notes before submitting",
+            minlength: "Review notes must be at least 10 characters long"
+        }
+    });
+});
+</script>
+@endpush
 @endsection

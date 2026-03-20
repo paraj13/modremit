@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="card-body p-4 p-md-5">
-                <form action="{{ route('customer.recipients.update', $recipient->id) }}" method="POST">
+                <form action="{{ route('customer.recipients.update', $recipient->id) }}" method="POST" id="recipientEditForm">
                     @csrf
                     @method('PUT')
                     
@@ -112,4 +112,22 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+$(document).ready(function() {
+    window.initGlobalValidation('recipientEditForm', {
+        name: { required: true, minlength: 3 },
+        email: { email: true },
+        bank_name: { required: true },
+        country: { required: true },
+        account_number: { required: true, minlength: 5 }
+    }, {
+        name: "Please enter recipient's full legal name",
+        bank_name: "Please provide the bank name",
+        country: "Please select a country",
+        account_number: "Valid account number or IBAN is required"
+    });
+});
+</script>
+@endpush
 @endsection

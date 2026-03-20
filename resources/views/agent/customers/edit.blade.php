@@ -57,44 +57,23 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    if ($.validator) {
-        $("#customerEditForm").validate({
-            rules: {
-                name: {
-                    required: true,
-                    minlength: 3
-                },
-                email: {
-                    required: true,
-                    email: true
-                },
-                phone: {
-                    required: true,
-                    phoneFormat: true
-                }
-            },
-            messages: {
-                name: {
-                    required: "Please enter the customer's full legal name",
-                    minlength: "Name must be at least 3 characters"
-                },
-                email: {
-                    required: "Email address is required",
-                    email: "Please enter a valid email address"
-                },
-                phone: {
-                    required: "Phone number is required"
-                }
-            },
-            errorPlacement: function(error, element) {
-                error.insertAfter(element.closest('.input-group'));
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('customerEditForm', {
+        name: { required: true, minlength: 3 },
+        email: { required: true, email: true },
+        phone: { required: true, phoneFormat: true }
+    }, {
+        name: {
+            required: "Please enter the customer's full legal name",
+            minlength: "Name must be at least 3 characters"
+        },
+        email: {
+            required: "Email address is required",
+            email: "Please enter a valid email address"
+        },
+        phone: {
+            required: "Phone number is required"
+        }
+    });
 });
 </script>
 @endpush

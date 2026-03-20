@@ -150,34 +150,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submit_btn');
     const transferForm = $("#customerTransferForm");
 
-    if ($.validator) {
-        transferForm.validate({
-            rules: {
-                recipient_id: { required: true },
-                chf_amount: { required: true, number: true, min: 10 }
-            },
-            messages: {
-                recipient_id: "Please select a recipient",
-                chf_amount: {
-                    required: "Please enter a send amount",
-                    min: "Minimum transfer amount is 10 CHF"
-                }
-            },
-            errorPlacement: function(error, element) {
-                const id = element.attr('id');
-                const container = $(`#${id}-error-container`);
-                if (container.length) {
-                    error.appendTo(container);
-                } else {
-                    error.insertAfter(element.closest('.input-group'));
-                }
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    // Initialize jQuery validation
+    window.initGlobalValidation('customerTransferForm', {
+        recipient_id: { required: true },
+        chf_amount: { required: true, number: true, min: 10 }
+    }, {
+        recipient_id: "Please select a recipient",
+        chf_amount: {
+            required: "Please enter a send amount",
+            min: "Minimum transfer amount is 10 CHF"
+        }
+    }, function(error, element) {
+        const id = element.attr('id');
+        const container = $(`#${id}-error-container`);
+        if (container.length) {
+            error.appendTo(container);
+        } else {
+            error.insertAfter(element.closest('.input-group'));
+        }
+    });
 
     getQuoteBtn.addEventListener('click', function() {
         const amount = chfAmountInput.value;

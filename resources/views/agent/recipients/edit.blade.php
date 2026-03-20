@@ -201,47 +201,17 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    if ($.validator) {
-        $("#recipientEditForm").validate({
-            rules: {
-                name: {
-                    required: true,
-                    minlength: 3
-                },
-                bank_name: {
-                    required: true
-                },
-                account_number: {
-                    required: true,
-                    minlength: 5
-                },
-                country: {
-                    required: true
-                }
-            },
-            messages: {
-                name: {
-                    required: "Please enter the recipient's full name"
-                },
-                bank_name: {
-                    required: "Bank name is required"
-                },
-                account_number: {
-                    required: "Account number or IBAN is required"
-                },
-                country: {
-                    required: "Please select destination country"
-                }
-            },
-            errorPlacement: function(error, element) {
-                error.insertAfter(element.closest('.input-group'));
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('recipientEditForm', {
+        name: { required: true, minlength: 3 },
+        bank_name: { required: true },
+        account_number: { required: true, minlength: 5 },
+        country: { required: true }
+    }, {
+        name: "Please enter the recipient's full name",
+        bank_name: "Bank name is required",
+        account_number: "Account number or IBAN is required",
+        country: "Please select destination country"
+    });
 });
 </script>
 @endpush

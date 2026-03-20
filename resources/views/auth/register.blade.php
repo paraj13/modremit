@@ -172,5 +172,17 @@ Login here
 <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
 <script src="{{ asset('js/app-global.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.initGlobalValidation('registerForm', {
+            name: { required: true },
+            email: { required: true, email: true },
+            phone: { required: true },
+            country: { required: true },
+            password: { required: true, minlength: 8 },
+            password_confirmation: { required: true, equalTo: '#password' }
+        });
+    });
+</script>
 </body>
 </html>

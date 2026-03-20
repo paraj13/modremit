@@ -248,4 +248,59 @@
         </div>
     </div>
 </div>
+
+{{-- Agent's Customers --}}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 py-4 px-4 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-brand-dark">Agent's Customers ({{ $agent->customers->count() }})</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="border-0 px-4 py-3 small text-muted uppercase">Customer Name</th>
+                                <th class="border-0 py-3 small text-muted uppercase">Email / Phone</th>
+                                <th class="border-0 py-3 small text-muted uppercase text-center">KYC Status</th>
+                                <th class="border-0 py-3 small text-muted uppercase text-center">Recipients</th>
+                                <th class="border-0 px-4 py-3 small text-muted uppercase text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($agent->customers as $customer)
+                            <tr>
+                                <td class="px-4 py-3">
+                                    <div class="fw-bold text-brand-dark">{{ $customer->name }}</div>
+                                    <div class="x-small text-muted">ID: #{{ $customer->id }}</div>
+                                </td>
+                                <td>
+                                    <div class="small fw-bold">{{ $customer->email }}</div>
+                                    <div class="x-small text-muted">{{ $customer->phone ?? 'No phone' }}</div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="status-pill status-{{ $customer->kyc_status }} px-3 small">
+                                        {{ strtoupper($customer->kyc_status) }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-light text-dark border px-3">
+                                        {{ $customer->recipients->count() }}
+                                    </span>
+                                </td>
+                                <td class="px-4 text-end">
+                                    <a href="{{ route('admin.customers.show', $customer->id) }}" class="btn btn-sm btn-outline-dark rounded-3 px-3">View Details</a>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="5" class="text-center py-5 text-muted">No customers registered under this agent yet.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
