@@ -16,7 +16,7 @@
         <div class="card h-100 border-0 shadow-sm">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold">Transaction Details #{{ $log->transaction->id }}</h5>
-                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">
+                <span class="status-pill status-pending shadow-sm">
                     PENDING COMPLIANCE
                 </span>
             </div>
@@ -61,15 +61,7 @@
         <div class="card h-100 border-0 shadow-sm">
             <div class="card-header bg-brand-dark text-white py-3 d-flex justify-content-between align-items-center">
                 <h6 class="mb-0 fw-bold">Customer Details</h6>
-                @php
-                    $badgeClass = match($customer->kyc_status) {
-                        'approved' => 'bg-brand-mint text-brand-dark',
-                        'rejected' => 'bg-danger text-white',
-                        'pending'  => 'bg-warning text-dark',
-                        default    => 'bg-secondary'
-                    };
-                @endphp
-                <span class="badge {{ $badgeClass }} px-2 py-1 rounded-pill small">
+                <span class="status-pill status-{{ $customer->kyc_status }} small shadow-sm">
                     {{ strtoupper($customer->kyc_status) }}
                 </span>
             </div>

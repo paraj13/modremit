@@ -27,6 +27,29 @@ class CustomerController extends Controller
         return view('admin.customers.show', compact('customer'));
     }
 
+    public function edit(int $id)
+    {
+        $customer = \App\Models\Customer::findOrFail($id);
+        $agents = \App\Models\User::role('agent')->get();
+        return view('admin.customers.edit', compact('customer', 'agents'));
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $customer = \App\Models\Customer::findOrFail($id);
+
+        $data = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|max:255|unique:customers,email,' . $id,
+            'phone'    => 'required|string|max:20',
+            'agent_id' => 'nullable|exists:users,id',
+        ]);
+
+        $customer->update($data);
+
+        return redirect()->route('admin.customers.show', $id)->with('success', 'Customer updated successfully.');
+    }
+
     public function refreshKyc(int $id)
     {
         $status = $this->customerService->refreshKycStatus($id);

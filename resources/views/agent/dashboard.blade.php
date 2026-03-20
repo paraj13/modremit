@@ -162,6 +162,7 @@
                             <tr>
                                 <th class="border-0 small fw-bold ps-3">Customer</th>
                                 <th class="border-0 small fw-bold">Beneficiary</th>
+                                <th class="border-0 small fw-bold">KYC Status</th>
                                 <th class="border-0 small fw-bold text-end">Send Amount</th>
                                 <th class="border-0 small fw-bold text-end">Commission</th>
                                 <th class="border-0 small fw-bold text-center">Status</th>
@@ -176,6 +177,11 @@
                                         <div class="small text-muted">{{ $tx->customer->email }}</div>
                                     </td>
                                     <td>{{ $tx->recipient->name }}</td>
+                                    <td>
+                                        <span class="status-pill status-{{ $tx->customer->kyc_status }} px-3 small">
+                                            {{ strtoupper($tx->customer->kyc_status) }}
+                                        </span>
+                                    </td>
                                     <td class="text-end fw-bold text-brand-dark">{{ number_format($tx->send_amount, 2) }} CHF</td>
                                     <td class="text-end text-success fw-bold">{{ number_format($tx->agent_commission, 2) }} CHF</td>
                                     <td class="text-center">

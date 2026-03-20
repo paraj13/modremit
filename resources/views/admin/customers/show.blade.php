@@ -44,6 +44,10 @@
                 </div>
 
                 <div class="d-grid gap-2">
+                    <a href="{{ route('admin.customers.edit', $customer->id) }}" class="btn btn-brand btn-sm w-100 py-2">
+                        <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                    </a>
+
                     <form action="{{ route('admin.customers.refresh-kyc', $customer->id) }}" method="POST">
                         @csrf
                         <button type="submit" class="btn btn-brand-outline btn-sm w-100 py-2">
@@ -163,6 +167,54 @@
                             </div>
                         @endif
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Transaction History for this Customer --}}
+<div class="row g-4 mt-2">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0 text-brand-dark"><i class="bi bi-clock-history text-muted me-2"></i> Transaction History</h5>
+                <span class="badge bg-light text-dark rounded-pill px-3">{{ $customer->transactions->count() }} total</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="border-0 px-4 py-3 small text-muted text-uppercase">Date</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Recipient</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Amount (CHF)</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Target</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Initiated By</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($customer->transactions as $txn)
+                            <tr>
+                                <td class="px-4 py-3 small">{{ $txn->created_at->format('M d, Y H:i') }}</td>
+                                <td class="fw-bold text-brand-dark">{{ $txn->recipient->name ?? 'N/A' }}</td>
+                                <td class="fw-bold">CHF {{ number_format($txn->chf_amount, 2) }}</td>
+                                <td class="text-success small fw-bold">{{ number_format($txn->target_amount, 2) }} {{ $txn->target_currency }}</td>
+                                <td>
+                                    <span class="badge {{ $txn->initiated_by === 'customer' ? 'bg-info-subtle text-info' : 'bg-secondary-subtle text-secondary' }} rounded-pill px-2">
+                                        {{ strtoupper($txn->initiated_by) }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-{{ $txn->status_badge }} rounded-pill px-3">{{ strtoupper($txn->status) }}</span>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="6" class="text-center py-5 text-muted">No transaction history found for this customer.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

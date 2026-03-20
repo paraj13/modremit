@@ -28,16 +28,7 @@
                     <td>{{ $log->transaction->customer->name ?? 'N/A' }}</td>
                     <td class="text-brand-dark fw-bold">CHF {{ number_format($log->transaction->chf_amount, 2) }}</td>
                     <td>
-                        @php
-                            $badgeClass = match($log->status) {
-                                'pending'   => 'bg-warning text-dark',
-                                'reviewed'  => 'bg-info',
-                                'cleared'   => 'bg-brand-mint text-brand-dark',
-                                'escalated' => 'bg-danger text-white',
-                                default     => 'bg-secondary',
-                            };
-                        @endphp
-                        <span class="badge {{ $badgeClass }} px-3">
+                        <span class="status-pill status-{{ $log->status }}">
                             {{ strtoupper($log->status) }}
                         </span>
                     </td>

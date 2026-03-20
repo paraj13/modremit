@@ -38,15 +38,7 @@
                     </td>
                     <td>{{ number_format($transaction->rate, 4) }}</td>
                     <td>
-                        @php
-                            $badgeClass = match($transaction->status) {
-                                'completed'  => 'bg-brand-mint text-brand-dark',
-                                'processing' => 'bg-info text-white',
-                                'failed'     => 'bg-danger text-white',
-                                default      => 'bg-warning text-dark',
-                            };
-                        @endphp
-                        <span class="badge {{ $badgeClass }} px-3">
+                        <span class="status-pill status-{{ $transaction->status }}">
                             {{ strtoupper($transaction->status) }}
                         </span>
                     </td>

@@ -28,6 +28,18 @@ class TransactionRepository implements TransactionRepositoryInterface
         if (!empty($filters['flagged'])) {
             $query->where('flagged', true);
         }
+        if (isset($filters['has_agent'])) {
+            if ($filters['has_agent']) {
+                $query->whereNotNull('agent_id');
+            } else {
+                $query->whereNull('agent_id');
+            }
+        }
+
+        if (!empty($filters['limit'])) {
+            return $query->limit($filters['limit'])->get();
+        }
+
         return $query->paginate(20);
     }
 
@@ -60,16 +72,18 @@ class TransactionRepository implements TransactionRepositoryInterface
         $this->applyDateFilter($query, $params);
 
         $stats = [
-            'total'             => (clone $query)->count(),
-            'total_chf'         => (clone $query)->sum('chf_amount'),
-            'total_send'        => (clone $query)->sum('send_amount'),
-            'total_commission'  => (clone $query)->sum('commission'),
-            'agent_commissions' => (clone $query)->sum('agent_commission'),
-            'admin_commissions' => (clone $query)->sum('admin_commission'),
-            'failed'            => (clone $query)->where('status', 'failed')->count(),
-            'flagged'           => (clone $query)->where('flagged', true)->count(),
-            'pending'           => (clone $query)->where('status', 'pending')->count(),
-            'completed'         => (clone $query)->where('status', 'completed')->count(),
+            'total'                  => (clone $query)->count(),
+            'total_chf'              => (clone $query)->sum('chf_amount'),
+            'total_send'             => (clone $query)->sum('send_amount'),
+            'total_commission'       => (clone $query)->sum('commission'),
+            'agent_commissions'      => (clone $query)->where('initiated_by', 'agent')->sum('agent_commission'),
+            'admin_commissions'      => (clone $query)->sum('admin_commission'),
+            'platform_from_agent'    => (clone $query)->where('initiated_by', 'agent')->sum('admin_commission'),
+            'platform_from_customer' => (clone $query)->where('initiated_by', 'customer')->sum('commission'),
+            'failed'                 => (clone $query)->where('status', 'failed')->count(),
+            'flagged'                => (clone $query)->where('flagged', true)->count(),
+            'pending'                => (clone $query)->where('status', 'pending')->count(),
+            'completed'              => (clone $query)->where('status', 'completed')->count(),
         ];
 
         $stats['chart_data'] = $this->getChartData($params);

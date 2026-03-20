@@ -15,7 +15,7 @@ class Transaction extends Model
         'target_currency', 'chf_amount', 'target_amount', 'send_amount', 'commission', 'agent_commission', 'admin_commission', 'rate',
         'payment_ref',
         'wise_transfer_id', 'wise_quote_id', 'wise_status', 'wise_response',
-        'status', 'flagged', 'notes', 'failure_reason', 'metadata',
+        'status', 'flagged', 'notes', 'failure_reason', 'metadata', 'initiated_by',
     ];
 
     protected $casts = [

@@ -23,8 +23,12 @@ class DashboardController extends Controller
         $stats = $this->transactionService->getStats($params);
         $pendingCompliance = $this->complianceService->pending()->count();
         $pendingAgents = \App\Models\User::role('agent')->where('status', 'pending')->count();
-        $recentTransactions = $this->transactionService->listAll(['limit' => 5]);
+        $totalCustomers = \App\Models\Customer::count();
+        $recentTransactions = $this->transactionService->listAll([
+            'limit' => 5,
+            'has_agent' => true // Only show transactions with an agent assigned
+        ]);
 
-        return view('admin.dashboard', compact('stats', 'pendingCompliance', 'recentTransactions', 'pendingAgents', 'params'));
+        return view('admin.dashboard', compact('stats', 'pendingCompliance', 'recentTransactions', 'pendingAgents', 'totalCustomers', 'params'));
     }
 }

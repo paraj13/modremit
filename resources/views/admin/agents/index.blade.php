@@ -43,7 +43,7 @@
                     <td>{{ $agent->email }}</td>
                     <td>{{ $agent->phone ?? 'N/A' }}</td>
                     <td>
-                        <span class="badge {{ $agent->is_active ? 'bg-brand-mint text-brand-dark' : 'bg-danger text-white' }} px-3">
+                        <span class="status-pill status-{{ $agent->is_active ? 'approved' : 'rejected' }} px-3">
                             {{ $agent->is_active ? 'ACTIVE' : 'INACTIVE' }}
                         </span>
                     </td>

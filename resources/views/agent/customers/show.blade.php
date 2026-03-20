@@ -117,4 +117,45 @@
         </div>
     </div>
 </div>
+
+{{-- Transaction History for this Customer --}}
+<div class="row g-4 mt-2">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 py-3 px-4">
+                <h5 class="fw-bold mb-0 text-brand-dark"><i class="bi bi-clock-history text-muted me-2"></i> Transaction History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="border-0 px-4 py-3 small text-muted text-uppercase">Date</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Recipient</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Amount (CHF)</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase">Target</th>
+                                <th class="border-0 py-3 small text-muted text-uppercase text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($customer->transactions as $txn)
+                            <tr>
+                                <td class="px-4 py-3 small">{{ $txn->created_at->format('M d, Y H:i') }}</td>
+                                <td class="fw-bold text-brand-dark">{{ $txn->recipient->name ?? 'N/A' }}</td>
+                                <td class="fw-bold">CHF {{ number_format($txn->chf_amount, 2) }}</td>
+                                <td class="text-success small fw-bold">{{ number_format($txn->target_amount, 2) }} {{ $txn->target_currency }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-{{ $txn->status_badge }} rounded-pill px-3">{{ strtoupper($txn->status) }}</span>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr><td colspan="5" class="text-center py-5 text-muted">No transactions found for this customer.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

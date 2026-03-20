@@ -50,8 +50,8 @@ body {
 }
 
 .btn-brand:hover {
-    background-color: #324614;
-    color: var(--brand-lime);
+    background-color:var(--brand-lime);
+    color: var(--brand-dark);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(37, 51, 15, 0.2);
 }
@@ -223,3 +223,28 @@ body {
     border: 2px solid rgba(20, 36, 114, 0.2);
     border-top-color: var(--brand-dark);
 }
+
+/* Standardized Status Badges */
+.status-pill {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.status-completed { background-color: #D3FF8A; color: #142472; }
+.status-pending   { background-color: #FFDE42; color: #142472; }
+.status-approved  { background-color: #10B981; color: #ffffff; }
+.status-rejected  { background-color: #FF4842; color: #ffffff; }
+.status-transfer  { background-color: #142472; color: #FFDE42; }
+.status-commission { background-color: #8B5CF6; color: #ffffff; }
+.status-refund     { background-color: #F97316; color: #ffffff; }
+
+/* Legacy compatibility classes */
+.bg-brand-mint { background-color: #D3FF8A !important; color: #142472 !important; }
