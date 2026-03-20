@@ -70,12 +70,12 @@
                                     <span class="input-group-text bg-white border-0 px-4 fw-bold text-brand-dark">CHF</span>
                                     <input type="number" name="chf_amount" id="chf_amount" class="form-control border-0 shadow-none ps-0" step="0.01" placeholder="0.00" value="{{ old('chf_amount', 100) }}">
                                     <select name="target_currency" id="target_currency" class="form-select border-0 bg-light fw-bold" style="max-width: 120px;">
-                                        <option value="INR" selected>INR</option>
-                                        <option value="EUR">EUR</option>
-                                        <option value="USD">USD</option>
-                                        <option value="GBP">GBP</option>
-                                        <option value="PKR">PKR</option>
-                                        <option value="PHP">PHP</option>
+                                        @foreach(\App\Constants\CountryCurrency::CURRENCIES as $c)
+                                            @continue($c['code'] === 'CHF')
+                                            <option value="{{ $c['code'] }}" {{ old('target_currency', 'INR') == $c['code'] ? 'selected' : '' }}>
+                                                {{ $c['code'] }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                     <button type="button" id="get_quote_btn" class="btn btn-brand rounded-0 px-4">Get Quote</button>
                                 </div>

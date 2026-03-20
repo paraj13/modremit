@@ -89,7 +89,7 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'basic-kyc');
-        $redirectUrl = config('app.url') . '/login';
+        $redirectUrl = config('app.url') . '/';
         $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
         if (!$customer) {
             $user = \App\Models\User::where('sumsub_applicant_id', $applicantId)->first();

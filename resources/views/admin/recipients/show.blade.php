@@ -71,8 +71,8 @@
                         <p class="text-muted small mb-0">The agent responsible for this connection</p>
                     </div>
                 </div>
-                <h5 class="fw-bold text-dark mb-0">{{ $recipient->customer->agent->name }}</h5>
-                <p class="text-muted small">{{ $recipient->customer->agent->email }}</p>
+                <h5 class="fw-bold text-dark mb-0">{{ $recipient->customer->agent->name ?? 'Direct / Platform' }}</h5>
+                <p class="text-muted small">{{ $recipient->customer->agent->email ?? 'N/A' }}</p>
             </div>
             
             <div class="mt-auto pt-4 text-center">

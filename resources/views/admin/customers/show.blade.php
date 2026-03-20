@@ -35,7 +35,7 @@
                     </div>
                     <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
                         <span class="small text-muted fw-bold">AGENT</span>
-                        <span class="small text-primary fw-bold">{{ $customer->agent->name }}</span>
+                        <span class="small text-primary fw-bold">{{ $customer->agent->name ?? 'Direct / Platform' }}</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom pb-2">
                         <span class="small text-muted fw-bold">SUMSUB ID</span>

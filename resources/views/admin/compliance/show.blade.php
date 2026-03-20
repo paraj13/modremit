@@ -24,7 +24,7 @@
                 <div class="row mb-4">
                     <div class="col-sm-6 mb-3 mb-sm-0">
                         <label class="text-muted small fw-bold text-uppercase letter-spacing-1">Creating Agent</label>
-                        <div class="fs-5 fw-bold">{{ $log->transaction->agent->name }}</div>
+                        <div class="fs-5 fw-bold">{{ $log->transaction->agent->name ?? 'Direct / Platform' }}</div>
                     </div>
                     <div class="col-sm-6">
                         <label class="text-muted small fw-bold text-uppercase letter-spacing-1">Recipient</label>

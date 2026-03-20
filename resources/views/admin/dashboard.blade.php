@@ -53,7 +53,7 @@
 
 <div class="row g-4 mb-4">
     <div class="col-md-3">
-        <div class="card card-stat-premium p-4 h-100">
+        <div class="card card-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-bank fs-5"></i>
@@ -65,7 +65,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-stat-premium p-4 h-100">
+        <div class="card card-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-graph-up-arrow fs-5"></i>
@@ -77,7 +77,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-stat-premium p-4 h-100">
+        <div class="card card-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-people fs-5"></i>
@@ -89,7 +89,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <div class="card card-stat-premium p-4 h-100">
+        <div class="card card-premium p-4 h-100">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-opacity-10 p-2 rounded-3 me-3">
                     <i class="bi bi-arrow-left-right fs-5"></i>

@@ -126,12 +126,13 @@ value="{{ old('phone') }}">
 
 <div class="col-md-6">
 <label class="form-label small fw-bold">Country</label>
-<select name="country" class="form-control form-control-premium">
+<select name="country" class="form-control form-control-premium @error('country') is-invalid @enderror">
 <option value="">Select Country</option>
-<option>Switzerland</option>
-<option>Germany</option>
-<option>India</option>
-<option>United Kingdom</option>
+@foreach(\App\Constants\CountryCurrency::COUNTRIES as $c)
+    <option value="{{ $c['name'] }}" {{ old('country') == $c['name'] ? 'selected' : '' }}>
+        {{ $c['name'] }}
+    </option>
+@endforeach
 </select>
 </div>
 
