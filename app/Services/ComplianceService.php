@@ -53,6 +53,7 @@ class ComplianceService
         return $this->compliance->update($id, [
             'reviewed_by' => Auth::id(),
             'reviewed_at' => now(),
+            'status'      => 'reviewed',
             'notes'       => $notes,
         ]);
     }

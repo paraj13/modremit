@@ -36,7 +36,7 @@
 
                     <div class="row g-4">
                         {{-- Full Name --}}
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted">RECIPIENT FULL NAME</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light border-0"><i class="bi bi-person-fill text-muted"></i></span>
@@ -44,6 +44,17 @@
                                     value="{{ old('name', $recipient->name ?? '') }}" placeholder="Receiver's full name">
                             </div>
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                        </div>
+
+                        {{-- Email --}}
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted">EMAIL ADDRESS <span class="opacity-50">(Optional)</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-envelope-fill text-muted"></i></span>
+                                <input type="email" name="email" id="email" class="form-control bg-light border-0 shadow-none @error('email') is-invalid @enderror"
+                                    value="{{ old('email', $recipient->email ?? '') }}" placeholder="For transfer notifications">
+                            </div>
+                            @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Bank Details Section --}}

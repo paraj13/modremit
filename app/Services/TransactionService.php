@@ -6,9 +6,11 @@ use App\Models\Transaction;
 use App\Notifications\TransactionCompleted;
 use App\Notifications\TransactionFailed;
 use App\Repositories\Contracts\TransactionRepositoryInterface;
+use App\Mail\TransactionNotificationMail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TransactionService
 {
@@ -122,6 +124,15 @@ class TransactionService
                 $this->compliance->flagTransaction($transaction, "Routine compliance record.");
             }
 
+            // Send notification to recipient if email exists
+            if ($transaction->recipient && $transaction->recipient->email) {
+                try {
+                    Mail::to($transaction->recipient->email)->send(new TransactionNotificationMail($transaction));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send transaction notification to recipient", ['error' => $e->getMessage()]);
+                }
+            }
+
             return $transaction;
         });
     }
@@ -177,6 +188,15 @@ class TransactionService
             $this->executePayment($transaction->id);
             $transaction = $transaction->fresh();
             $this->compliance->checkAndFlag($transaction);
+
+            // Send notification to recipient if email exists
+            if ($transaction->recipient && $transaction->recipient->email) {
+                try {
+                    Mail::to($transaction->recipient->email)->send(new TransactionNotificationMail($transaction));
+                } catch (\Exception $e) {
+                    Log::error("Failed to send transaction notification to recipient", ['error' => $e->getMessage()]);
+                }
+            }
 
             return $transaction;
         });

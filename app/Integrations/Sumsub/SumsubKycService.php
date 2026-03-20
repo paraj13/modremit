@@ -89,6 +89,7 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'basic-kyc');
+        $redirectUrl = config('app.url') . '/login';
         $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
         if (!$customer) {
             $user = \App\Models\User::where('sumsub_applicant_id', $applicantId)->first();
@@ -98,7 +99,7 @@ class SumsubKycService
         }
 
         try {
-            return $this->requestWebSdkLink($level, $externalUserId);
+            return $this->requestWebSdkLink($level, $externalUserId, $redirectUrl);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             if ($e->getResponse() && $e->getResponse()->getStatusCode() === 404) {
                 $errorBody = json_decode($e->getResponse()->getBody()->getContents(), true);
@@ -255,6 +256,13 @@ class SumsubKycService
         if ($customer) {
             $customer->update(['kyc_status' => $kycStatus]);
 
+            // Notify the customer
+            try {
+                \Illuminate\Support\Facades\Mail::to($customer->email)->send(new \App\Mail\KycStatusMail($customer, $kycStatus, $payload['reviewResult']['reviewRejectType'] ?? null));
+            } catch (\Exception $e) {
+                logger()->error("Failed to send KYC status email to customer", ['error' => $e->getMessage()]);
+            }
+
             // Notify the agent
             $customer->agent?->notify(new \App\Notifications\KycStatusUpdated($customer, $kycStatus));
             return;
@@ -263,6 +271,13 @@ class SumsubKycService
         $agent = \App\Models\User::role('agent')->where('sumsub_applicant_id', $applicantId)->first();
         if ($agent) {
             $agent->update(['kyc_status' => $kycStatus]);
+            
+            // Notify the agent
+            try {
+                \Illuminate\Support\Facades\Mail::to($agent->email)->send(new \App\Mail\KycStatusMail($agent, $kycStatus, $payload['reviewResult']['reviewRejectType'] ?? null));
+            } catch (\Exception $e) {
+                logger()->error("Failed to send KYC status email to agent", ['error' => $e->getMessage()]);
+            }
         }
     }
 }

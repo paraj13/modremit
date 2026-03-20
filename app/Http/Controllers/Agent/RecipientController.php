@@ -39,6 +39,7 @@ class RecipientController extends Controller
         $data = $request->validate([
             'eid'           => 'required|string',
             'name'          => 'required|string|max:255',
+            'email'         => 'nullable|email|max:255',
             'bank_name'     => 'required|string|max:255',
             'account_number'=> 'required|string|max:50',
             'ifsc_code'     => 'nullable|string|max:20',
@@ -84,6 +85,7 @@ class RecipientController extends Controller
     {
         $data = $request->validate([
             'name'          => 'required|string|max:255',
+            'email'         => 'nullable|email|max:255',
             'bank_name'     => 'required|string|max:255',
             'account_number'=> 'required|string|max:50',
             'ifsc_code'     => 'nullable|string|max:20',

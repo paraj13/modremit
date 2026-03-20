@@ -224,18 +224,43 @@ body {
     border-top-color: var(--brand-dark);
 }
 
-/* Standardized Status Badges */
+/* Standardized Status Pills */
 .status-pill {
-    padding: 6px 16px;
+    padding: 0.4rem 1.2rem;
     border-radius: 50px;
-    font-weight: 700;
     font-size: 0.75rem;
+    font-weight: 700;
+    display: inline-block;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Stat Cards Theme */
+.card-stat-premium {
+    background: var(--brand-dark) !important;
+    color: var(--brand-yellow) !important;
+    border: none !important;
+    border-radius: 20px !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-stat-premium:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(20, 36, 114, 0.2);
+}
+
+.card-stat-premium .text-muted {
+    color: rgba(255, 222, 66, 0.7) !important;
+}
+
+.card-stat-premium .bg-opacity-10 {
+    background-color: rgba(255, 222, 66, 0.2) !important;
+}
+
+.card-stat-premium i {
+    color: var(--brand-yellow) !important;
 }
 
 .status-completed { background-color: #D3FF8A; color: #142472; }
@@ -245,6 +270,7 @@ body {
 .status-transfer  { background-color: #142472; color: #FFDE42; }
 .status-commission { background-color: #8B5CF6; color: #ffffff; }
 .status-refund     { background-color: #F97316; color: #ffffff; }
+.status-failed { background-color: #FF4842; color: #ffffff; }
 
 /* Legacy compatibility classes */
 .bg-brand-mint { background-color: #D3FF8A !important; color: #142472 !important; }

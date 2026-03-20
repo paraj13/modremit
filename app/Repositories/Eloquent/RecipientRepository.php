@@ -9,14 +9,14 @@ class RecipientRepository implements RecipientRepositoryInterface
 {
     public function allForCustomer(int $customerId)
     {
-        return Recipient::where('customer_id', $customerId)->latest()->get();
+        return Recipient::where('customer_id', $customerId)->latest()->paginate(10);
     }
 
     public function allForAgent(int $agentId)
     {
         return Recipient::whereHas('customer', function($q) use ($agentId) {
             $q->where('agent_id', $agentId);
-        })->with('customer')->latest()->get();
+        })->with('customer')->latest()->paginate(10);
     }
 
     public function findById(int $id): ?Recipient
