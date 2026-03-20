@@ -12,6 +12,9 @@
     <style>
         body { background-color: var(--brand-lime); min-height: 100vh; font-family: 'Inter', sans-serif; display: flex; align-items: center; justify-content: center; }
         .auth-card { background: white; border-radius: 32px; padding: 40px; width: 100%; max-width: 450px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        @media (max-width: 575px) {
+            .auth-card { padding: 30px 20px; border-radius: 24px; margin: 0 15px; }
+        }
     </style>
     @stack('styles')
 </head>
