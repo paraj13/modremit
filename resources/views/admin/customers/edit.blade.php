@@ -72,4 +72,15 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+$(document).ready(function() {
+    window.initGlobalValidation('editCustomerForm', {
+        name: { required: true, minlength: 2 },
+        email: { required: true, email: true },
+        phone: { required: true, phoneFormat: true }
+    });
+});
+</script>
+@endpush
 @endsection

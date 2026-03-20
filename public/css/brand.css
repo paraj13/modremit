@@ -53,7 +53,7 @@ body {
     background-color:var(--brand-lime);
     color: var(--brand-dark);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(37, 51, 15, 0.2);
+    box-shadow: 0 5px 15px rgba(170, 213, 255, 0.2);
 }
 
 .btn-brand-outline {

@@ -55,31 +55,19 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    if ($.validator) {
-        $("#topupForm").validate({
-            rules: {
-                amount: {
-                    required: true,
-                    number: true,
-                    min: 10
-                }
-            },
-            messages: {
-                amount: {
-                    required: "Please enter the amount you wish to top up",
-                    number: "Please enter a valid amount",
-                    min: "Minimum top-up amount is 10 CHF"
-                }
-            },
-            errorPlacement: function(error, element) {
-                error.insertAfter(element.closest('.input-group'));
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('topupForm', {
+        amount: {
+            required: true,
+            number: true,
+            min: 10
+        }
+    }, {
+        amount: {
+            required: "Please enter the amount you wish to top up",
+            number: "Please enter a valid amount",
+            min: "Minimum top-up amount is 10 CHF"
+        }
+    });
 });
 </script>
 @endpush

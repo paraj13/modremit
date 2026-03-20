@@ -35,4 +35,13 @@
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.initGlobalValidation('forgotPasswordForm', {
+            email: { required: true, email: true }
+        });
+    });
+</script>
+@endpush
 @endsection

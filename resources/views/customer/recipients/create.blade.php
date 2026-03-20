@@ -101,4 +101,22 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+$(document).ready(function() {
+    window.initGlobalValidation('recipientForm', {
+        name: { required: true, minlength: 3 },
+        email: { email: true },
+        bank_name: { required: true },
+        country: { required: true },
+        account_number: { required: true, minlength: 5 }
+    }, {
+        name: "Please enter recipient's full legal name",
+        bank_name: "Please provide the bank name",
+        country: "Please select a country",
+        account_number: "Valid account number or IBAN is required"
+    });
+});
+</script>
+@endpush
 @endsection

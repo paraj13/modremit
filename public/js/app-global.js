@@ -127,4 +127,50 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // Custom Validation Methods
+    if ($.validator) {
+        $.validator.addMethod("phoneFormat", function(value, element) {
+            return this.optional(element) || /^(\+?[0-9\s\-\(\)]+)$/.test(value);
+        }, "Please enter a valid phone number.");
+
+        $.validator.addMethod("decimal", function(value, element) {
+            return this.optional(element) || /^-?\d*(\.\d+)?$/.test(value);
+        }, "Please enter a valid decimal number.");
+    }
+
+    // Global Validator Helper
+    window.initGlobalValidation = function(formId, rules, messages = {}) {
+        const $form = $('#' + formId);
+        if (!$form.length) return;
+
+        $form.attr('novalidate', 'novalidate');
+
+        return $form.validate({
+            rules: rules,
+            messages: messages,
+            errorElement: 'span',
+            errorClass: 'invalid-feedback',
+            highlight: function(element) {
+                $(element).addClass('is-invalid').removeClass('is-valid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid').addClass('is-valid');
+            },
+            errorPlacement: function(error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            },
+            submitHandler: function(form) {
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn && !submitBtn.classList.contains('no-loader')) {
+                    window.showLoader(submitBtn);
+                }
+                form.submit();
+            }
+        });
+    };
 });

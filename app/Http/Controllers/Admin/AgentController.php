@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AgentWelcomeMail;
+use Illuminate\Support\Facades\Log;
 
 class AgentController extends Controller
 {
@@ -72,7 +73,7 @@ class AgentController extends Controller
         try {
             Mail::to($user->email)->send(new AgentWelcomeMail($user, '12345678'));
         } catch (\Exception $e) {
-            \Log::error("Failed to send welcome mail to agent " . $user->id, ['error' => $e->getMessage()]);
+            Log::error("Failed to send welcome mail to agent " . $user->id, ['error' => $e->getMessage()]);
         }
 
         try {
@@ -82,7 +83,7 @@ class AgentController extends Controller
                 $user->update(['sumsub_applicant_id' => $applicantId]);
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Failed to create sumsub for agent " . $user->id, ['error' => $e->getMessage()]);
+            Log::error("Failed to create sumsub for agent " . $user->id, ['error' => $e->getMessage()]);
         }
 
         return redirect()->route('admin.agents.index')->with('success', 'Agent created successfully. Default password is 12345678.');
@@ -92,7 +93,7 @@ class AgentController extends Controller
     {
         $agent->load(['wallet', 'wallet.transactions' => function($q) {
             $q->latest()->limit(50);
-        }]);
+        }, 'customers']);
 
         $stats = [
             'total_added' => $agent->wallet ? $agent->wallet->transactions()->where('type', 'deposit')->where('status', 'completed')->sum('amount') : 0,
@@ -149,7 +150,7 @@ class AgentController extends Controller
             }
             return back()->with('success', 'KYC Status synced: ' . ucfirst($status ?? 'pending'));
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error("Failed to sync KYC for agent " . $agent->id, ['error' => $e->getMessage()]);
+            Log::error("Failed to sync KYC for agent " . $agent->id, ['error' => $e->getMessage()]);
             return back()->with('error', 'Failed to sync KYC status.');
         }
     }

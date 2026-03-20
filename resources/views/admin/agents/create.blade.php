@@ -59,30 +59,18 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    if ($.validator) {
-        $("#agentCreateForm").validate({
-            rules: {
-                name: { required: true, minlength: 2 },
-                email: { required: true, email: true },
-                phone: { required: true, phoneFormat: true }
-            },
-            messages: {
-                name: "Full name is required",
-                email: {
-                    required: "Email address is required",
-                    email: "Please enter a valid email"
-                },
-                phone: "Valid phone number is required"
-            },
-            errorPlacement: function(error, element) {
-                error.insertAfter(element.closest('.input-group'));
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('agentCreateForm', {
+        name: { required: true, minlength: 2 },
+        email: { required: true, email: true },
+        phone: { required: true, phoneFormat: true }
+    }, {
+        name: "Full name is required",
+        email: {
+            required: "Email address is required",
+            email: "Please enter a valid email"
+        },
+        phone: "Valid phone number is required"
+    });
 });
 </script>
 @endpush

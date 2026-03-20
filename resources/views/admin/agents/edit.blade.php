@@ -64,34 +64,22 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    if ($.validator) {
-        $("#agentEditForm").validate({
-            rules: {
-                name: { required: true, minlength: 2 },
-                email: { required: true, email: true },
-                phone: { required: true, phoneFormat: true },
-                password: { minlength: 6 }
-            },
-            messages: {
-                name: "Full name is required",
-                email: {
-                    required: "Email address is required",
-                    email: "Please enter a valid email"
-                },
-                phone: "Valid phone number is required",
-                password: {
-                    minlength: "Password must be at least 6 characters"
-                }
-            },
-            errorPlacement: function(error, element) {
-                error.insertAfter(element.closest('.input-group'));
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('agentEditForm', {
+        name: { required: true, minlength: 2 },
+        email: { required: true, email: true },
+        phone: { required: true, phoneFormat: true },
+        password: { minlength: 6 }
+    }, {
+        name: "Full name is required",
+        email: {
+            required: "Email address is required",
+            email: "Please enter a valid email"
+        },
+        phone: "Valid phone number is required",
+        password: {
+            minlength: "Password must be at least 6 characters"
+        }
+    });
 });
 </script>
 @endpush

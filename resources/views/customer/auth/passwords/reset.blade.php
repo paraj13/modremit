@@ -44,4 +44,15 @@
         <button type="submit" class="btn btn-brand w-100 py-3 fs-6">Update Password</button>
     </form>
 </div>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.initGlobalValidation('resetPasswordForm', {
+            email: { required: true, email: true },
+            password: { required: true, minlength: 8 },
+            password_confirmation: { required: true, equalTo: 'input[name="password"]' }
+        });
+    });
+</script>
+@endpush
 @endsection

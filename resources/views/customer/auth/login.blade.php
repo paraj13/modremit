@@ -46,4 +46,14 @@
         </div>
     </form>
 </div>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.initGlobalValidation('customerLoginForm', {
+            email: { required: true, email: true },
+            password: { required: true }
+        });
+    });
+</script>
+@endpush
 @endsection

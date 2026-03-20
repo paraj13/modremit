@@ -47,39 +47,23 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    if ($.validator) {
-        $("#creditForm").validate({
-            rules: {
-                amount: {
-                    required: true,
-                    number: true,
-                    min: 0.01
-                },
-                description: {
-                    required: true,
-                    minlength: 3
-                }
-            },
-            messages: {
-                amount: {
-                    required: "Please enter the amount to credit",
-                    min: "Amount must be at least 0.01 CHF"
-                },
-                description: "Description is required for internal records"
-            },
-            errorPlacement: function(error, element) {
-                if (element.closest('.input-group').length) {
-                    error.insertAfter(element.closest('.input-group'));
-                } else {
-                    error.insertAfter(element);
-                }
-            },
-            submitHandler: function(form) {
-                showLoader($(form).find('button[type="submit"]')[0]);
-                form.submit();
-            }
-        });
-    }
+    window.initGlobalValidation('creditForm', {
+        amount: {
+            required: true,
+            number: true,
+            min: 0.01
+        },
+        description: {
+            required: true,
+            minlength: 3
+        }
+    }, {
+        amount: {
+            required: "Please enter the amount to credit",
+            min: "Amount must be at least 0.01 CHF"
+        },
+        description: "Description is required for internal records"
+    });
 });
 </script>
 @endpush

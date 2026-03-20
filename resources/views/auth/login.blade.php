@@ -122,5 +122,13 @@
     <script src="{{ asset('vendor/js/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('vendor/js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('js/app-global.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            window.initGlobalValidation('loginForm', {
+                email: { required: true, email: true },
+                password: { required: true }
+            });
+        });
+    </script>
 </body>
 </html>
