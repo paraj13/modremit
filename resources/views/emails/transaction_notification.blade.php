@@ -26,6 +26,10 @@
         </table>
     </div>
 
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{{ route('transaction.track', $transaction->unique_hash) }}" class="button">Track Transaction</a>
+    </div>
+
     <p>The funds are being processed and will be credited to your bank account soon. You don't need to take any action at this time.</p>
 
     <p style="margin-top: 30px; font-size: 14px; color: #64748b;">Thank you for using Modremit.<br><strong>The Modremit Team</strong></p>

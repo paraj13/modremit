@@ -5,10 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Transaction extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected static function booted()
+    {
+        static::creating(function ($transaction) {
+            $transaction->unique_hash = Str::uuid()->toString();
+        });
+    }
 
     protected $fillable = [
         'agent_id', 'customer_id', 'recipient_id', 'fx_quote_id',
@@ -16,6 +24,7 @@ class Transaction extends Model
         'payment_ref',
         'wise_transfer_id', 'wise_quote_id', 'wise_status', 'wise_response',
         'status', 'flagged', 'notes', 'failure_reason', 'metadata', 'initiated_by',
+        'unique_hash',
     ];
 
     protected $casts = [

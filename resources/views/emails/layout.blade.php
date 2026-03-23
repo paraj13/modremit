@@ -59,12 +59,12 @@
             <a href="{{ url('/') }}" style="text-decoration: none;">
                 <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                     <tr>
-                        <td style="background-color: #ffde42; border-radius: 8px; width: 44px; height: 44px; text-align: center; vertical-align: middle;">
-                            <span style="color: #142472; font-size: 20px;">&#10148;</span>
+                        <td style="background-color: #142472; border-radius: 8px; width: 32px; height: 32px; text-align: center; vertical-align: middle;">
+                            <span style="color: #D3FF8A; font-size: 16px;">➤</span>
                         </td>
-                        <td style="padding-left: 12px; vertical-align: middle;">
-                            <span style="color: #ffffff; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; font-family: 'Inter', sans-serif;">
-                                MOD<span style="background-color: #ffde42; color: #142472; padding: 2px 8px; margin-left: 4px; border-radius: 4px;">REMIT</span>
+                        <td style="padding-left: 8px; vertical-align: middle;">
+                            <span style="color: #ffffff; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; font-family: 'Inter', sans-serif; text-transform: uppercase;">
+                                MOD<span style="background-color: #142472; color: #ffffff; padding: 2px 6px; margin-left: 2px; border-radius: 4px;">REMIT</span>
                             </span>
                         </td>
                     </tr>
