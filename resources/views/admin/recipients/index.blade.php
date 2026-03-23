@@ -32,7 +32,7 @@
                     </td>
                     <td class="fw-bold">{{ $recipient->name }}</td>
                     <td>{{ $recipient->customer->name ?? 'N/A' }}</td>
-                    <td><span class="badge bg-light text-brand-dark border">{{ $recipient->customer->agent->name ?? 'N/A' }}</span></td>
+                    <td><span class="badge bg-light text-brand-dark border">{{ $recipient->customer->agent->name ?? 'Self' }}</span></td>
                     <td>
                         @if($recipient->upi_id)
                             <span class="text-primary fw-bold">UPI: {{ $recipient->upi_id }}</span>

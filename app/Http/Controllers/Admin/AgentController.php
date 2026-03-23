@@ -55,7 +55,7 @@ class AgentController extends Controller
     {
         $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
+            'email'    => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
             'phone'    => 'nullable|string|max:20',
         ]);
 
@@ -129,7 +129,7 @@ class AgentController extends Controller
     {
         $request->validate([
             'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $agent->id,
+            'email' => 'required|email|unique:users,email,' . $agent->id . ',id,deleted_at,NULL',
             'phone' => 'nullable|string|max:20',
         ]);
 
