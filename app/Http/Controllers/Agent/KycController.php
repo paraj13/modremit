@@ -41,4 +41,13 @@ class KycController extends Controller
         
         return view('agent.kyc-required', compact('agent', 'verificationLink'));
     }
+
+    public function awaitingApproval()
+    {
+        $agent = Auth::user();
+        if ($agent->isKycApproved() && $agent->status === 'approved') {
+            return redirect()->route('agent.dashboard');
+        }
+        return view('agent.awaiting-approval', compact('agent'));
+    }
 }

@@ -29,12 +29,14 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            if ($user->status !== 'approved') {
+            if ($user->status === 'rejected') {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Your account is pending approval. Please contact an administrator.',
+                    'email' => 'Your account has been rejected. Please contact support.',
                 ])->onlyInput('email');
             }
+
+            // If pending, they will be gated by KYC/Approval middleware after login
 
             $request->session()->regenerate();
 

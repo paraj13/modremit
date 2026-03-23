@@ -76,6 +76,7 @@ Route::middleware(['auth', 'role:agent', 'agent.kyc'])->prefix('agent')->name('a
 
 Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->group(function () {
     Route::get('/kyc-required', [Agent\KycController::class, 'required'])->name('kyc.required');
+    Route::get('/awaiting-approval', [Agent\KycController::class, 'awaitingApproval'])->name('awaiting-approval');
 });
 
 // Stripe Webhook
