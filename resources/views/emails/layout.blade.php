@@ -91,16 +91,16 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <div class="header" style="background-color:#142472>
             <a href="{{ url('/') }}" style="text-decoration: none;">
                 <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                     <tr>
-                        <td style="background-color: #142472; border-radius: 6px; width: 36px; height: 36px; text-align: center; vertical-align: middle;">
-                            <span style="color: #ffde42; font-size: 18px;">➤</span>
+                        <td style="background-color: #ffde42; border-radius: 6px; width: 36px; height: 36px; text-align: center; vertical-align: middle;">
+                            <span style="color: #142472; font-size: 18px;"></span>
                         </td>
                         <td style="padding-left: 10px; vertical-align: middle;">
-                            <span style="color: #142472; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; font-family: 'Inter', sans-serif; text-transform: uppercase;">
-                                MOD<span style="background-color: #142472; color: #ffffff; padding: 2px 8px; margin-left: 4px; border-radius: 4px;">REMIT</span>
+                            <span style="color: #ffde42; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; font-family: 'Inter', sans-serif; text-transform: uppercase;">
+                                MOD<span style="background-color: #ffde42; color: #142472; padding: 2px 8px; margin-left: 4px; border-radius: 4px;">REMIT</span>
                             </span>
                         </td>
                     </tr>

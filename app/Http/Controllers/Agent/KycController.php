@@ -28,6 +28,10 @@ class KycController extends Controller
             }
         }
 
+        if  ($agent->kyc_status === 'approved') {
+            return redirect()->route('agent.dashboard');
+        }
+
         // Generate a fresh WebSDK link for the agent to continue KYC
         $verificationLink = null;
         if ($agent->sumsub_applicant_id) {

@@ -13,6 +13,7 @@ class KycController extends Controller
         
         // Try to update status from Sumsub if not already approved
         if ($customer->sumsub_applicant_id && $customer->kyc_status !== 'approved') {
+            dd($customer);
             try {
                 $kyc = app(\App\Integrations\Sumsub\SumsubKycService::class);
                 $status = $kyc->getStatus($customer->sumsub_applicant_id);
@@ -26,6 +27,10 @@ class KycController extends Controller
             } catch (\Exception $e) {
                 logger()->warning('Failed to auto-check Sumsub status', ['error' => $e->getMessage()]);
             }
+        }
+
+        if  ($customer->kyc_status === 'approved') {
+            return redirect()->route('customer.dashboard');
         }
 
         // Generate a fresh WebSDK link for the customer to continue KYC
