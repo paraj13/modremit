@@ -10,15 +10,15 @@
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td class="fw-bold fs-14">Ref No:</td>
-                <td class="fs-14 fw-bold">{{ $transaction->reference_no }}</td>
+                <td class="fs-14 fw-bold">{{ $transaction->payment_ref ?? 'TXN-' . str_pad($transaction->id, 8, '0', STR_PAD_LEFT) }}</td>
             </tr>
             <tr>
                 <td class="fs-14">Amount:</td>
-                <td class="fs-14">{{ $transaction->sending_amount }} {{ $transaction->sending_currency }}</td>
+                <td class="fs-14">{{ number_format($transaction->send_amount, 2) }} CHF</td>
             </tr>
             <tr>
                 <td class="fs-14">Receiver:</td>
-                <td class="fs-14 fw-bold">{{ $transaction->recipient_name }}</td>
+                <td class="fs-14 fw-bold">{{ $transaction->recipient->name }}</td>
             </tr>
         </table>
     </div>
