@@ -55,17 +55,10 @@
                     </div>
                 @endif
 
-                <div class="d-flex gap-2">
-                    <a href="{{ route('customer.kyc.required') }}" class="btn btn-outline-dark w-100 py-2 fw-bold">
-                        <i class="bi bi-arrow-clockwise me-1"></i> Check Status
-                    </a>
-                    <form action="{{ route('customer.logout') }}" method="POST" class="w-100">
-                        @csrf
-                        <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
-                            <i class="bi bi-box-arrow-right me-1"></i> Sign Out
-                        </button>
-                    </form>
-                </div>
+                <form action="{{ route('customer.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-light text-muted small py-2 px-4">Sign Out</button>
+                </form>
             </div>
         </div>
     </div>
