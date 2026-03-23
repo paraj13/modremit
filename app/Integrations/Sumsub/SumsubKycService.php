@@ -107,7 +107,7 @@ class SumsubKycService
                 if (($errorBody['description'] ?? '') === 'Applicant is deactivated') {
                     logger()->info("Applicant {$applicantId} is deactivated, attempting reactivation.");
                     if ($this->activateApplicant($applicantId)) {
-                        return $this->requestWebSdkLink($level, $externalUserId);
+                        return $this->requestWebSdkLink($level, $externalUserId, $redirectUrl);
                     }
                 }
             }
@@ -116,13 +116,19 @@ class SumsubKycService
     }
 
     /** Private helper to perform the actual link request */
-    private function requestWebSdkLink(string $level, string $userId): ?string
+    private function requestWebSdkLink(string $level, string $userId, ?string $redirectUrl = null): ?string
     {
-        $response = $this->client->post("resources/sdkIntegrations/levels/-/websdkLink", [
+        $payload = [
             'levelName' => $level,
             'userId'    => $userId,
             'ttlInSecs' => 86400, // 24 hours
-        ]);
+        ];
+
+        if ($redirectUrl) {
+            $payload['successRedirectUrl'] = $redirectUrl;
+        }
+
+        $response = $this->client->post("resources/sdkIntegrations/levels/-/websdkLink", $payload);
 
         return $response['url'] ?? null;
     }
