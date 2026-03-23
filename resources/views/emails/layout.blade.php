@@ -32,11 +32,11 @@
             padding: 40px;
         }
         .footer {
-            background-color: #f1f5f9;
+            background-color: #ffde42;
             padding: 20px;
             text-align: center;
             font-size: 12px;
-            color: #64748b;
+            color: #142472;
         }
         .button {
             display: inline-block;
