@@ -11,6 +11,17 @@ class Customer extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
 
+    protected static function booted()
+    {
+        static::deleting(function ($customer) {
+            if (!$customer->isForceDeleting() && $customer->email) {
+                $customer->update([
+                    'email' => $customer->email . '::deleted_' . now()->timestamp
+                ]);
+            }
+        });
+    }
+
     protected $guard = 'customer';
 
     protected $fillable = [

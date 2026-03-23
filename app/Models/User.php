@@ -12,6 +12,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    
+    protected static function booted()
+    {
+        static::deleting(function ($user) {
+            if (!$user->isForceDeleting() && $user->email) {
+                $user->update([
+                    'email' => $user->email . '::deleted_' . now()->timestamp
+                ]);
+            }
+        });
+    }
 
     protected $fillable = [
         'name', 'email', 'password', 'phone', 'is_active', 'status', 'sumsub_applicant_id', 'kyc_status',

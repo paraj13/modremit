@@ -40,7 +40,7 @@ class CustomerController extends Controller
 
         $data = $request->validate([
             'name'     => 'required|string|max:255',
-            'email'    => 'required|email|max:255|unique:customers,email,' . $id,
+            'email'    => 'required|email|max:255|unique:customers,email,' . $id . ',id,deleted_at,NULL',
             'phone'    => 'required|string|max:20',
             'agent_id' => 'nullable|exists:users,id',
         ]);

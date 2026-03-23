@@ -28,7 +28,7 @@
                 <tr>
                     <td>{{ $customers->firstItem() + $index }}</td>
                     <td class="fw-bold">{{ $customer->name }}</td>
-                    <td><span class="badge bg-light text-brand-dark border">{{ $customer->agent->name ?? 'N/A' }}</span></td>
+                    <td><span class="badge bg-light text-brand-dark border">{{ $customer->agent->name ?? 'Self' }}</span></td>
                     <td>
                         <div>{{ $customer->email }}</div>
                         <small class="text-muted">{{ $customer->phone ?? 'N/A' }}</small>
