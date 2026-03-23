@@ -43,7 +43,7 @@
                             </form>
                             <form action="{{ route('admin.agents.reject', $agent->id) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="btn btn-sm btn-outline-danger px-3 rounded-pill">Reject</button>
+                                <button type="submit" class="btn btn-md btn-outline-danger px-3 rounded-pill">Reject</button>
                             </form>
                         </div>
                     </td>

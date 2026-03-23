@@ -21,11 +21,11 @@ class AgentController extends Controller
 
         return view('admin.agents.index', compact('agents'));
     }
-
+    
     public function pending(Request $request)
     {
         $agents = User::role('agent')
-            ->where('status', 'pending')
+            ->whereIn('status', ['pending','rejected'])
             ->latest()
             ->paginate(10);
 
@@ -77,13 +77,30 @@ class AgentController extends Controller
         }
 
         try {
+            Log::info("Initiating Admin-created Agent KYC: " . $user->id);
             $sumsub = app(\App\Integrations\Sumsub\SumsubKycService::class);
             $applicantId = $sumsub->createAgentApplicant($user);
             if ($applicantId) {
+                Log::info("Sumsub Applicant created: " . $applicantId);
                 $user->update(['sumsub_applicant_id' => $applicantId]);
+                
+                // Generate and send KYC link
+                $verificationLink = $sumsub->generateWebSdkLink($applicantId);
+                if ($verificationLink) {
+                    Log::info("Verification link generated: " . $verificationLink);
+                    Mail::to($user->email)->send(new \App\Mail\VerifyAgentKycMail($user, $verificationLink));
+                    Log::info("VerifyAgentKycMail sent to: " . $user->email);
+                } else {
+                    Log::warning("Failed to generate verification link for admin-created agent: " . $user->email);
+                }
+            } else {
+                Log::warning("Failed to create Sumsub applicant for admin-created agent: " . $user->email);
             }
         } catch (\Exception $e) {
-            Log::error("Failed to create sumsub for agent " . $user->id, ['error' => $e->getMessage()]);
+            Log::error("Failed to create sumsub for agent " . $user->id, [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
         }
 
         return redirect()->route('admin.agents.index')->with('success', 'Agent created successfully. Default password is 12345678.');

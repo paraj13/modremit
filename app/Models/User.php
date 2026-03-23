@@ -46,4 +46,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(FxQuote::class, 'agent_id');
     }
+
+    public function getKycBadgeAttribute(): string
+    {
+        return match($this->kyc_status) {
+            'approved'  => 'success',
+            'submitted' => 'warning',
+            'rejected'  => 'danger',
+            default     => 'secondary',
+        };
+    }
+
+    public function isKycApproved(): bool
+    {
+        return $this->kyc_status === 'approved';
+    }
 }
