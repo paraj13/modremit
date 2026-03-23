@@ -7,7 +7,7 @@
     <div class="col-md-5">
         <div class="card card-premium p-0 overflow-hidden h-100">
             <div class="bg-brand-dark py-5 text-center">
-                <div class="bg-brand-mint text-brand-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width: 80px; height: 80px;">
+                <div class="bg-brand-mint text-brand-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg icon-avatar-xl">
                     <i class="bi bi-person-check h2 mb-0"></i>
                 </div>
                 <h4 class="fw-bold mb-1 text-white">{{ $recipient->name }}</h4>

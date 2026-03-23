@@ -7,7 +7,7 @@
     <div class="col-md-4">
         <div class="card card-premium p-0 h-100 overflow-hidden">
             <div class="bg-brand-dark py-5 text-center">
-                <div class="bg-brand-lime text-brand-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg" style="width: 80px; height: 80px;">
+                <div class="bg-brand-lime text-brand-dark rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow-lg icon-avatar-xl">
                     <span class="h2 mb-0 fw-800">{{ strtoupper(substr($customer->name, 0, 1)) }}</span>
                 </div>
                 <h4 class="fw-bold mb-1 text-white">{{ $customer->name }}</h4>

@@ -109,7 +109,7 @@
                 <a href="{{ route('customer.recipients.create') }}" class="btn btn-outline-light py-3 fw-bold rounded-4">
                     <i class="bi bi-person-plus-fill me-2"></i> Add Recipient
                 </a>
-                <a href="{{ route('customer.transactions.index') }}" class="btn btn-white btn-opacity-10 text-white py-3 fw-bold rounded-4" style="background: rgba(255,255,255,0.1); border: none;">
+                <a href="{{ route('customer.transactions.index') }}" class="btn btn-white btn-opacity-10 text-white py-3 fw-bold rounded-4 btn-glass">
                     <i class="bi bi-journal-text me-2"></i> Transactions
                 </a>
             </div>

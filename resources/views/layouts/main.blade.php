@@ -97,10 +97,10 @@
         <nav class="nav flex-column">
             @yield('sidebar_nav')
             <div class="mt-auto px-4 pb-4">
-                <hr class="my-4" style="opacity: 0.05;">
+                <hr class="my-4 hr-subtle">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent py-3 px-3 rounded-3 text-white-50" style="margin:0;">
+                    <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent py-3 px-3 rounded-3 text-white-50 nav-btn-reset">
                         <i class="bi bi-box-arrow-right me-2 text-danger"></i> Sign Out
                     </button>
                 </form>
@@ -168,7 +168,7 @@
 
         <div class="d-flex justify-content-between align-items-center page-header">
             <div>
-                <h2 class="mb-1 fw-800 text-brand-dark" style="letter-spacing: -1px;">@yield('page_title')</h2>
+                <h2 class="mb-1 fw-800 text-brand-dark page-heading">@yield('page_title')</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item small text-muted">Workspace</li>
@@ -177,12 +177,12 @@
                 </nav>
             </div>
             <div class="user-info d-flex align-items-center bg-white p-2 rounded-4 shadow-sm">
-                <div class="bg-brand-mint p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                <div class="bg-brand-mint p-2 rounded-circle me-3 d-flex align-items-center justify-content-center user-avatar-circle">
                     <i class="bi bi-person-fill text-brand-dark fs-5"></i>
                 </div>
                 <div class="text-start me-3">
                     <div class="fw-bold text-brand-dark small leading-tight">{{ auth()->user()->name }}</div>
-                    <div class="text-muted" style="font-size: 0.75rem;">{{ auth()->user()->email }}</div>
+                    <div class="text-muted user-info-text">{{ auth()->user()->email }}</div>
                 </div>
             </div>
         </div>

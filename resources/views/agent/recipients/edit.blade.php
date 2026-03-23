@@ -8,7 +8,7 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
             <div class="card-header bg-brand-dark py-4 border-0">
                 <div class="d-flex align-items-center">
-                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center icon-circle-lg">
                         <i class="bi {{ isset($recipient) ? 'bi-pencil-square' : 'bi-person-plus' }} text-brand-dark h4 mb-0"></i>
                     </div>
                     <div>
@@ -172,7 +172,7 @@
                     </div>
                     </div>
 
-                    <div class="d-flex flex-wrap justify-content-end align-items-center mt-5 pt-3 border-top gap-2">
+                    <div class="d-flex flex-wrap justify-content-end align-items-center m-4 pt-3 border-top gap-2">
                         
                         @if(isset($recipient))
                             <a href="{{ route('agent.customers.show', $recipient->customer_id) }}" 

@@ -1,25 +1,23 @@
 @extends('emails.layout')
 
 @section('content')
-    <h2 style="margin-top: 0;">Hello {{ $customer->name }},</h2>
-    
-    <p>To comply with financial regulations and ensure the security of your account, we require you to verify your identity.</p>
-    
+    <h2 class="mt-0">Verify Your Identity</h2>
+    <p>Hello {{ $customer->name }},</p>
+    <p>To ensure the security of your account and comply with financial regulations, we need you to verify your identity.</p>
     <p>Please click the button below to start the secure KYC verification process. It should only take a few minutes.</p>
     
-    <div style="text-align: center; margin: 30px 0;">
-        <a href="{{ $verificationLink }}" class="button">Verify Your Identity</a>
+    <div class="text-center mt-30">
+        <a href="{{ $verificationLink }}" class="button button-dark">Verify Your Identity</a>
     </div>
 
-    <div style="background-color: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; margin-top: 30px;">
-        <h4 style="margin-top: 0; color: #142472; font-size: 16px;">Why is this required?</h4>
-        <p style="margin-bottom: 0; font-size: 14px; color: #64748b;">Identity verification helps us prevent fraud and maintain a safe environment for all our customers.</p>
+    <div class="alert alert-info mt-30">
+        <p class="mb-0 fw-bold fs-14">Why verification is required?</p>
+        <ul class="fs-14">
+            <li>To protect your account from unauthorized access</li>
+            <li>To comply with Anti-Money Laundering (AML) regulations</li>
+            <li>To enable higher transfer limits</li>
+        </ul>
     </div>
 
-    <p style="margin-top: 30px;">If you have any questions, please contact our support team.</p>
-
-    <p style="margin-top: 30px; font-size: 14px; color: #64748b;">
-        Regards,<br>
-        <strong>The {{ config('app.name') }} Team</strong>
-    </p>
+    <p class="text-muted small mt-30">The verification link is valid for 24 hours. For security reasons, do not share this link with anyone.</p>
 @endsection

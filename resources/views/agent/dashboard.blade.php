@@ -17,8 +17,7 @@
 
             <!-- Month -->
             <select name="month"
-                class="form-select form-select-sm shadow-sm rounded-3"
-                style="width:140px;">
+                class="form-select form-select-sm shadow-sm rounded-3 chart-sparkline-lg">
                 @foreach(range(1, 12) as $m)
                     <option value="{{ sprintf('%02d', $m) }}"
                         {{ $params['month'] == sprintf('%02d', $m) ? 'selected' : '' }}>
@@ -29,8 +28,7 @@
 
             <!-- Year -->
             <select name="year"
-                class="form-select form-select-sm shadow-sm rounded-3"
-                style="width:110px;">
+                class="form-select form-select-sm shadow-sm rounded-3 chart-sparkline-md">
                 @php
                     $startYear = date('Y') - 1;
                     $endYear = date('Y') + 1;
@@ -109,7 +107,7 @@
     <div class="col-md-8">
         <div class="card card-premium border-0 shadow-sm p-4 h-100">
             <h6 class="fw-bold text-brand-dark mb-4">My Performance Trend</h6>
-            <div id="performanceChart" style="min-height: 300px;"></div>
+            <div id="performanceChart" class="chart-container"></div>
         </div>
     </div>
     <div class="col-md-4">
@@ -162,7 +160,6 @@
                             <tr>
                                 <th class="border-0 small fw-bold ps-3">Customer</th>
                                 <th class="border-0 small fw-bold">Beneficiary</th>
-                                <th class="border-0 small fw-bold">KYC Status</th>
                                 <th class="border-0 small fw-bold text-end">Send Amount</th>
                                 <th class="border-0 small fw-bold text-end">Commission</th>
                                 <th class="border-0 small fw-bold text-center">Status</th>
@@ -177,11 +174,6 @@
                                         <div class="small text-muted">{{ $tx->customer->email }}</div>
                                     </td>
                                     <td>{{ $tx->recipient->name }}</td>
-                                    <td>
-                                        <span class="status-pill status-{{ $tx->customer->kyc_status }} px-3 small">
-                                            {{ strtoupper($tx->customer->kyc_status) }}
-                                        </span>
-                                    </td>
                                     <td class="text-end fw-bold text-brand-dark">{{ number_format($tx->send_amount, 2) }} CHF</td>
                                     <td class="text-end text-success fw-bold">{{ number_format($tx->agent_commission, 2) }} CHF</td>
                                     <td class="text-center">

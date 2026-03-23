@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="col-md-2 text-center text-muted py-3 py-md-0">
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm icon-circle-md">
                                 <i class="bi bi-arrow-right fs-5 text-brand-dark"></i>
                             </div>
                             <div class="small mt-2 fw-bold">@ {{ $transaction->rate }}</div>

@@ -8,7 +8,7 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
             <div class="card-header bg-brand-dark py-4 border-0">
                 <div class="d-flex align-items-center">
-                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center icon-circle-lg">
                         <i class="bi bi-pencil-square text-brand-dark h4 mb-0"></i>
                     </div>
                     <div>

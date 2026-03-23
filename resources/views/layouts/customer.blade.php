@@ -64,11 +64,11 @@
             <a class="nav-link {{ request()->routeIs('customer.recipients.*') ? 'active' : '' }}" href="{{ route('customer.recipients.index') }}">
                 <i class="bi bi-person-lines-fill"></i> Recipients
             </a>
-            <div class="mt-auto px-4 pb-4" style="position: absolute; bottom: 0; width: 100%;">
-                <hr style="opacity: 0.05;">
+            <div class="mt-auto px-4 pb-4 sidebar-footer">
+                <hr class="hr-subtle">
                 <form action="{{ route('customer.logout') }}" method="POST">
                     @csrf
-                    <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent py-3 px-3 rounded-3 text-white-50" style="margin:0;">
+                    <button type="submit" class="nav-link w-100 text-start border-0 bg-transparent py-3 px-3 rounded-3 text-white-50 nav-btn-reset">
                         <i class="bi bi-box-arrow-right me-2 text-danger"></i> Sign Out
                     </button>
                 </form>
@@ -101,7 +101,7 @@
 
         <div class="d-flex justify-content-between align-items-center page-header">
             <div>
-                <h2 class="mb-1 fw-800 text-brand-dark" style="letter-spacing: -1px;">@yield('page_title')</h2>
+                <h2 class="mb-1 fw-800 text-brand-dark page-heading">@yield('page_title')</h2>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item small text-muted">Customer Portal</li>
@@ -110,13 +110,13 @@
                 </nav>
             </div>
             <div class="user-info d-flex align-items-center bg-white p-2 rounded-4 shadow-sm">
-                <div class="bg-brand-lime p-2 rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                <div class="bg-brand-lime p-2 rounded-circle me-3 d-flex align-items-center justify-content-center user-avatar-circle">
                     <i class="bi bi-person-fill text-brand-dark fs-5"></i>
                 </div>
                 <div class="text-start me-3">
                     <div class="fw-bold text-brand-dark small leading-tight">{{ auth()->guard('customer')->user()->name }}</div>
-                    <div class="text-muted d-flex align-items-center" style="font-size: 0.7rem;">
-                        <span class="badge bg-{{ auth()->guard('customer')->user()->kyc_badge }} rounded-pill me-1" style="font-size:0.6rem;">{{ strtoupper(auth()->guard('customer')->user()->kyc_status) }}</span>
+                    <div class="text-muted d-flex align-items-center user-info-text">
+                        <span class="badge bg-{{ auth()->guard('customer')->user()->kyc_badge }} rounded-pill me-1 user-kyc-badge">{{ strtoupper(auth()->guard('customer')->user()->kyc_status) }}</span>
                         {{ auth()->guard('customer')->user()->email }}
                     </div>
                 </div>

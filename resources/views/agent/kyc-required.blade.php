@@ -9,20 +9,20 @@
             <div class="card-body p-5 text-center">
                 <div class="mb-4">
                     @if($agent->kyc_status === 'rejected')
-                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:90px;height:90px;">
-                            <i class="bi bi-shield-x text-danger" style="font-size:2.5rem;"></i>
+                        <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3 icon-circle-2xl">
+                            <i class="bi bi-shield-x text-danger icon-xxl"></i>
                         </div>
                         <h3 class="fw-800 text-danger mb-2">KYC Rejected</h3>
                         <p class="text-muted">Your identity verification was rejected. Please try again or contact support.</p>
                     @elseif($agent->kyc_status === 'submitted')
-                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:90px;height:90px;">
-                            <i class="bi bi-hourglass-split text-warning" style="font-size:2.5rem;"></i>
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3 icon-circle-2xl">
+                            <i class="bi bi-hourglass-split text-warning icon-xxl"></i>
                         </div>
                         <h3 class="fw-800 text-brand-dark mb-2">KYC Under Review</h3>
                         <p class="text-muted">Your documents are being reviewed. This typically takes 1–2 business days. We'll notify you once done.</p>
                     @else
-                        <div class="bg-brand-mint rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:90px;height:90px;">
-                            <i class="bi bi-shield-lock text-brand-dark" style="font-size:2.5rem;"></i>
+                        <div class="bg-brand-mint rounded-circle d-inline-flex align-items-center justify-content-center mb-3 icon-circle-2xl">
+                            <i class="bi bi-shield-lock text-brand-dark icon-xxl"></i>
                         </div>
                         <h3 class="fw-800 text-brand-dark mb-2">Complete Your Verification</h3>
                         <p class="text-muted">To use the Modremit Agent portal, you must complete identity verification (KYC). This only takes a few minutes.</p>

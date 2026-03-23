@@ -158,7 +158,7 @@ Submit Application
 <div class="text-center mt-4">
 <p class="small text-muted mb-0">
 Already have an account?
-<a href="{{ route('login') }}" class="fw-bold text-decoration-none" style="color:var(--brand-dark);">
+<a href="{{ route('login') }}" class="fw-bold text-decoration-none link-brand">
 Login here
 </a>
 </p>

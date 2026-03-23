@@ -38,7 +38,7 @@
     <div class="header-section d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <div class="logo-box">
-                <span style="font-size: 20px;">&#10148;</span>
+                <span class="fs-5">&#10148;</span>
             </div>
             <span class="brand-text">MOD<span class="brand-highlight">REMIT</span></span>
         </div>

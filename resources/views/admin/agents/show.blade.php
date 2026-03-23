@@ -57,14 +57,14 @@
         <h6 class="fw-bold text-brand-dark mb-0"><i class="bi bi-bar-chart-line-fill me-2"></i> Commission Summary for {{ $agent->name }}</h6>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm p-4" style="border-left: 4px solid #142472 !important;">
+        <div class="card border-0 shadow-sm p-4 card-accent-dark">
             <h6 class="text-muted small fw-bold text-uppercase mb-1">Agent Earnings (60%)</h6>
             <h3 class="fw-bold text-primary mb-0">CHF {{ number_format($agentTotalCommission, 2) }}</h3>
             <p class="small text-muted mt-1 mb-0">Total earned from all transfers</p>
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card border-0 shadow-sm p-4" style="border-left: 4px solid #28a745 !important;">
+        <div class="card border-0 shadow-sm p-4 card-accent-green">
             <h6 class="text-muted small fw-bold text-uppercase mb-1">Platform Earnings (40%)</h6>
             <h3 class="fw-bold text-success mb-0">CHF {{ number_format($platformFromAgent, 2) }}</h3>
             <p class="small text-muted mt-1 mb-0">Platform's share from this agent's transfers</p>
@@ -96,34 +96,36 @@
             </div>
             <div class="card-body px-4 bg-light rounded-bottom-4">
                 <div class="row g-4">
-                    <div class="col-md-4 text-center border-end">
-                        <div class="text-muted small fw-bold mb-3 text-uppercase">ID Document (Front)</div>
+                    <div class="col-md-4 mb-4">
+                        <label class="text-muted small fw-bold text-uppercase mb-2 d-block">ID Document (Front)</label>
                         @if($kycData['doc_front'])
-                            <img src="{{ $kycData['doc_front'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" style="max-height: 180px; object-fit: contain;" alt="Doc Front">
+                            <img src="{{ $kycData['doc_front'] }}" class="img-fluid rounded border shadow-sm bg-white p-1 kyc-image" alt="Doc Front">
                         @else
-                            <div class="bg-white border rounded py-4 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 150px;">
+                            <div class="bg-white border rounded py-4 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center kyc-placeholder">
                                 <i class="bi bi-file-earmark-image fs-1 text-light-emphasis mb-2"></i>
                                 Not available
                             </div>
                         @endif
                     </div>
-                    <div class="col-md-4 text-center border-end">
-                        <div class="text-muted small fw-bold mb-3 text-uppercase">ID Document (Back)</div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="text-muted small fw-bold text-uppercase mb-2 d-block">ID Document (Back)</label>
                         @if($kycData['doc_back'])
-                            <img src="{{ $kycData['doc_back'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" style="max-height: 180px; object-fit: contain;" alt="Doc Back">
+                            <img src="{{ $kycData['doc_back'] }}" class="img-fluid rounded border shadow-sm bg-white p-1 kyc-image" alt="Doc Back">
                         @else
-                            <div class="bg-white border rounded py-4 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 150px;">
+                            <div class="bg-white border rounded py-4 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center kyc-placeholder">
                                 <i class="bi bi-file-earmark-image fs-1 text-light-emphasis mb-2"></i>
                                 Not available
                             </div>
                         @endif
                     </div>
-                    <div class="col-md-4 text-center">
-                        <div class="text-muted small fw-bold mb-3 text-uppercase">Selfie Match</div>
+
+                    <div class="col-md-4 mb-4">
+                        <label class="text-muted small fw-bold text-uppercase mb-2 d-block">Selfie</label>
                         @if($kycData['selfie'])
-                            <img src="{{ $kycData['selfie'] }}" class="img-fluid rounded border shadow-sm bg-white p-1" style="max-height: 180px; object-fit: contain;" alt="Selfie">
+                            <img src="{{ $kycData['selfie'] }}" class="img-fluid rounded border shadow-sm bg-white p-1 kyc-image" alt="Selfie">
                         @else
-                            <div class="bg-white border rounded py-4 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center h-100" style="min-height: 150px;">
+                            <div class="bg-white border rounded py-4 text-muted small shadow-sm d-flex flex-column align-items-center justify-content-center kyc-placeholder">
                                 <i class="bi bi-person-bounding-box fs-1 text-light-emphasis mb-2"></i>
                                 Not available
                             </div>
@@ -199,7 +201,7 @@
             </div>
             <div class="card-body px-4">
                 <div class="d-flex align-items-center mb-4">
-                    <div class="avatar bg-brand-lime text-brand-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 60px; height: 60px; font-size: 1.5rem;">
+                    <div class="avatar bg-brand-lime text-brand-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3 icon-avatar-lg">
                         {{ substr($agent->name, 0, 1) }}
                     </div>
                     <div>

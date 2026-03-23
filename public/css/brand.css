@@ -362,3 +362,140 @@ img {
     max-width: 100%;
     height: auto;
 }
+/* KYC Helpers */
+.kyc-image {
+    max-height: 180px; 
+    object-fit: contain;
+}
+
+.kyc-placeholder {
+    height: 180px;
+    min-height: 150px;
+}
+
+/* Tracking Page */
+.track-card {
+    background: var(--white);
+    border-radius: 40px;
+    box-shadow: 0 20px 60px rgba(20, 36, 114, 0.08);
+    border: none;
+    margin-top: -80px;
+    position: relative;
+    z-index: 10;
+}
+.track-arrow-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    aspect-ratio: 1;
+}
+
+/* Icon Circle Utilities */
+.icon-circle-sm  { width: 32px;  height: 32px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-circle-md  { width: 40px;  height: 40px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-circle-lg  { width: 48px;  height: 48px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-circle-xl  { width: 80px;  height: 80px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-circle-2xl { width: 90px;  height: 90px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-xxl        { font-size: 2.5rem; }
+.icon-avatar-lg  { width: 60px;  height: 60px; font-size: 1.5rem; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-avatar-xl  { width: 80px;  height: 80px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+
+/* Badge Steps (step indicator circles in multi-step forms) */
+.step-badge {
+    width: 32px; height: 32px;
+    flex-shrink: 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Card Left Border Accents */
+.card-accent-dark  { border-left: 4px solid var(--brand-dark) !important; }
+.card-accent-lime  { border-left: 4px solid var(--brand-lime) !important; }
+.card-accent-green { border-left: 4px solid #28a745 !important; }
+
+/* Chart / Progress Container */
+.chart-container { min-height: 300px; }
+
+/* Search input min-width */
+.search-input { min-width: 280px; }
+
+/* Auth card max-width */
+.auth-card-sm { max-width: 500px; }
+
+/* Currency dropdown max width */
+.currency-select { max-width: 120px; }
+
+/* Dashboard sparkline charts */
+.chart-sparkline-lg  { width: 140px; }
+.chart-sparkline-md  { width: 110px; }
+
+/* Transaction log / code overflow */
+.log-overflow { max-height: 300px; overflow-y: auto; }
+
+/* Transparent glass button for dark backgrounds */
+.btn-glass {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+}
+
+/* === Extra utilities to eliminate remaining inline styles === */
+
+/* Welcome/landing page */
+.card-premium-lime  { background-color: var(--brand-lime); }
+.card-premium-home  { background: var(--white-home); }
+.section-accent     { background-color: var(--brand-lime); }
+.section-tag-dark   { background: var(--brand-dark); color: var(--brand-lime); }
+.icon-circle-feature { width: 64px; height: 64px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.icon-circle-xs     { width: 24px; height: 24px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.converter-sparkline { width: 140px; }
+.converter-step-border {
+    border-color: var(--brand-lime) !important;
+}
+.converter-step-dot {
+    margin-left: -1px;
+}
+.border-accent-lime { border-color: var(--brand-lime) !important; }
+
+/* Footer / Navbar logo text */
+.brand-logo-text    { font-size: 1.5rem; letter-spacing: -0.5px; }
+.brand-icon         { font-size: 1.4rem; }
+
+/* Layout shared */
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.nav-btn-reset      { margin: 0; }
+.page-heading       { letter-spacing: -1px; }
+.user-avatar-circle { width: 44px; height: 44px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; }
+.user-info-text     { font-size: 0.75rem; }
+.user-kyc-badge     { font-size: 0.6rem; }
+.hr-subtle          { opacity: 0.05; }
+
+/* Email layout helpers */
+.mt-5-email         { margin-top: 5px; }
+.mt-10              { margin-top: 10px; }
+
+/* Flag option in dropdowns (JS-generated) */
+.flag-option-text-lg  { font-size: 1rem; font-weight: 700; color: var(--brand-dark); }
+.flag-option-text-sm  { font-size: 0.75rem; font-weight: 500; color: #6c757d; }
+.flag-icon-option     { font-size: 1.25rem; border-radius: 3px; flex-shrink: 0; box-shadow: 0 0 1px rgba(0,0,0,0.5); }
+.flag-option-row      { display: flex; align-items: center; gap: 10px; width: 100%; }
+.flag-option-col      { display: flex; flex-direction: column; line-height: 1.2; }
+.flag-badge-sm        { border-radius: 3px; }
+
+/* Brand link colour */
+.link-brand { color: var(--brand-dark); }
+.link-brand:hover { color: var(--brand-dark); opacity: 0.8; }
+
+/* Flag circles */
+.flag-circle { width: 20px; height: 20px; flex-shrink: 0; aspect-ratio: 1; object-fit: cover; }
+
+/* Timeline step icon */
+.icon-timeline-step { width: 38px; height: 38px; min-width: 38px; flex-shrink: 0; aspect-ratio: 1; display: inline-flex; align-items: center; justify-content: center; z-index: 2; }
+

@@ -7,8 +7,8 @@
     <div class="col-md-7">
         <div class="card border-0 shadow-sm rounded-4 card-premium">
             <div class="card-header bg-white py-4 border-0 text-center">
-                <h4 class="fw-800 text-brand-dark mb-1" style="letter-spacing: -1px;">Customer Registration</h4>
-                <p class="text-muted small mb-0 uppercase fw-bold" style="letter-spacing: 1px;">Register a new sender on the platform</p>
+                <h4 class="fw-800 text-brand-dark mb-1" >Customer Registration</h4>
+                <p class="text-muted small mb-0 uppercase fw-bold" >Register a new sender on the platform</p>
             </div>
             <div class="card-body p-5 pt-2">
                 <form action="{{ route('agent.customers.store') }}" method="POST" id="customerCreateForm">
