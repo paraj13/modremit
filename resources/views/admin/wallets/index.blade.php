@@ -29,7 +29,7 @@
                     <tr>
                         <td class="px-4 py-4">
                             <div class="d-flex align-items-center">
-                                <div class="avatar bg-brand-lime text-brand-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 40px; height: 40px;">
+                                <div class="avatar bg-brand-lime text-brand-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3 icon-circle-md">
                                     {{ substr($agent->name, 0, 1) }}
                                 </div>
                                 <div class="fw-bold text-brand-dark">{{ $agent->name }}</div>

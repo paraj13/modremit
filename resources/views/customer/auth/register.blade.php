@@ -3,7 +3,7 @@
 @section('title', 'Customer Registration — Modremit')
 
 @section('content')
-<div class="auth-card" style="max-width: 500px;">
+<div class="auth-card auth-card-sm">
     <div class="mb-4 d-flex justify-content-center">
         <x-logo />
     </div>

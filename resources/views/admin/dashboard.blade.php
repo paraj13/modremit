@@ -17,8 +17,7 @@
 
             <!-- Month -->
             <select name="month"
-                class="form-select form-select-sm shadow-sm rounded-3"
-                style="width:140px;">
+                class="form-select form-select-sm shadow-sm rounded-3 chart-sparkline-lg">
                 @foreach(range(1, 12) as $m)
                     <option value="{{ sprintf('%02d', $m) }}"
                         {{ $params['month'] == sprintf('%02d', $m) ? 'selected' : '' }}>
@@ -29,8 +28,7 @@
 
             <!-- Year -->
             <select name="year"
-                class="form-select form-select-sm shadow-sm rounded-3"
-                style="width:110px;">
+                class="form-select form-select-sm shadow-sm rounded-3 chart-sparkline-md">
                 @php
                     $startYear = date('Y') - 1;
                     $endYear = date('Y') + 1;
@@ -108,7 +106,7 @@
         <h6 class="fw-bold text-brand-dark mb-3"><i class="bi bi-bar-chart-line-fill me-2 text-brand-dark"></i> Commission Breakdown</h6>
     </div>
     <div class="col-md-4">
-        <div class="card card-premium p-4 h-100" style="border-left: 4px solid var(--brand-dark) !important;">
+        <div class="card card-premium p-4 h-100 card-accent-dark">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-3 text-primary">
                     <i class="bi bi-person-workspace fs-5"></i>
@@ -120,7 +118,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card card-premium p-4 h-100" style="border-left: 4px solid var(--brand-lime) !important;">
+        <div class="card card-premium p-4 h-100 card-accent-lime">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-success bg-opacity-10 p-2 rounded-3 me-3 text-success">
                     <i class="bi bi-building fs-5"></i>
@@ -132,7 +130,7 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card card-premium p-4 h-100" style="border-left: 4px solid var(--brand-yellow) !important;">
+        <div class="card card-premium p-4 h-100 card-accent-lime">
             <div class="d-flex align-items-center mb-2">
                 <div class="bg-warning bg-opacity-10 p-2 rounded-3 me-3 text-warning">
                     <i class="bi bi-people-fill fs-5"></i>
@@ -151,13 +149,13 @@
     <div class="col-md-8">
         <div class="card card-premium border-0 shadow-sm p-4 h-100">
             <h6 class="fw-bold text-brand-dark mb-4">Volume & Commissions Trend</h6>
-            <div id="volumeChart" style="min-height: 300px;"></div>
+            <div id="volumeChart" class="chart-container"></div>
         </div>
     </div>
     <div class="col-md-4">
         <div class="card card-premium border-0 shadow-sm p-4 h-100">
             <h6 class="fw-bold text-brand-dark mb-4">Transaction Distribution</h6>
-            <div id="statusChart" style="min-height: 300px;"></div>
+            <div id="statusChart" class="chart-container"></div>
         </div>
     </div>
 </div>
@@ -210,7 +208,7 @@
                                 <td class="text-end fw-bold text-brand-dark">{{ number_format($tx->send_amount, 2) }} CHF</td>
                                 <td class="text-end">
                                     <div class="fw-bold text-success">{{ number_format($tx->commission, 2) }} CHF</div>
-                                    <div class="small text-muted" style="font-size: 0.7rem;">A: {{ number_format($tx->agent_commission, 2) }} | P: {{ number_format($tx->admin_commission, 2) }}</div>
+                                    <div class="small text-muted user-info-text">A: {{ number_format($tx->agent_commission, 2) }} | P: {{ number_format($tx->admin_commission, 2) }}</div>
                                 </td>
                                 <td class="text-end fw-bold text-primary">{{ number_format($tx->chf_amount, 2) }} CHF</td>
                                 <td class="text-center">

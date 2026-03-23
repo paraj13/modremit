@@ -12,7 +12,7 @@
             </div>
             <div class="card-body p-4">
                 <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-4">
-                    <div class="avatar bg-brand-lime text-brand-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" style="width: 50px; height: 50px;">
+                    <div class="avatar bg-brand-lime text-brand-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3 icon-circle-lg">
                         {{ substr($agent->name, 0, 1) }}
                     </div>
                     <div>

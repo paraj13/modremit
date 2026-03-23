@@ -68,8 +68,7 @@
                 <div class="timeline-indicator d-flex flex-column align-items-center me-3">
                     
                     <!-- ICON -->
-                    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center shadow-sm {{ $iconBg }} {{ $iconColor }}"
-                         style="width: 38px; height: 38px; min-width: 38px; z-index: 2;">
+                    <div class="timeline-icon rounded-circle d-flex align-items-center justify-content-center shadow-sm {{ $iconBg }} {{ $iconColor }} icon-timeline-step">
                         <i class="bi {{ $step['icon'] }} fs-5"></i>
                     </div>
 
@@ -87,7 +86,7 @@
                         </h6>
 
                         @if($step['time'])
-                            <span class="text-muted" style="font-size: 0.7rem;">
+                            <span class="text-muted user-info-text">
                                 {{ $step['time'] }}
                             </span>
                         @endif
@@ -98,7 +97,7 @@
                     </p>
 
                     @if($index === count($steps) - 1 && $transaction->initiated_by)
-                        <span class="badge bg-light text-dark border mt-2 px-2 py-1" style="font-size: 0.65rem;">
+                        <span class="badge bg-light text-dark border mt-2 px-2 py-1 user-kyc-badge">
                             Via: {{ ucfirst($transaction->initiated_by) }}
                         </span>
                     @endif

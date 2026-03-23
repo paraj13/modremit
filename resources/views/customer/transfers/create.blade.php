@@ -8,7 +8,7 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
             <div class="card-header bg-brand-dark py-4 border-0">
                 <div class="d-flex align-items-center">
-                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <div class="bg-brand-lime rounded-circle p-2 me-3 d-flex align-items-center justify-content-center icon-circle-lg">
                         <i class="bi bi-send-fill text-brand-dark h4 mb-0"></i>
                     </div>
                     <div>
@@ -23,7 +23,7 @@
                     
                     <div class="p-4 p-md-5 border-bottom">
                         <div class="d-flex align-items-center mb-4">
-                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">1</span>
+                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center step-badge">1</span>
                             <h5 class="fw-bold mb-0 text-brand-dark">Select Recipient</h5>
                         </div>
 
@@ -59,7 +59,7 @@
 
                     <div class="p-4 p-md-5 border-bottom bg-gray-light bg-opacity-30">
                         <div class="d-flex align-items-center mb-4">
-                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">2</span>
+                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center step-badge">2</span>
                             <h5 class="fw-bold mb-0 text-brand-dark">Amount & Exchange Rate</h5>
                         </div>
 
@@ -69,7 +69,7 @@
                                 <div class="input-group input-group-lg bg-white rounded-3 shadow-none border overflow-hidden">
                                     <span class="input-group-text bg-white border-0 px-4 fw-bold text-brand-dark">CHF</span>
                                     <input type="number" name="chf_amount" id="chf_amount" class="form-control border-0 shadow-none ps-0" step="0.01" placeholder="0.00" value="{{ old('chf_amount', 100) }}">
-                                    <select name="target_currency" id="target_currency" class="form-select border-0 bg-light fw-bold" style="max-width: 120px;">
+                                    <select name="target_currency" id="target_currency" class="form-select border-0 bg-light fw-bold currency-select">
                                         @foreach(\App\Constants\CountryCurrency::CURRENCIES as $c)
                                             @continue($c['code'] === 'CHF')
                                             <option value="{{ $c['code'] }}" {{ old('target_currency', 'INR') == $c['code'] ? 'selected' : '' }}>
@@ -116,7 +116,7 @@
 
                     <div class="p-4 p-md-5">
                         <div class="d-flex align-items-center mb-4">
-                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; border-radius: 50%;">3</span>
+                            <span class="badge-premium me-3 d-flex align-items-center justify-content-center step-badge">3</span>
                             <h5 class="fw-bold mb-0 text-brand-dark">Finalize & Memo</h5>
                         </div>
 

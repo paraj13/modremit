@@ -44,7 +44,7 @@
                             </div>
                         </div>
                         <div class="col-md-2 text-center text-muted py-3 py-md-0">
-                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px;">
+                            <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm icon-circle-md">
                                 <i class="bi bi-arrow-right fs-5 text-brand-dark"></i>
                             </div>
                             <div class="small mt-2 fw-bold">@ {{ $transaction->rate }}</div>
@@ -103,7 +103,7 @@
                         <i class="bi bi-code-slash me-1"></i> View Raw JSON
                     </button>
                     <div class="collapse" id="wiseResponse">
-                        <div class="bg-dark text-light p-3 rounded-3 mt-2 small overflow-auto" style="max-height: 300px;">
+                        <div class="bg-dark text-light p-3 rounded-3 mt-2 small log-overflow">
                             <pre class="mb-0"><code class="language-json">{{ json_encode($transaction->wise_response, JSON_PRETTY_PRINT) }}</code></pre>
                         </div>
                     </div>

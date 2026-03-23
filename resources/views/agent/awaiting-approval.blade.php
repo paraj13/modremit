@@ -8,8 +8,8 @@
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div class="card-body p-5 text-center">
                 <div class="mb-4">
-                    <div class="bg-brand-mint rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:90px;height:90px;">
-                        <i class="bi bi-clock-history text-brand-dark" style="font-size:2.5rem;"></i>
+                    <div class="bg-brand-mint rounded-circle d-inline-flex align-items-center justify-content-center mb-3 icon-circle-2xl">
+                        <i class="bi bi-clock-history text-brand-dark icon-xxl"></i>
                     </div>
                     <h3 class="fw-800 text-brand-dark mb-2">Verification Complete!</h3>
                     <p class="text-muted">Your identity has been verified. Your account is now being reviewed by our administrators. This usually takes less than 24 hours.</p>

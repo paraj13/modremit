@@ -360,7 +360,7 @@
                     <div class="mb-3 d-inline-block">
                         <span class="badge bg-brand-dark text-brand-lime px-3 py-2 rounded-pill fw-bold fs-6 shadow-sm border border-dark">
                             <i class="bi bi-lightning-charge-fill me-1 text-warning"></i>
-                            1 CHF = <span id="hero_rate_amount">{{ number_format($baseRate ?? 96.85, 2) }}</span> <span id="hero_rate_currency">INR</span> <span class="fi fi-in fi-badge me-1" id="hero_rate_flag" style="border-radius:3px;"></span>
+                            1 CHF = <span id="hero_rate_amount">{{ number_format($baseRate ?? 96.85, 2) }}</span> <span id="hero_rate_currency">INR</span> <span class="fi fi-in fi-badge me-1 flag-badge-sm" id="hero_rate_flag"></span>
                         </span>
                     </div>
                     <h1 class="hero-title">{!! __('messages.hero_title') !!}</h1>
@@ -379,7 +379,7 @@
                             <label class="pod-label">{{ __('messages.you_send') }}</label>
                             <div class="input-group-modern">
                                 <input type="number" id="send_amount" class="amount-input" value="1000">
-                                <div style="width: 140px;">
+                                <div class="converter-sparkline">
                                     <select id="from_currency" class="choices" name="from_currency">
                                         @foreach(\App\Constants\CountryCurrency::CURRENCIES as $c)
                                             <option value="{{ $c['code'] }}" data-name="{{ $c['name'] }}" data-flag="{{ $c['flag'] }}" {{ $c['code'] === 'CHF' ? 'selected' : '' }}>
@@ -391,7 +391,7 @@
                             </div>
                         </div>
 
-                        <div class="position-relative my-4 ps-4 border-start border-2" style="border-color: var(--brand-lime) !important;">
+                        <div class="position-relative my-4 ps-4 border-start border-2 converter-step-border">
                             <div class="mb-3 d-flex justify-content-between align-items-center">
                                 <span class="text-muted small fw-bold"><i class="bi bi-dash"></i> <span id="fee_amount">15.00</span> <span class="from_code">CHF</span></span>
                                 <span class="text-muted small">{{ __('messages.fee') }}</span>
@@ -400,8 +400,8 @@
                                 <span class="text-muted small fw-bold"><i class="bi bi-x"></i> <span id="fx_rate">{{ number_format($baseRate ?? 96.85, 4) }}</span></span>
                                 <span class="text-muted small">{{ __('messages.rate') }}</span>
                             </div>
-                            <div class="position-absolute top-50 start-0 translate-middle-x bg-white p-1" style="margin-left: -1px;">
-                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">
+                            <div class="position-absolute top-50 start-0 translate-middle-x bg-white p-1 converter-step-dot">
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center icon-circle-xs">
                                     <i class="bi bi-arrow-down-short text-muted"></i>
                                 </div>
                             </div>
@@ -411,7 +411,7 @@
                             <label class="pod-label">{{ __('messages.recipient_gets') }}</label>
                             <div class="input-group-modern">
                                 <input type="text" id="receive_amount" class="amount-input" readonly>
-                                <div style="width: 140px;">
+                                <div class="converter-sparkline">
                                     <select id="to_currency" class="choices" name="to_currency">
                                         @foreach(\App\Constants\CountryCurrency::CURRENCIES as $c)
                                             <option value="{{ $c['code'] }}" data-name="{{ $c['name'] }}" data-flag="{{ $c['flag'] }}" {{ $c['code'] === 'INR' ? 'selected' : '' }}>
@@ -459,7 +459,7 @@
                 </div>
                 <p class="mb-3 text-light small">"{{ $review['text'] }}"</p>
                 <div class="d-flex align-items-center">
-                    <span class="fi fi-{{ $review['country'] }} me-2 rounded-circle border"></span>
+                    <span class="fi fi-{{ $review['country'] }} me-2 rounded-circle border flag-circle"></span>
                     <span class="small fw-bold text-light"> {{ $review['name'] }}</span>
                 </div>
             </div>
@@ -476,8 +476,8 @@
             </div>
             <div class="row g-4">
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center " style="background-color: var(--brand-lime);">
-                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
+                    <div class="card-premium h-100 text-center  card-premium-lime">
+                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4 icon-circle-feature">
                             <i class="bi bi-calculator fs-3"></i>
                         </div>
                         <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_1_title') }}</h4>
@@ -485,8 +485,8 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center" style="background-color: var(--brand-lime);">
-                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
+                    <div class="card-premium h-100 text-center card-premium-lime">
+                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4 icon-circle-feature">
                             <i class="bi bi-person-check fs-3"></i>
                         </div>
                         <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_2_title') }}</h4>
@@ -494,8 +494,8 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center" style="background-color: var(--brand-lime);">
-                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
+                    <div class="card-premium h-100 text-center card-premium-lime">
+                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4 icon-circle-feature">
                             <i class="bi bi-credit-card fs-3"></i>
                         </div>
                         <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_3_title') }}</h4>
@@ -503,8 +503,8 @@
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card-premium h-100 text-center" style="background-color: var(--brand-lime);">
-                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4" style="width: 64px; height: 64px;">
+                    <div class="card-premium h-100 text-center card-premium-lime">
+                        <div class="bg-brand-mint text-brand-dark rounded-circle d-flex align-items-center justify-content-center mx-auto mb-4 icon-circle-feature">
                             <i class="bi bi-check-circle-fill fs-3"></i>
                         </div>
                         <h4 class="fw-bold mb-3 text-dark">{{ __('messages.step_4_title') }}</h4>
@@ -524,7 +524,7 @@
             </div>
             <div class="row g-4">
                 <div class="col-md-4">
-                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5 card-premium-home">
                         <div class="text-brand-dark mb-4 d-inline-block">
                             <i class="bi bi-shield-lock-fill fs-1"></i>
                         </div>
@@ -533,7 +533,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5 card-premium-home">
                         <div class="text-brand-dark mb-4 d-inline-block">
                             <i class="bi bi-percent fs-1"></i>
                         </div>
@@ -542,7 +542,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5 card-premium-home">
                         <div class="text-brand-dark mb-4 d-inline-block">
                             <i class="bi bi-geo-alt-fill fs-1"></i>
                         </div>
@@ -551,7 +551,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5 card-premium-home">
                         <div class="text-brand-dark mb-4 d-inline-block">
                             <i class="bi bi-lightning-charge-fill fs-1"></i>
                         </div>
@@ -560,7 +560,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5 card-premium-home">
                         <div class="text-brand-dark mb-4 d-inline-block">
                             <i class="bi bi-globe fs-1"></i>
                         </div>
@@ -569,7 +569,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card-premium h-100 border-0 shadow-sm p-5" style="background: var(--white-home);">
+                    <div class="card-premium h-100 border-0 shadow-sm p-5 card-premium-home">
                         <div class="text-brand-dark mb-4 d-inline-block">
                             <i class="bi bi-headset fs-1"></i>
                         </div>
@@ -582,10 +582,10 @@
     </section>
 
     <!-- Supported Countries -->
-    <section id="countries" style="background-color: var(--brand-lime);">
+    <section id="countries" class="card-premium-lime">
         <div class="container">
             <div class="section-header text-center">
-                <span class="section-tag" style="background: var(--brand-dark); color: var(--brand-lime);">{{ __('messages.countries') }}</span>
+                <span class="section-tag section-tag-dark">{{ __('messages.countries') }}</span>
                 <h2 class="section-title text-dark">{{ __('messages.move_borders') }}</h2>
             </div>
             <div class="row row-cols-2 row-cols-md-4 g-4">
@@ -739,12 +739,11 @@
 
                     <a class="navbar-brand d-flex align-items-center {{ $class ?? '' }}" href="{{ url('/') }}">
                         
-                        <div class="bg-brand-light text-brand-dark rounded-3 d-flex align-items-center justify-content-center me-3"
-                            style="width: 48px; height: 48px;">
-                            <i class="bi bi-send-fill" style="font-size: 1.4rem;"></i>
+                        <div class="bg-brand-light text-brand-dark rounded-3 d-flex align-items-center justify-content-center me-3 icon-circle-lg">
+                            <i class="bi bi-send-fill brand-icon"></i>
                         </div>
 
-                        <span class="fw-bold text-light" style="font-size: 1.5rem; letter-spacing: -0.5px;">
+                        <span class="fw-bold text-light brand-logo-text">
                             MOD<span class="text-brand-dark bg-brand-light px-2 ms-1 rounded">REMIT</span>
                         </span>
 

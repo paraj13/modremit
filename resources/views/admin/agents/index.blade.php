@@ -15,7 +15,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4 px-3">
         <h5 class="mb-0 fw-bold text-brand-dark">Active Platform Agents</h5>
         <div class="search-box">
-            <input type="text" class="form-control rounded-pill px-4 shadow-sm border-0 bg-white" placeholder="Search agents..." data-search-target="#agentsTable" style="min-width: 280px;">
+            <input type="text" class="form-control rounded-pill px-4 shadow-sm border-0 bg-white search-input" placeholder="Search agents..." data-search-target="#agentsTable">
         </div>
     </div>
     <div class="table-responsive">

@@ -5,7 +5,7 @@
         <i class="bi bi-send-fill" style="font-size: 1.4rem;"></i>
     </div>
 
-    <span class="fw-bold" style="font-size: 1.5rem; letter-spacing: -0.5px;">
+    <span class="fw-bold brand-logo-text">
         MOD<span class="text-brand-dark bg-brand-light px-2 ms-1 rounded">REMIT</span>
     </span>
 
