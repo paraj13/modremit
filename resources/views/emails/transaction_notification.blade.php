@@ -2,25 +2,34 @@
 
 @section('content')
     <h2 class="mt-0">Hello {{ $transaction->recipient->name }},</h2>
-    <h2 class="mt-0">Transaction Update</h2>
-    <p>Hello,</p>
     <p>A new transaction has been initiated for you. Here are the details:</p>
 
-    <div class="alert alert-info">
-        <table border="0" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-                <td class="fw-bold fs-14">Ref No:</td>
-                <td class="fs-14 fw-bold">{{ $transaction->payment_ref ?? 'TXN-' . str_pad($transaction->id, 8, '0', STR_PAD_LEFT) }}</td>
-            </tr>
-            <tr>
-                <td class="fs-14">Amount:</td>
-                <td class="fs-14">{{ number_format($transaction->send_amount, 2) }} CHF</td>
-            </tr>
-            <tr>
-                <td class="fs-14">Receiver:</td>
-                <td class="fs-14 fw-bold">{{ $transaction->recipient->name }}</td>
-            </tr>
-        </table>
+    <div class="transaction-card">
+        <div class="transaction-header">Transfer Details</div>
+        
+        <div class="data-row">
+            <div class="data-label">Amount to Receive:</div>
+            <div class="data-value amount-value">{{ number_format($transaction->target_amount, 2) }} {{ $transaction->target_currency }}</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Sender:</div>
+            <div class="data-value">{{ $transaction->customer->name }}</div>
+        </div>
+
+        <div class="data-row">
+            <div class="data-label">Reference ID:</div>
+            <div class="data-value">#{{ $transaction->payment_ref ?? 'TXN-' . str_pad($transaction->id, 8, '0', STR_PAD_LEFT) }}</div>
+        </div>
+
+        <div class="data-row pb-10">
+            <div class="data-label">Current Status:</div>
+            <div class="data-value">
+                <span class="status-badge status-badge-{{ $transaction->status }}">
+                    {{ strtoupper($transaction->status) }}
+                </span>
+            </div>
+        </div>
     </div>
 
     <div class="text-center mt-30">

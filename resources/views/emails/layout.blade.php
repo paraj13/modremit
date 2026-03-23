@@ -87,6 +87,68 @@
         }
         .italic { font-style: italic; }
         .mt-5 { margin-top: 5px; }
+        .mb-10 { margin-bottom: 10px; }
+        .pb-10 { padding-bottom: 10px; }
+        .border-bottom-dashed { border-bottom: 1px dashed #e2e8f0; }
+        
+        .transaction-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .transaction-header {
+            color: #142472;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .data-row {
+            display: table;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        .data-label {
+            display: table-cell;
+            color: #64748b;
+            font-size: 14px;
+            width: 40%;
+            vertical-align: middle;
+        }
+        .data-value {
+            display: table-cell;
+            text-align: right;
+            font-weight: 700;
+            color: #142472;
+            vertical-align: middle;
+        }
+        .amount-value {
+            color: #28a745;
+            font-size: 18px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-badge-completed {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .status-badge-processing {
+            background-color: #e0f2fe;
+            color: #075985;
+        }
+        .status-badge-pending {
+            background-color: #ffedd5;
+            color: #9a3412;
+        }
     </style>
 </head>
 <body>

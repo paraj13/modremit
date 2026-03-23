@@ -8,9 +8,9 @@
     <style>
         body { font-family: 'Inter', sans-serif; color: #142472; background: #fff; }
         .receipt-container { max-width: 800px; margin: 40px auto; padding: 40px; border: 1px solid #eee; }
-        .logo-box { background-color: #D3FF8A; border-radius: 8px; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; }
+        .logo-box { background-color: #ffde42; border-radius: 8px; width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; }
         .brand-text { font-size: 24px; font-weight: 800; letter-spacing: -1px; margin-left: 10px; }
-        .brand-highlight { background-color: #D3FF8A; color: #142472; padding: 2px 8px; border-radius: 4px; margin-left: 2px; }
+        .brand-highlight { background-color: #ffde42; color: #142472; padding: 2px 8px; border-radius: 4px; margin-left: 2px; }
         .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; }
         .detail-label { color: #64748b; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; }
         .detail-value { font-weight: 700; color: #142472; }
