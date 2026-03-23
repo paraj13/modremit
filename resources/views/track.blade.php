@@ -12,9 +12,13 @@
                     <p class="text-muted mb-0">Real-time status of transaction #{{ str_pad($transaction->id, 8, '0', STR_PAD_LEFT) }}</p>
                 </div>
                 <div class="text-end">
-                    <span class="badge bg-{{ $transaction->status_badge }} rounded-pill px-4 py-2 fs-6 shadow-sm">
+                    <span class="badge bg-{{ $transaction->status_badge }} rounded-pill px-4 py-2 fs-6 shadow-sm mb-2 d-inline-block">
                         {{ strtoupper($transaction->status) }}
                     </span>
+                    <br>
+                    <a href="{{ route('transaction.track.receipt', $transaction->unique_hash) }}?download=1" target="_blank" class="btn btn-sm btn-success rounded-pill px-3 mt-1 shadow-sm">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> Download Receipt
+                    </a>
                 </div>
             </div>
 

@@ -14,6 +14,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Public Transaction Tracking
 Route::get('/track/{hash}', [App\Http\Controllers\TrackTransactionController::class, 'show'])->name('transaction.track');
+Route::get('/track/{hash}/receipt', [App\Http\Controllers\TrackTransactionController::class, 'receipt'])->name('transaction.track.receipt');
 
 // Admin Routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
