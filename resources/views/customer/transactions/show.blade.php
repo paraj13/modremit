@@ -78,7 +78,7 @@
                     <a href="{{ route('customer.transactions.receipt', $transaction->id) }}" target="_blank" class="btn btn-brand px-4 py-2 rounded-pill me-2">
                         <i class="bi bi-printer me-1"></i> Print Receipt
                     </a>
-                    <a href="{{ route('customer.transactions.receipt', $transaction->id) }}" target="_blank" class="btn btn-success px-4 py-2 rounded-pill">
+                    <a href="{{ route('customer.transactions.receipt', $transaction->id) }}?download=1" target="_blank" class="btn btn-success px-4 py-2 rounded-pill">
                         <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
                     </a>
                 </div>

@@ -26,13 +26,37 @@
 
 <div class="no-print text-center my-4">
     <button onclick="window.print()" class="btn btn-primary px-4 rounded-pill me-2">
-        Print Receipt
+        <i class="bi bi-printer me-1"></i> Print Receipt
     </button>
-    <button onclick="window.print()" class="btn btn-success px-4 rounded-pill">
-        Download PDF
+    <button onclick="downloadReceipt()" class="btn btn-success px-4 rounded-pill">
+        <i class="bi bi-file-earmark-pdf me-1"></i> Download PDF
     </button>
-    <p class="small text-muted mt-2">To save as PDF, select "Save as PDF" in the printer destination.</p>
+    <p class="small text-muted mt-2">To save as PDF, select "Save as PDF" in the printer destination or use the Download button.</p>
 </div>
+
+<!-- html2pdf.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script>
+    function downloadReceipt() {
+        const element = document.querySelector('.receipt-container');
+        const opt = {
+            margin:       0.5,
+            filename:     'Receipt_{{ str_pad($transaction->id, 8, '0', STR_PAD_LEFT) }}.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // Auto-download if ?download=1 is in the URL
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('download') === '1') {
+            downloadReceipt();
+        }
+    }
+</script>
 
 <div class="receipt-container shadow-sm">
     <div class="header-section d-flex justify-content-between align-items-center">
