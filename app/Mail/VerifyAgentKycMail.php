@@ -3,14 +3,12 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VerifyKycMail extends Mailable
+class VerifyAgentKycMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +16,7 @@ class VerifyKycMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public \App\Models\Customer $customer,
+        public \App\Models\User $agent,
         public string $verificationLink
     ) {}
 
@@ -28,7 +26,7 @@ class VerifyKycMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Verify Your Identity - ' . config('app.name'),
+            subject: 'Verify Your Agent Identity - ' . config('app.name'),
         );
     }
 
@@ -37,18 +35,13 @@ class VerifyKycMail extends Mailable
      */
     public function content(): Content
     {
+        // Reusing the same view as customer KYC, but passing $customer variable name for compatibility or updating view to use generic $user
         return new Content(
             view: 'emails.verify-kyc',
+            with: [
+                'customer' => $this->agent,
+                'verificationLink' => $this->verificationLink,
+            ],
         );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
     }
 }

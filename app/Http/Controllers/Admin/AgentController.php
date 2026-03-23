@@ -81,6 +81,12 @@ class AgentController extends Controller
             $applicantId = $sumsub->createAgentApplicant($user);
             if ($applicantId) {
                 $user->update(['sumsub_applicant_id' => $applicantId]);
+                
+                // Generate and send KYC link
+                $verificationLink = $sumsub->generateWebSdkLink($applicantId);
+                if ($verificationLink) {
+                    Mail::to($user->email)->send(new \App\Mail\VerifyAgentKycMail($user, $verificationLink));
+                }
             }
         } catch (\Exception $e) {
             Log::error("Failed to create sumsub for agent " . $user->id, ['error' => $e->getMessage()]);

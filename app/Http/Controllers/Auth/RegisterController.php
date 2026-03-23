@@ -30,7 +30,23 @@ class RegisterController extends Controller
 
         $user = $this->create($request->all());
 
-        return redirect()->route('login')->with('success', 'Registration successful. Admin will review and approve your account shortly.');
+        // Create Sumsub Applicant and send KYC email
+        try {
+            $sumsub = app(\App\Integrations\Sumsub\SumsubKycService::class);
+            $applicantId = $sumsub->createAgentApplicant($user);
+            if ($applicantId) {
+                $user->update(['sumsub_applicant_id' => $applicantId]);
+                
+                $verificationLink = $sumsub->generateWebSdkLink($applicantId);
+                if ($verificationLink) {
+                    \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\VerifyAgentKycMail($user, $verificationLink));
+                }
+            }
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to initiate Agent KYC during registration: " . $user->id, ['error' => $e->getMessage()]);
+        }
+
+        return redirect()->route('login')->with('success', 'Registration successful. Please check your email for identity verification and await admin approval.');
     }
 
     protected function validator(array $data)

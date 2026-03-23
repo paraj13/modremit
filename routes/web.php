@@ -49,7 +49,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // Agent Routes
-Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->group(function () {
+Route::middleware(['auth', 'role:agent', 'agent.kyc'])->prefix('agent')->name('agent.')->group(function () {
     Route::get('/dashboard', [Agent\DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('customers', Agent\CustomerController::class);
@@ -72,6 +72,10 @@ Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->grou
     Route::get('/wallet', [Agent\WalletController::class, 'index'])->name('wallet.index');
     Route::get('/wallet/topup', [Agent\WalletController::class, 'topUp'])->name('wallet.topup');
     Route::post('/wallet/checkout', [Agent\WalletController::class, 'checkout'])->name('wallet.checkout');
+});
+
+Route::middleware(['auth', 'role:agent'])->prefix('agent')->name('agent.')->group(function () {
+    Route::get('/kyc-required', [Agent\KycController::class, 'required'])->name('kyc.required');
 });
 
 // Stripe Webhook
