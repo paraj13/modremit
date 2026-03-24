@@ -13,7 +13,6 @@ class KycController extends Controller
         
         // Try to update status from Sumsub if not already approved
         if ($customer->sumsub_applicant_id && $customer->kyc_status !== 'approved') {
-            dd($customer);
             try {
                 $kyc = app(\App\Integrations\Sumsub\SumsubKycService::class);
                 $status = $kyc->getStatus($customer->sumsub_applicant_id);

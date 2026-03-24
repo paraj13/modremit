@@ -90,24 +90,36 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'basic-kyc');
-        $redirectUrl = config('app.url') . '/';
+        $redirectUrl = config('integrations.sumsub.redirect_url') ?: config('app.url') . '/dashboard'; 
         $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
+        $identifiers = [];
+
         if (!$customer) {
             $user = \App\Models\User::where('sumsub_applicant_id', $applicantId)->first();
             $externalUserId = $user ? $this->getExternalId($user) : 'unknown';
+            if ($user) {
+                $identifiers = [
+                    'email' => $user->email,
+                    'phone' => $user->phone ?? ''
+                ];
+            }
         } else {
             $externalUserId = $this->getExternalId($customer);
+            $identifiers = [
+                'email' => $customer->email,
+                'phone' => $customer->phone
+            ];
         }
 
         try {
-            return $this->requestWebSdkLink($level, $externalUserId, $redirectUrl);
+            return $this->requestWebSdkLink($level, $externalUserId, $identifiers, $redirectUrl);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             if ($e->getResponse() && $e->getResponse()->getStatusCode() === 404) {
                 $errorBody = json_decode($e->getResponse()->getBody()->getContents(), true);
                 if (($errorBody['description'] ?? '') === 'Applicant is deactivated') {
                     logger()->info("Applicant {$applicantId} is deactivated, attempting reactivation.");
                     if ($this->activateApplicant($applicantId)) {
-                        return $this->requestWebSdkLink($level, $externalUserId, $redirectUrl);
+                        return $this->requestWebSdkLink($level, $externalUserId, $identifiers, $redirectUrl);
                     }
                 }
             }
@@ -116,16 +128,24 @@ class SumsubKycService
     }
 
     /** Private helper to perform the actual link request */
-    private function requestWebSdkLink(string $level, string $userId, ?string $redirectUrl = null): ?string
+    private function requestWebSdkLink(string $level, string $userId, array $identifiers = [], ?string $redirectUrl = null): ?string
     {
         $payload = [
             'levelName' => $level,
             'userId'    => $userId,
-            'ttlInSecs' => 86400, // 24 hours
+            'ttlInSecs' => 1800, // 30 minutes as per recommended integration
         ];
 
+        if (!empty($identifiers)) {
+            $payload['applicantIdentifiers'] = $identifiers;
+        }
+
         if ($redirectUrl) {
-            $payload['successRedirectUrl'] = $redirectUrl;
+            // Updated structure to use the redirect object as required by latest Sumsub SDK
+            $payload['redirect'] = [
+                'successUrl' => $redirectUrl,
+                'rejectUrl'  => $redirectUrl, // Can be customized later
+            ];
         }
 
         $response = $this->client->post("resources/sdkIntegrations/levels/-/websdkLink", $payload);

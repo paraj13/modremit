@@ -12,5 +12,6 @@ return [
         'secret_key' => env('SUMSUB_SECRET_KEY', ''),
         'base_url'   => env('SUMSUB_BASE_URL', 'https://api.sumsub.com'),
         'level_name' => env('SUMSUB_LEVEL_NAME', 'id-and-liveness'),
+        'redirect_url' => env('SUMSUB_REDIRECT_URL'),
     ],
 ];
