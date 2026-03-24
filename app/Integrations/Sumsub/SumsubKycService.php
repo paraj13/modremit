@@ -90,13 +90,13 @@ class SumsubKycService
         }
 
         $level = config('integrations.sumsub.level_name', 'basic-kyc');
-        $redirectUrl = config('integrations.sumsub.redirect_url') ?: config('app.url') . '/dashboard'; 
         $customer = Customer::where('sumsub_applicant_id', $applicantId)->first();
         $identifiers = [];
 
         if (!$customer) {
             $user = \App\Models\User::where('sumsub_applicant_id', $applicantId)->first();
             $externalUserId = $user ? $this->getExternalId($user) : 'unknown';
+            $redirectUrl = config('integrations.sumsub.redirect_url') ?: config('app.url') . '/dashboard';
             if ($user) {
                 $identifiers = [
                     'email' => $user->email,
@@ -105,6 +105,7 @@ class SumsubKycService
             }
         } else {
             $externalUserId = $this->getExternalId($customer);
+            $redirectUrl = config('integrations.sumsub.redirect_url') ?: config('app.url') . '/customer/dashboard';
             $identifiers = [
                 'email' => $customer->email,
                 'phone' => $customer->phone
