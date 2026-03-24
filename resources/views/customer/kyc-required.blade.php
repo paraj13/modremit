@@ -29,6 +29,13 @@
                     @endif
                 </div>
 
+                <div id="status-check-indicator" class="alert alert-info border-0 rounded-4 py-3 mb-4 d-none">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="spinner-border spinner-border-sm text-info me-3" role="status"></div>
+                        <span class="fw-semibold">Verifying your status... please wait.</span>
+                    </div>
+                </div>
+
                 <div class="bg-light rounded-4 p-4 mb-4 text-start">
                     <div class="d-flex align-items-center mb-3">
                         <i class="bi bi-check-circle-fill text-success me-3 fs-5"></i>
@@ -64,3 +71,23 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const kycStatus = "{{ $customer->kyc_status }}";
+        
+        // If status is not approved, show the checking indicator and reload after 5 seconds
+        if (kycStatus !== 'approved') {
+            const indicator = document.getElementById('status-check-indicator');
+            if (indicator) {
+                indicator.classList.remove('d-none');
+            }
+            
+            setTimeout(function() {
+                window.location.reload();
+            }, 5000);
+        }
+    });
+</script>
+@endpush
