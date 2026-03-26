@@ -18,7 +18,6 @@
     <form action="{{ route('customer.login') }}" method="POST" id="customerLoginForm">
         @csrf
         <div class="mb-3">
-            <label class="form-label small fw-bold">Email Address</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-0"><i class="bi bi-envelope"></i></span>
                 <input type="email" name="email" id="email" class="form-control form-control-premium @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="you@example.com" required autofocus>
@@ -27,14 +26,18 @@
         </div>
         
         <div class="mb-4">
-            <div class="d-flex justify-content-between">
-                <label class="form-label small fw-bold">Password</label>
-                <a href="{{ route('customer.password.request') }}" class="small text-decoration-none text-muted">Forgot?</a>
-            </div>
+
             <div class="input-group">
                 <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
                 <input type="password" name="password" id="password" class="form-control form-control-premium @error('password') is-invalid @enderror" placeholder="••••••••" required>
+                <span class="input-group-text bg-light border-0 cursor-pointer toggle-password" data-target="#password">
+                    <i class="bi bi-eye"></i>
+                </span>
                 @error('password') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="d-flex justify-content-end mt-2">
+                <a href="{{ route('customer.password.request') }}" class="small text-decoration-none text-muted">Forgot?</a>
             </div>
         </div>
 
@@ -46,12 +49,34 @@
         </div>
     </form>
 </div>
+@push('styles')
+<style>
+.cursor-pointer { cursor: pointer; }
+</style>
+@endpush
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         window.initGlobalValidation('customerLoginForm', {
             email: { required: true, email: true },
             password: { required: true }
+        });
+
+        document.querySelectorAll('.toggle-password').forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.querySelector(targetId);
+                const icon = this.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+                }
+            });
         });
     });
 </script>
