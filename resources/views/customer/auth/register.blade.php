@@ -14,7 +14,6 @@
     <form action="{{ route('customer.register') }}" method="POST" id="customerRegisterForm">
         @csrf
         <div class="mb-3">
-            <label class="form-label small fw-bold">Full Name</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-0"><i class="bi bi-person"></i></span>
                 <input type="text" name="name" class="form-control form-control-premium @error('name') is-invalid @enderror" value="{{ old('name') }}" placeholder="John Doe" required>
@@ -23,7 +22,6 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label small fw-bold">Email Address</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-0"><i class="bi bi-envelope"></i></span>
                 <input type="email" name="email" class="form-control form-control-premium @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="you@example.com" required>
@@ -32,7 +30,6 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label small fw-bold">Phone Number</label>
             <div class="input-group">
                 <span class="input-group-text bg-light border-0"><i class="bi bi-phone"></i></span>
                 <input type="text" name="phone" class="form-control form-control-premium @error('phone') is-invalid @enderror" value="{{ old('phone') }}" placeholder="+1234567890" required>
@@ -40,22 +37,25 @@
             </div>
         </div>
 
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label small fw-bold">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" id="password" class="form-control form-control-premium @error('password') is-invalid @enderror" placeholder="••••••••" required>
-                </div>
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-lock"></i></span>
+                <input type="password" name="password" id="password" class="form-control form-control-premium @error('password') is-invalid @enderror" placeholder="Password" required>
+                <span class="input-group-text bg-light border-0 cursor-pointer toggle-password" data-target="#password">
+                    <i class="bi bi-eye"></i>
+                </span>
             </div>
-            <div class="col-md-6">
-                <label class="form-label small fw-bold">Confirm Password</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-0"><i class="bi bi-lock-fill"></i></span>
-                    <input type="password" name="password_confirmation" class="form-control form-control-premium" placeholder="••••••••" required>
-                </div>
+            @error('password') <div class="mt-1 small text-danger">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-0"><i class="bi bi-lock-fill"></i></span>
+                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control form-control-premium" placeholder="Confirm Password" required>
+                <span class="input-group-text bg-light border-0 cursor-pointer toggle-password" data-target="#password_confirmation">
+                    <i class="bi bi-eye"></i>
+                </span>
             </div>
-            @error('password') <div class="col-12 mt-1 small text-danger">{{ $message }}</div> @enderror
         </div>
 
         <button type="submit" class="btn btn-brand w-100 py-3 fs-6 mt-2">Register Now</button>
@@ -65,6 +65,11 @@
         </div>
     </form>
 </div>
+@push('styles')
+<style>
+.cursor-pointer { cursor: pointer; }
+</style>
+@endpush
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -74,6 +79,23 @@
             phone: { required: true },
             password: { required: true, minlength: 8 },
             password_confirmation: { required: true, equalTo: '#password' }
+        });
+
+        document.querySelectorAll('.toggle-password').forEach(function(toggle) {
+            toggle.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.querySelector(targetId);
+                const icon = this.querySelector('i');
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+                }
+            });
         });
     });
 </script>
